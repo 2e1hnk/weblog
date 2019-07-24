@@ -54,7 +54,7 @@ public class QRZClient {
 		this.apiClient = Client.create();
 	}
 
-	protected CallbookEntry lookupCallsign(String callsign) {
+	protected CallbookEntry lookupCallsign(String callsign) throws QRZCallsignNotFoundException {
 		
 		logger.info("Looking up " + callsign);
 		
@@ -83,11 +83,15 @@ public class QRZClient {
 	
 				Document qrzDocument = response.getEntity(Document.class);
 	
-				logger.info("QRZ login debug ....");
+				logger.info("QRZ debug ....");
 				logger.info(this.getXmlString(qrzDocument));
+				if ( qrzDocument.getElementsByTagName("Error").getLength() > 0 ) {
+					logger.error("Callsign not found");
+					throw new QRZCallsignNotFoundException("Callsign not found: " + callsign);
+				}
 				qrzData = this.qrzDocumentToCallbookEntry(qrzDocument);
 				
-			} catch (Exception e) {
+			} catch (RuntimeException | XPathException e) {
 				e.printStackTrace();
 			}
 		
