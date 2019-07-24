@@ -27,6 +27,7 @@ public class ImportExportController {
 
     private final StorageService storageService;
 
+
     @Autowired
     public ImportExportController(@Qualifier("ADIFStorageService") StorageService storageService) {
         this.storageService = storageService;
@@ -34,13 +35,21 @@ public class ImportExportController {
     
     @GetMapping("/")
     public String listUploadedFiles(Model model) throws IOException {
-
+/*
         model.addAttribute("files", storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName(ImportExportController.class,
                         "serveFile", path.getFileName().toString()).build().toString())
                 .collect(Collectors.toList()));
-
+*/
         return "importexport";
+    }
+    
+    @GetMapping("/download")
+    @ResponseBody
+    public ResponseEntity<Resource> serveFile() {
+        Resource file = storageService.loadAsResource("dummy");
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
     
     @GetMapping("/files/{filename:.+}")

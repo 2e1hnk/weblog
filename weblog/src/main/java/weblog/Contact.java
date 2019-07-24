@@ -1,5 +1,7 @@
 package weblog;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -36,6 +38,9 @@ public class Contact {
 	private boolean qsl_req;
 	private boolean qsl_sent;
 	private boolean qsl_rcvd;
+	
+	
+	
     
     public long getId() {
 		return id;
@@ -51,6 +56,16 @@ public class Contact {
 
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
+	}
+	
+	private String getAdifDate() {
+		DateFormat adifDateFormatter = new SimpleDateFormat("yyyyMMdd");
+		return adifDateFormatter.format(this.getTimestamp());
+	}
+
+	private String getAdifTime() {
+		DateFormat adifTimeFormatter = new SimpleDateFormat("HHmm");
+		return adifTimeFormatter.format(this.getTimestamp());
 	}
 
 	public String getCallsign() {
@@ -141,4 +156,23 @@ public class Contact {
 		this.qsl_rcvd = qsl_rcvd;
 	}
 
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(String.format("<QSO_DATE:%d>%s", this.getAdifDate().length(), this.getAdifDate()));
+		sb.append(String.format("<TIME_ON:%d>%s", this.getAdifTime().length(), this.getAdifTime()));
+		sb.append(String.format("<CALL:%d>%s", this.getCallsign().length(), this.getCallsign()));
+		if ( this.getBand() != null ) {
+			sb.append(String.format("<BAND:%d>%s", this.getBand().length(), this.getBand()));
+		}
+		if ( this.getMode() != null ) {
+			sb.append(String.format("<MODE:%d>%s", this.getMode().length(), this.getMode()));
+		}
+		sb.append(String.format("<RST_SENT:%d>%s", this.getRsts().length(), this.getRsts()));
+		sb.append(String.format("<RST_RCVD:%d>%s", this.getRstr().length(), this.getRstr()));
+		//sb.append(String.format("<GRIDSQUARE:%d>%s", this.getGrid().length(), this.getGrid()));
+		sb.append("<EOR>\n");
+		
+		return sb.toString();
+	}
 }

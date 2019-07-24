@@ -1,6 +1,8 @@
 package weblog;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,6 +17,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -26,18 +30,24 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ADIFStorageService implements StorageService {
 	
-	Pattern regex_date = Pattern.compile("<QSO_DATE:[0-9]*>([0-9]{8})");
-	Pattern regex_time = Pattern.compile("<TIME_ON:[0-9]*>([0-9]{4})");
-	Pattern regex_band = Pattern.compile("<BAND:[0-9]*>([0-9]{0,4}[a-zA-Z]{0,2})");
-	Pattern regex_mode = Pattern.compile("<MODE:[0-9]*>([a-zA-Z0-9]{0,8})");
-	Pattern regex_callsign = Pattern.compile("<CALL:[0-9]*>([a-zA-Z0-9/]{0,10})");
-	Pattern regex_rsts = Pattern.compile("<RST_SENT:[0-9]*>([0-9]{0,3})");
-	Pattern regex_rstr = Pattern.compile("<RST_RCVD:[0-9]*>([0-9]{0,3})");
-	Pattern regex_grid = Pattern.compile("<GRIDSQUARE:[0-9]*>([a-zA-Z0-9]{0,6})");
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	Pattern regex_date = Pattern.compile("<QSO_DATE:[0-9]*>([0-9]{8})", Pattern.CASE_INSENSITIVE);
+	Pattern regex_time = Pattern.compile("<TIME_ON:[0-9]*>([0-9]{4})", Pattern.CASE_INSENSITIVE);
+	Pattern regex_band = Pattern.compile("<BAND:[0-9]*>([0-9]{0,4}[a-zA-Z]{0,2})", Pattern.CASE_INSENSITIVE);
+	Pattern regex_mode = Pattern.compile("<MODE:[0-9]*>([a-zA-Z0-9]{0,8})", Pattern.CASE_INSENSITIVE);
+	Pattern regex_callsign = Pattern.compile("<CALL:[0-9]*>([a-zA-Z0-9\\/]{0,10})", Pattern.CASE_INSENSITIVE);
+	Pattern regex_rsts = Pattern.compile("<RST_SENT:[0-9]*>([0-9]{0,3})", Pattern.CASE_INSENSITIVE);
+	Pattern regex_rstr = Pattern.compile("<RST_RCVD:[0-9]*>([0-9]{0,3})", Pattern.CASE_INSENSITIVE);
+	Pattern regex_grid = Pattern.compile("<GRIDSQUARE:[0-9]*>([a-zA-Z0-9]{0,6})", Pattern.CASE_INSENSITIVE);
 	
 	SimpleDateFormat adifDateFormatter = new SimpleDateFormat("yyyyMMddHHmm");
 	
 	@Autowired ContactRepository contactRepository;
+	
+	@Autowired CallbookEntryRepository callbookEntryRepository;
+	
+	private QRZClient qrzClient = new QRZClient();
 
     @Autowired
     public ADIFStorageService() {
@@ -45,7 +55,10 @@ public class ADIFStorageService implements StorageService {
 
     @Override
     public void store(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        
+    	String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        int linesImported = 0, linesSkipped = 0;
+    	
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + filename);
@@ -71,18 +84,49 @@ public class ADIFStorageService implements StorageService {
             		
             	    Contact contact = new Contact();
             	    try {
-						contact.setTimestamp(adifDateFormatter.parse("" + dateMatcher.group(1) + timeMatcher.group(2)));
-						contact.setBand(bandMatcher.group(1));
-						contact.setCallsign(callsignMatcher.group(1));
-						contact.setRsts(rstsMatcher.group(1));
-						contact.setRstr(rstrMatcher.group(1));
+                		// Handle mandatory matches
+            	    	dateMatcher.find();
+            	    	timeMatcher.find();
+            	    	contact.setTimestamp(adifDateFormatter.parse("" + dateMatcher.group(1) + timeMatcher.group(1)));
 						
+            	    	callsignMatcher.find();
+            	    	contact.setCallsign(callsignMatcher.group(1));
+						
+            	    	// Handle non-mandatory matches
+            	    	if ( bandMatcher.find() ) {
+            	    		contact.setBand(bandMatcher.group(1));
+            	    	}
+            	    	if ( modeMatcher.find() ) {
+            	    		contact.setMode(modeMatcher.group(1));
+            	    	}
+            	    	if ( rstsMatcher.find() ) {
+            	    		contact.setRsts(rstsMatcher.group(1));
+            	    	}
+            	    	if ( rstrMatcher.find() ) {
+            	    		contact.setRstr(rstrMatcher.group(1));
+            	    	}
+            	    	if ( gridMatcher.find() ) {
+            	    		contact.setLocation(gridMatcher.group(1));
+            	    	}
+            	    	
 						// TODO: Others here
 						
 						contactRepository.save(contact);
+						linesImported++;
 						
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
+						// Populate Callbook entry
+						if ( callbookEntryRepository.findByCallsign(callsignMatcher.group(1)).isEmpty() ) {
+							try {
+								callbookEntryRepository.save(qrzClient.lookupCallsign(callsignMatcher.group(1)));
+							} catch (Exception e) {
+								// Callsign not found in QRZ
+							}
+						}
+						
+					} catch (ParseException | IllegalStateException e) {
+						// Ignore this line
+						logger.error("Skipped importing line: " + line);
+						linesSkipped++;
 						e.printStackTrace();
 					}
             	    
@@ -106,14 +150,49 @@ public class ADIFStorageService implements StorageService {
 
     @Override
     public Path load(String filename) {
-		return null;
+    	// Create a temporary file
+    	File tmpFile = null;
+    	try {
+			tmpFile = File.createTempFile("log", ".adi");
+			FileWriter writer = new FileWriter(tmpFile);
+			for ( Contact contact : contactRepository.findAll() ) {
+				writer.write(contact.toString());
+			}
+		    writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+    	
+		return tmpFile.toPath();
         
     }
 
     @Override
     public Resource loadAsResource(String filename) {
-		return null;
-        
+    	try { 
+	    	// Create a temporary file
+	    	File tmpFile = null;
+	    	try {
+				tmpFile = File.createTempFile("log", ".adi");
+				FileWriter writer = new FileWriter(tmpFile);
+				writer.write("Exported from weblog online logging software\n");
+				writer.write(tmpFile.getName() + "\n");
+				writer.write("\n<EOH>\n");
+				for ( Contact contact : contactRepository.findAll() ) {
+					writer.write(contact.toString());
+				}
+			    writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+	    	
+			Path tmpFilePath = tmpFile.toPath();
+			Resource resource = new UrlResource(tmpFilePath.toUri());
+			return resource;
+	    }
+	    catch (MalformedURLException e) {
+	        throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+	    }
     }
 
     @Override

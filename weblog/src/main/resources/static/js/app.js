@@ -40,6 +40,7 @@ function populate_map() {
         },
         complete: function() {
         	$("#callbook-status").html("");
+        	map.invalidateSize();
     	}
     });	
 }
@@ -81,7 +82,7 @@ function callsign_lookup(callsign) {
 	    });
 	    $.ajax({
 	        type: "GET",
-	        url: "/contact/search/" + callsign,
+	        url: "/search/" + callsign,
 	        cache: false,
 	        timeout: 600000,
 	        success: function (data) {
