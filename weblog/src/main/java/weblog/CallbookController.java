@@ -41,7 +41,12 @@ public class CallbookController {
 	@GetMapping(path="/{callsign}")
 	public @ResponseBody Collection<CallbookEntry> getCallbookEntryByCallsign(@PathVariable String callsign) {
 		if ( callbookEntryRepository.findByCallsign(callsign).isEmpty() ) {
-			callbookEntryRepository.save(qrzClient.lookupCallsign(callsign));
+			try {
+				callbookEntryRepository.save(qrzClient.lookupCallsign(callsign));
+			} catch ( QRZCallsignNotFoundException e ) {
+				// Callsign not found, nothing to do
+				logger.error("QRZ Lookup for " + callsign + " returned no results.");
+			}
 		}
 		return callbookEntryRepository.findByCallsign(callsign);
 	}
