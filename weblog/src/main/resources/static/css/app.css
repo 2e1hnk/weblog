@@ -1,3 +1,8 @@
-.tabs-title.is-active {
+.tabs-title.is-active > a {
 	background-color: white;
+}
+
+li.settings {
+	padding-left: 30px;
+	padding-right: 30px;
 }

@@ -21,6 +21,10 @@ $(document).ready(function () {
 	  }, 500);
 	  $(this).data('timer', wait);
     });
+    
+    $("#liveSwitch").change(updateLiveEditMode);
+    
+    updateLiveEditMode();
 });
 
 function populate_map() {
@@ -101,5 +105,17 @@ function callsign_lookup(callsign) {
 	        	$("#previous-contacts-status").html("");
 	        }
 	    });
+	}
+}
+
+function updateLiveEditMode() {
+	if ( document.getElementById("liveSwitch").checked ) {
+		// Live mode
+		setInterval(function() {
+			document.getElementById("timestamp").value = moment().format('YYYY-MM-DD HH:mm:ss');
+		}, 1000);
+	} else {
+		// Edit mode
+		clearInterval();
 	}
 }
