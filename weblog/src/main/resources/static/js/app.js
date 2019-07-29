@@ -53,7 +53,8 @@ function callsign_lookup(callsign) {
 	if ( callsign.length > 3 ) {
 		$("#callbook-status").html("Loading...");
 		$("#previous-contacts-status").html("Loading...");
-	    $.ajax({
+
+		$.ajax({
 	        type: "GET",
 	        url: "/callbook/" + callsign,
 	        cache: false,
@@ -74,6 +75,48 @@ function callsign_lookup(callsign) {
 	        	$('#callbook-address').html(address);
 	            $('#callbook-image').attr('src', data[0].image);
 	
+	            console.log("AJAX RESULT : ", data);
+	
+	        },
+	        error: function (e) {
+	            console.log("ERROR : ", e);
+	        },
+	        complete: function() {
+	        	$("#callbook-status").html("");
+	    	}
+	    });
+		$.ajax({
+	        type: "GET",
+	        url: "/lotw-user/" + callsign,
+	        cache: false,
+	        timeout: 600000,
+	        success: function (data) {
+	        	if ( data.length > 0 ) {
+	        		$("#callbook-tag-lotw").css("visibility", "visible");
+	        	} else {
+	        		$("#callbook-tag-lotw").css("visibility", "hidden");
+	        	}
+	            console.log("AJAX RESULT : ", data);
+	
+	        },
+	        error: function (e) {
+	            console.log("ERROR : ", e);
+	        },
+	        complete: function() {
+	        	$("#callbook-status").html("");
+	    	}
+	    });
+		$.ajax({
+	        type: "GET",
+	        url: "/eqsl-user/" + callsign,
+	        cache: false,
+	        timeout: 600000,
+	        success: function (data) {
+	        	if ( data.length > 0 ) {
+	        		$("#callbook-tag-eqsl").css("visibility", "visible");
+	        	} else {
+	        		$("#callbook-tag-eqsl").css("visibility", "hidden");
+	        	}
 	            console.log("AJAX RESULT : ", data);
 	
 	        },
