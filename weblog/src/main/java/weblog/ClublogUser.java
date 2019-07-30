@@ -5,13 +5,18 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 public class ClublogUser {
 	
 	@Id
 	private String callsign;
-	private Date firstQso;
-	private Date lastQso;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss") private Date firstqso;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss") private Date lastqso;
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss") private Date lastupload;
 	private String locator;
 	private boolean oqrs;
 	
@@ -21,17 +26,23 @@ public class ClublogUser {
 	public void setCallsign(String callsign) {
 		this.callsign = callsign;
 	}
-	public Date getFirstQso() {
-		return firstQso;
+	public Date getFirstqso() {
+		return firstqso;
 	}
-	public void setFirstQso(Date firstQso) {
-		this.firstQso = firstQso;
+	public void setFirstqso(Date firstqso) {
+		this.firstqso = firstqso;
 	}
-	public Date getLastQso() {
-		return lastQso;
+	public Date getLastqso() {
+		return lastqso;
 	}
-	public void setLastQso(Date lastQso) {
-		this.lastQso = lastQso;
+	public void setLastqso(Date lastqso) {
+		this.lastqso = lastqso;
+	}
+	public Date getLastupload() {
+		return lastupload;
+	}
+	public void setLastupload(Date lastupload) {
+		this.lastupload = lastupload;
 	}
 	public String getLocator() {
 		return locator;
