@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello WebSocket</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+</head>
+<body>
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<form>
+	<label for="connect">WebSocket connection:</label>
+    <button id="connect" type="submit">Connect</button>
+    <button id="disconnect" type="submit" disabled="disabled">Disconnect</button>
+</form>
+<form class="form-inline">
+	<div>
+	    <label for="name">Rid ID*</label>
+	    <input type="text" id="rigId" class="form-control" placeholder="Rig ID...">
+	</div>
+	<div>
+	    <label for="name">Frequency</label>
+	    <input type="text" id="frequency" class="form-control" placeholder="Updated frequency here...">
+	</div>
+	<div>
+	    <label for="name">Mode</label>
+	    <input type="text" id="mode" class="form-control" placeholder="Updated mode here...">
+	</div>
+	<button id="send" class="btn btn-default" type="submit">Send</button>
+</form>
+<table id="conversation" class="table table-striped">
+    <thead>
+    <tr>
+        <th>Rig</th>
+        <th>Frequency</th>
+        <th>Mode</th>
+    </tr>
+    </thead>
+    <tbody id="greetings">
+    </tbody>
+</table>
+<script>
+	var stompClient = null;
+	
+	function setConnected(connected) {
+	    $("#connect").prop("disabled", connected);
+	    $("#disconnect").prop("disabled", !connected);
+	    if (connected) {
+	        $("#conversation").show();
+	    }
+	    else {
+	        $("#conversation").hide();
+	    }
+	    $("#greetings").html("");
+	}
+	
+	function connect() {
+	    var socket = new SockJS('/rigctl-update');
+	    stompClient = Stomp.over(socket);
+	    console.log("connecting");
+	    stompClient.connect({}, function (frame) {
+	        setConnected(true);
+	        console.log('Connected: ' + frame);
+	        stompClient.subscribe('/topic/rigctl', function (rigctlMessage) {
+	        	console.log("RigctlMessage", rigctlMessage);
+	        	console.log("RigctlMessage parsed", JSON.parse(rigctlMessage.body));
+	            showUpdate(JSON.parse(rigctlMessage.body));
+	        });
+	    });
+	}
+	
+	function disconnect() {
+	    if (stompClient !== null) {
+	        stompClient.disconnect();
+	    }
+	    setConnected(false);
+	    console.log("Disconnected");
+	}
+	
+	function sendUpdate() {
+	    stompClient.send("/app/update", {}, JSON.stringify({'rigId': $("#rigId").val(), 'frequency': $("#frequency").val(), 'mode': $("#mode").val()}));
+	}
+	
+	function showUpdate(message) {
+	    $("#greetings").append("<tr><td>" + message.rigId + "</td><td>" + message.frequency + "</td><td>" + message.mode + "</td></tr>");
+	}
+	
+	$(function () {
+	    $("form").on('submit', function (e) {
+	        e.preventDefault();
+	    });
+	    $( "#connect" ).click(function() { connect(); });
+	    $( "#disconnect" ).click(function() { disconnect(); });
+	    $( "#send" ).click(function() { sendUpdate(); });
+	    $( document ).ready(function() { connect(); });
+	});
+	
+</script>
+</body>
+</html>
