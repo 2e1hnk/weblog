@@ -39,13 +39,13 @@ public class ClublogDownloader extends ScheduledTasks {
 	// Useful for testing but disable in prod
 	@Scheduled(fixedRate = 604800,initialDelay = 10000)
 	public void scheduleTaskWithInitialDelay() {
-		this.populateClublogUsersTable();
+		// this.populateClublogUsersTable();
 	}
 	
 	// Every Saturday at 3am
 	@Scheduled(cron = "0 3 * * 6 ?")
 	public void scheduleTaskWithCronExpression() {
-		this.populateClublogUsersTable();
+		// this.populateClublogUsersTable();
 	}
 	
 	private void populateClublogUsersTable() {
