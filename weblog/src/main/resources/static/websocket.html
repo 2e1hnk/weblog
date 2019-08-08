@@ -12,14 +12,11 @@
     Javascript and reload this page!</h2></noscript>
 <form>
 	<label for="connect">WebSocket connection:</label>
-    <button id="connect" type="submit">Connect</button>
+    <button id="connect-1" type="submit">Connect to Rig 1</button>
+    <button id="connect-2" type="submit">Connect to Rig 2</button>
     <button id="disconnect" type="submit" disabled="disabled">Disconnect</button>
 </form>
 <form class="form-inline">
-	<div>
-	    <label for="name">Rid ID*</label>
-	    <input type="text" id="rigId" class="form-control" placeholder="Rig ID...">
-	</div>
 	<div>
 	    <label for="name">Frequency</label>
 	    <input type="text" id="frequency" class="form-control" placeholder="Updated frequency here...">
@@ -42,10 +39,55 @@
     </tbody>
 </table>
 <script>
-	var stompClient = null;
+var RigCtl = function() {
+	
+	this.config = {
+		stompClient: null,
+		currentRigId: null			
+	};
+	
+	this.connect = function(rigId) {
+		this.config.currentRigId = rigId;
+	    var socket = new SockJS('/rigctl-update');
+	    this.config.stompClient = Stomp.over(socket);
+	    console.log("connecting to rig " + rigId);
+	    this.config.stompClient.connect({}, function (frame) {
+	        setConnected(true);
+	        console.log('Connected: ' + frame);
+	        rigCtl.config.stompClient.subscribe('/topic/rigctl/' + rigId, function (rigctlMessage) {
+	        	console.log("RigctlMessage", rigctlMessage);
+	        	console.log("RigctlMessage parsed", JSON.parse(rigctlMessage.body));
+	            showUpdate(JSON.parse(rigctlMessage.body));
+	        });
+	    });		
+	};
+	
+	this.disconnect = function() {
+	    if (this.config.stompClient !== null) {
+	    	this.config.stompClient.disconnect();
+	    }
+	    setConnected(false);
+	    console.log("Disconnected");
+	};
+	
+	this.sendUpdate = function() {
+		this.config.stompClient.send("/app/update/" + this.config.currentRigId, {}, JSON.stringify({'rigId': currentRigId, 'frequency': $("#frequency").val(), 'mode': $("#mode").val()}));
+	}
+	
+	this.showUpdate = function(message) {
+	    $("#greetings").append("<tr><td>" + message.rigId + "</td><td>" + message.frequency + "</td><td>" + message.mode + "</td></tr>");
+	}
+
+}
+
+	var rigCtl = new RigCtl();
+	
+	//var stompClient = null;
+	//var currentRigId = null;
 	
 	function setConnected(connected) {
-	    $("#connect").prop("disabled", connected);
+		$("#connect-1").prop("disabled", connected);
+		$("#connect-2").prop("disabled", connected);
 	    $("#disconnect").prop("disabled", !connected);
 	    if (connected) {
 	        $("#conversation").show();
@@ -55,15 +97,16 @@
 	    }
 	    $("#greetings").html("");
 	}
-	
-	function connect() {
+	/*
+	function connect(rigId) {
+		currentRigId = rigId;
 	    var socket = new SockJS('/rigctl-update');
 	    stompClient = Stomp.over(socket);
-	    console.log("connecting");
+	    console.log("connecting to rig " + rigId);
 	    stompClient.connect({}, function (frame) {
 	        setConnected(true);
 	        console.log('Connected: ' + frame);
-	        stompClient.subscribe('/topic/rigctl', function (rigctlMessage) {
+	        stompClient.subscribe('/topic/rigctl/' + rigId, function (rigctlMessage) {
 	        	console.log("RigctlMessage", rigctlMessage);
 	        	console.log("RigctlMessage parsed", JSON.parse(rigctlMessage.body));
 	            showUpdate(JSON.parse(rigctlMessage.body));
@@ -80,21 +123,23 @@
 	}
 	
 	function sendUpdate() {
-	    stompClient.send("/app/update", {}, JSON.stringify({'rigId': $("#rigId").val(), 'frequency': $("#frequency").val(), 'mode': $("#mode").val()}));
+	    stompClient.send("/app/update/" + currentRigId, {}, JSON.stringify({'rigId': currentRigId, 'frequency': $("#frequency").val(), 'mode': $("#mode").val()}));
 	}
 	
 	function showUpdate(message) {
 	    $("#greetings").append("<tr><td>" + message.rigId + "</td><td>" + message.frequency + "</td><td>" + message.mode + "</td></tr>");
 	}
-	
+	*/
 	$(function () {
 	    $("form").on('submit', function (e) {
 	        e.preventDefault();
 	    });
-	    $( "#connect" ).click(function() { connect(); });
-	    $( "#disconnect" ).click(function() { disconnect(); });
-	    $( "#send" ).click(function() { sendUpdate(); });
-	    $( document ).ready(function() { connect(); });
+	    $( "#connect-1" ).click(function() { rigCtl.connect(1); });
+	    $( "#connect-2" ).click(function() { rigCtl.connect(2); });
+	    $( "#disconnect" ).click(function() { rigCtl.disconnect(); });
+	    $( "#send" ).click(function() { rigCtl.sendUpdate(); });
+	    // Use this to auto-connect
+	    //$( document ).ready(function() { rigCtl.connect(1); });
 	});
 	
 </script>

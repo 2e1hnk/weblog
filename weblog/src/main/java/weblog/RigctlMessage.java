@@ -22,6 +22,18 @@ public class RigctlMessage {
 	public void setMode(String mode) {
 		this.mode = mode;
 	}
+	public void setValueByAttributeName(String attribute, Object value) throws Exception {
+		switch (attribute) {
+		case "frequency":
+			this.setFrequency(Float.parseFloat(value.toString()));
+			break;
+		case "mode":
+			this.setMode(value.toString());
+			break;
+		default:
+			throw new Exception("Invalid attribute: " + attribute);
+		}
+	}
 	@Override
 	public String toString() {
 		return "RigctlMessage [rigId=" + rigId + ", frequency=" + frequency + ", mode=" + mode + "]";

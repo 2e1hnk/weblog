@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-//@RequestMapping(path="/contact")
+@RequestMapping(path="/log")
 public class ContactController {
 	
 	private final ContactRepository contactRepository;
