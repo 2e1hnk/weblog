@@ -38,7 +38,7 @@ dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.6.RELEASE', ext: 'pom'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.6.RELEASE'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.1.6.RELEASE'
-	compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity3")
+	compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.1.6.RELEASE'
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.1.6.RELEASE'
 	compile group: 'org.springframework.security', name: 'spring-security-data'

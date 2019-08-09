@@ -1,9 +1,9 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <!-- Compiled and minified CSS -->
-<link rel="stylesheet" th:href="@{/css/foundation.min.css}">
+<link rel="stylesheet" th:href="@{/webjars/foundation/dist/css/foundation.min.css}">
 <link rel="stylesheet" th:href="@{/css/app.css}">
 <link
 	href='https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css'
@@ -21,15 +21,21 @@
 	<div class="top-bar">
 		<div class="top-bar-left">
 			<ul class="dropdown menu" data-dropdown-menu>
-				<li class="menu-text">GB1WSG</li>
+				<li class="menu-text">WebLog</li>
 				<li><a href="#">File</a>
 					<ul class="menu vertical">
 						<li><a href="/file">Import ADIF File</a></li>
 						<li><a href="/file/download">Export Log as ADIF File</a></li>
 						<li><a href="#">Three</a></li>
 					</ul></li>
-				<li><a href="#" th:text="${#authentication.getPrincipal().getUser().getUsername()}">username</a></li>
-				<li><a href="/login?logout" th:text="#{lang.logout}"></a></li>
+				<li><a href="#"><span sec:authentication="name"><i class="fi-torso"></i> username</span></a>
+					<ul class="menu vertical">
+						<li><a href="/profile" th:text="#{lang.profile}"></a></li>
+						<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin" th:text="#{lang.admin}"></a></li>
+						<li><a href="/login?logout" th:text="#{lang.logout}"></a></li>
+					</ul>
+				</li>
+				
 				<li class="settings">
 					<div class="switch tiny" style="margin-bottom: 0px; top: 5px;">
 						<input class="switch-input" id="liveSwitch" type="checkbox" name="liveSwitch" />
