@@ -23,10 +23,10 @@ import org.springframework.security.data.repository.query.SecurityEvaluationCont
 
 @Configuration
 @EnableWebSecurity
-@EnableWebMvc
-@Import(WebSecurityConfig.class)
-@PropertySource("classpath:persistence-h2.properties")
-@EnableJpaRepositories()
+//@EnableWebMvc
+//@Import(WebSecurityConfig.class)
+//@PropertySource("classpath:persistence-h2.properties")
+//@EnableJpaRepositories()
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 
@@ -77,8 +77,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.jdbcAuthentication()
 			.dataSource(dataSource)
-			.usersByUsernameQuery("select email,password,enabled " + "from users " + "where email = ?")
-			.authoritiesByUsernameQuery("select email,authority " + "from authorities " + "where email = ?");
+			.usersByUsernameQuery("select username,password,enabled " + "from user " + "where username = ?")
+			.authoritiesByUsernameQuery("select username,authority " + "from authorities " + "where username = ?");
 	}
 
 	@Bean

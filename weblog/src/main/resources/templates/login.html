@@ -18,7 +18,7 @@
 				<h4>Login</h4>
 				<div class="callout alert" th:if="${param.error}" th:text="#{message.badCredentials}"></div>
 				<div class="callout success" th:if="${param.logout}" th:text="#{message.logoutSucc}"></div>
-				<label>User <input type='text' name='username' value=''>
+				<label>Email <input type='text' name='username' value=''>
 				</label> <label>Password <input type='password' name='password' />
 				</label> <input id="show-password" type="checkbox"><label
 					for="show-password">Show password</label>
