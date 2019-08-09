@@ -14,6 +14,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private WebApplicationContext applicationContext;
+    
+    @Autowired
     private UserRepository userRepository;
 
     public CustomUserDetailsService() {
@@ -26,12 +28,29 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(final String username) {
-        final User appUser = userRepository.findByUsername(username);
-        if (appUser == null) {
-            throw new UsernameNotFoundException(username);
+    public UserDetails loadUserByUsername(final String username) throws  UsernameNotFoundExcaption {
+        boolean enabled = true;
+        boolean accountNonExpired = true;
+        boolean credentialsNonExpired = true;
+        boolean accountNonLocked = true;
+        try {
+            User user = userRepository.findByEmail(email);
+            if (user == null) {
+                throw new UsernameNotFoundException(
+                  "No user found with username: " + email);
+            }
+             
+            return new org.springframework.security.core.userdetails.User(
+              user.getEmail(), 
+              user.getPassword().toLowerCase(), 
+              user.isEnabled(), 
+              accountNonExpired, 
+              credentialsNonExpired, 
+              accountNonLocked, 
+              getAuthorities(user.getRole()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return new WeblogUserPrincipal(appUser);
     }
 
 }

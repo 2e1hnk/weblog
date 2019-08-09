@@ -1,12 +1,16 @@
 package weblog;
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 
 @Entity
@@ -23,10 +27,17 @@ public class User {
     
     @NotBlank(message = "Password is required")
     private String password;
+    
+    @NotBlank(message = "Email address is required")
+    private String email;
 
     private Date lastLogin;
     
-    private boolean enabled = true;
+    private boolean enabled = false;
+    
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
     
 	public long getId() {
 		return id;
@@ -36,7 +47,7 @@ public class User {
 		this.id = id;
 	}
 
-	public String getEmail() {
+	public String getUsername() {
 		return username;
 	}
 
@@ -50,6 +61,14 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getEmail() {
+		return this.email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Date getLastLogin() {
@@ -67,6 +86,14 @@ public class User {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(final Collection<Role> roles) {
+        this.roles = roles;
+    }
  
     // standard constructors / setters / getters / toString
 }
