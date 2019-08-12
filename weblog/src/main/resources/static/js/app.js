@@ -129,7 +129,7 @@ function callsign_lookup(callsign) {
 	    });
 	    $.ajax({
 	        type: "GET",
-	        url: "/search/" + callsign,
+	        url: "/log/search/" + callsign,
 	        cache: false,
 	        timeout: 600000,
 	        success: function (data) {
