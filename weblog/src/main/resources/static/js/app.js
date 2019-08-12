@@ -44,7 +44,7 @@ function populate_map() {
         },
         complete: function() {
         	$("#callbook-status").html("");
-        	map.invalidateSize();
+        	mymap.invalidateSize();
     	}
     });	
 }

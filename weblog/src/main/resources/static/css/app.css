@@ -13,3 +13,16 @@ li.settings {
   border-radius: 0;
   margin-top: 3em;
 }
+
+.page-item.active {
+	font-weight: bold;
+}
+
+.button-group input{
+  display: none;
+}
+
+.button-group input:checked + label,
+.button-group input:checked + label:active {
+  background-color: salmon;
+}

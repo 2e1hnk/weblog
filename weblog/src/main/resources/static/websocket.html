@@ -57,7 +57,7 @@ var RigCtl = function() {
 	        rigCtl.config.stompClient.subscribe('/topic/rigctl/' + rigId, function (rigctlMessage) {
 	        	console.log("RigctlMessage", rigctlMessage);
 	        	console.log("RigctlMessage parsed", JSON.parse(rigctlMessage.body));
-	            showUpdate(JSON.parse(rigctlMessage.body));
+	            RigCtl.showUpdate(JSON.parse(rigctlMessage.body));
 	        });
 	    });		
 	};
@@ -71,8 +71,8 @@ var RigCtl = function() {
 	};
 	
 	this.sendUpdate = function() {
-		this.config.stompClient.send("/app/update/" + this.config.currentRigId, {}, JSON.stringify({'rigId': currentRigId, 'frequency': $("#frequency").val(), 'mode': $("#mode").val()}));
-	}
+		this.config.stompClient.send("/app/update/" + this.config.currentRigId, {}, JSON.stringify({'rigId': this.config.currentRigId, 'frequency': $("#frequency").val(), 'mode': $("#mode").val()}));
+	};
 	
 	this.showUpdate = function(message) {
 	    $("#greetings").append("<tr><td>" + message.rigId + "</td><td>" + message.frequency + "</td><td>" + message.mode + "</td></tr>");
