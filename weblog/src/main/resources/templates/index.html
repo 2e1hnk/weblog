@@ -85,13 +85,13 @@
 									<label for="datetime"><span th:text="#{lang.date_time}"></span>
 										<input type="datetime" class="input-group-field" th:field="*{timestamp}" id="timestamp" placeholder="Date/Time" ondblclick="javascript: document.getElementById('timestamp').value=new Date()" />
 									</label>
-									<span th:if="${#fields.hasErrors('timestamp')}"	th:errors="*{timestamp}"></span>
+									<div class="callout alert small" th:if="${#fields.hasErrors('timestamp')}"	th:errors="*{timestamp}"></div>
 								</div>
 								<div class="cell small-12">
 									<label for="callsign"><span th:text="#{lang.callsign}"></span>
 										<input type="text" th:field="*{callsign}" id="callsign" placeholder="Callsign" />
 									</label>
-									<span th:if="${#fields.hasErrors('callsign')}" th:errors="*{callsign}"></span>
+									<div class="callout alert small" th:if="${#fields.hasErrors('callsign')}" th:errors="*{callsign}"></div>
 								</div>
 								<div class="cell small-12 medium-6">
 									<label for="rsts"><span th:text="#{lang.report_sent}"></span>

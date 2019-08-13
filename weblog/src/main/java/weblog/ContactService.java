@@ -11,6 +11,6 @@ public class ContactService {
     private ContactRepository contactRepository;
     
     public Page<Contact> getPaginatedArticles(Pageable pageable) {
-        return contactRepository.findAll(pageable);
+        return contactRepository.findAllByOrderByTimestampDesc(pageable);
     }
 }
