@@ -46,10 +46,16 @@
 						</label>
 					</div>
 				</li>
-				<!--
-				<li><input type="search" placeholder="Search"></li>
-				<li><button type="button" class="button">Search</button></li>
-				-->
+				<li>
+					<form action="/log/find" method="get">
+						<div class="input-group input-group-no-margin">
+							<input class="input-group-field" type="search" placeholder="Search" name="q" />
+							<div class="input-group-button">
+						    	<input type="submit" class="button" value="Go" />
+							</div>
+						</div>
+					</form>
+				</li>
 			</ul>
 		</div>
 		<div class="top-bar-right">
@@ -71,7 +77,7 @@
 			</ul>
 			<div class="tabs-content" data-tabs-content="input-panel-tabs">
   				<div class="tabs-panel is-active" id="logging">
-					<form action="#" th:action="@{/contact/addcontact}" th:object="${contact}"
+					<form action="#" th:action="${submitUrl} ? ${submitUrl} : @{/log/addcontact}" th:object="${contact}"
 						method="post">
 						<div class="grid-container">
 							<div class="grid-x grid-padding-x">
@@ -143,11 +149,9 @@
 					</form>
 				</div>
 				<div class="tabs-panel" id="rigctl">
-					
-						<button type="button" id="connect-1" class="button">Connect to Rig 1</button><br />
-					    <button type="button" id="connect-2" class="button">Connect to Rig 2</button><br />
-					    <button type="button" id="disconnect" class="button" disabled="disabled">Disconnect</button><br />
-					
+					<button type="button" id="connect-1" class="button">Connect to Rig 1</button><br />
+				    <button type="button" id="connect-2" class="button">Connect to Rig 2</button><br />
+				    <button type="button" id="disconnect" class="button" disabled="disabled">Disconnect</button><br />
 				</div>
 			</div>
 		</div>
@@ -223,9 +227,9 @@
 										<td th:text="${contact.location}"></td>
 										<td th:text="${contact.name}"></td>
 										<td><a class="waves-effect waves-light btn-small"
-											th:href="@{/contact/edit/{id}(id=${contact.id})}"><i class="fi-pencil"></i></a></td>
+											th:href="@{/log/edit/{id}(id=${contact.id})}"><i class="fi-pencil"></i></a></td>
 										<td><a class="waves-effect waves-light btn-small"
-											th:href="@{/contact/delete/{id}(id=${contact.id})}"><i class="fi-trash"></i></a></td>
+											th:href="@{/log/delete/{id}(id=${contact.id})}"><i class="fi-trash"></i></a></td>
 									</tr>
 								</tbody>
 							</table>

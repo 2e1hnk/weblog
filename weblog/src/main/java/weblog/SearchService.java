@@ -62,7 +62,5 @@ public class SearchService  {
         }
 
         return contactList;
-
-    
     }
 }

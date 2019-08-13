@@ -51,9 +51,6 @@ var RigCtl = function() {
 }
 
 $(function () {
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
     $( "#connect-1" ).click(function() { rigCtl.connect(1); });
     $( "#connect-2" ).click(function() { rigCtl.connect(2); });
     $( "#disconnect" ).click(function() { rigCtl.disconnect(); });

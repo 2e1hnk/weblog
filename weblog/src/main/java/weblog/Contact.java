@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Indexed
@@ -20,6 +21,7 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date timestamp;
      
     @NotBlank(message = "Callsign is mandatory")

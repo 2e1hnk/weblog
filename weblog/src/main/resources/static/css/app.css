@@ -26,3 +26,7 @@ li.settings {
 .button-group input:checked + label:active {
   background-color: salmon;
 }
+
+.input-group-no-margin {
+	margin: 0px;
+}

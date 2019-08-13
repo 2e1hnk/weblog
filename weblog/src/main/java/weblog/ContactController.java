@@ -49,7 +49,6 @@ public class ContactController {
     	int currentPage = page.orElse(1);
         int pageSize = size.orElse(20);
         
-        
         PageRequest pageable = PageRequest.of(currentPage - 1, pageSize);
         Page<Contact> contactPage = contactService.getPaginatedArticles(pageable);
         
@@ -81,12 +80,14 @@ public class ContactController {
     @PostMapping("/addcontact")
     public String addContact(@Valid Contact contact, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "add-contact";
+            return "index";
         }
          
         contactRepository.save(contact);
-        model.addAttribute("contacts", contactRepository.findAll());
-        return "index";
+        
+        return "redirect:/log";
+        // model.addAttribute("contacts", contactRepository.findAll());
+        // return "index";
     }
     
     @GetMapping("/edit/{id}")
@@ -95,6 +96,7 @@ public class ContactController {
           .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + id));
          
         model.addAttribute("contact", contact);
+        model.addAttribute("submitUrl", "/log/update/" + id);
         return "index";
     }
     
@@ -103,12 +105,12 @@ public class ContactController {
       BindingResult result, Model model) {
         if (result.hasErrors()) {
             contact.setId(id);
-            return "update-contact";
+            return "index";
         }
              
         contactRepository.save(contact);
-        model.addAttribute("contacts", contactRepository.findAll());
-        return "index";
+        //model.addAttribute("contacts", contactRepository.findAll());
+        return "redirect:/log";
     }
          
     @GetMapping("/delete/{id}")
@@ -116,8 +118,8 @@ public class ContactController {
         Contact contact = contactRepository.findById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + id));
         contactRepository.delete(contact);
-        model.addAttribute("contacts", contactRepository.findAll());
-        return "index";
+        //model.addAttribute("contacts", contactRepository.findAll());
+        return "redirect:/log";
     }
  
     // additional CRUD methods
@@ -129,11 +131,16 @@ public class ContactController {
 	}
 	
 	// Run full-text search
-	@GetMapping(path="/find/{searchterm}")
-	public @ResponseBody List<Contact> searchContacts(@PathVariable String searchterm) {
-		List<Contact> result = service.fuzzySearch(searchterm);
+	@GetMapping(path="/find")
+	public String searchContacts(Model model, Contact contact, @RequestParam String q) {
+		List<Contact> result = service.fuzzySearch(q);
 		logger.info("Found " + result.size() + " contacts");
-		return result;
+		model.addAttribute("contactList", result);
+        model.addAttribute("currentPage", 1);
+        model.addAttribute("totalPages", 1);
+        model.addAttribute("activeContactList", true);
+        model.addAttribute("contact", contact);
+		return "index";
 	}
 
 }
