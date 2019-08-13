@@ -52,6 +52,9 @@ dependencies {
 	compile 'mysql:mysql-connector-java'
 	compile group: 'com.sun.jersey', name: 'jersey-client', version: '1.19.4'
 	
+	// Search dependencies
+	compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.11.2.Final'
+	
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'

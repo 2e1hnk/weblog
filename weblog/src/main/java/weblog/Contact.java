@@ -10,7 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+
 @Entity
+@Indexed
 public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,14 +23,17 @@ public class Contact {
     private Date timestamp;
      
     @NotBlank(message = "Callsign is mandatory")
+    @Field
     private String callsign;
     
     private String rsts;
     
     private String rstr;
     
+    @Field
     private String location;
     
+    @Field
     private String name;
     
     private double frequency;
@@ -38,9 +45,6 @@ public class Contact {
 	private boolean qsl_req;
 	private boolean qsl_sent;
 	private boolean qsl_rcvd;
-	
-	
-	
     
     public long getId() {
 		return id;

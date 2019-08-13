@@ -8,6 +8,8 @@ import java.util.stream.IntStream;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +27,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(path="/log")
 public class ContactController {
 	
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	private final ContactRepository contactRepository;
 	
 	@Autowired
 	private ContactService contactService;
+	
+	@Autowired
+	SearchService service;
 
     @Autowired
     public ContactController(ContactRepository contactRepository) {
@@ -37,10 +44,11 @@ public class ContactController {
     
     @GetMapping("")
     public String home(Model model, Contact contact, @RequestParam("page") Optional<Integer> page, 
-    	      @RequestParam("size") Optional<Integer> size) {
+    	      @RequestParam("size") Optional<Integer> size, @RequestParam("edit") Optional<Long> editId) {
     	
     	int currentPage = page.orElse(1);
         int pageSize = size.orElse(20);
+        
         
         PageRequest pageable = PageRequest.of(currentPage - 1, pageSize);
         Page<Contact> contactPage = contactService.getPaginatedArticles(pageable);
@@ -54,6 +62,14 @@ public class ContactController {
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("activeContactList", true);
         model.addAttribute("contactList", contactPage.getContent());
+        
+        if ( editId.isPresent() ) {
+        	contact = contactRepository.findById(editId.get())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + editId.get()));
+        }
+        
+        model.addAttribute("contact", contact);
+              
         return "index";
     }
     
@@ -79,7 +95,7 @@ public class ContactController {
           .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + id));
          
         model.addAttribute("contact", contact);
-        return "update-contact";
+        return "index";
     }
     
     @PostMapping("/update/{id}")
@@ -110,6 +126,14 @@ public class ContactController {
 	@GetMapping(path="/search/{callsign}")
 	public @ResponseBody Collection<Contact> getContactsByCallsign(@PathVariable String callsign) {
 		return contactRepository.findByCallsign(callsign);
+	}
+	
+	// Run full-text search
+	@GetMapping(path="/find/{searchterm}")
+	public @ResponseBody List<Contact> searchContacts(@PathVariable String searchterm) {
+		List<Contact> result = service.fuzzySearch(searchterm);
+		logger.info("Found " + result.size() + " contacts");
+		return result;
 	}
 
 }
