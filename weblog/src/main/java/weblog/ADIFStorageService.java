@@ -47,7 +47,7 @@ public class ADIFStorageService implements StorageService {
 	
 	@Autowired CallbookEntryRepository callbookEntryRepository;
 	
-	private QRZClient qrzClient = new QRZClient();
+	private QRZClient2 qrzClient = new QRZClient2();
 
     @Autowired
     public ADIFStorageService() {

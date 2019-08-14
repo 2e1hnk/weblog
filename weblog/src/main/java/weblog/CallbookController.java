@@ -20,7 +20,7 @@ import org.w3c.dom.Document;
 public class CallbookController {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	private QRZClient qrzClient = new QRZClient();
+	private QRZClient2 qrzClient = new QRZClient2();
 	
 	@Autowired
 	private CallbookEntryRepository callbookEntryRepository;

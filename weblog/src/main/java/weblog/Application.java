@@ -13,4 +13,7 @@ public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+    
+    // Provide multi-tenancy support
+    // https://bytefish.de/blog/spring_boot_multitenancy/
 }

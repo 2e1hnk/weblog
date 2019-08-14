@@ -58,7 +58,16 @@ dependencies {
     
     
 	compile 'mysql:mysql-connector-java'
-	compile group: 'com.sun.jersey', name: 'jersey-client', version: '1.19.4'
+	
+	// Included for QRZClient
+	// TODO: Update QRZClient to use Jersey2
+	//compile group: 'com.sun.jersey', name: 'jersey-client', version: '1.19.4'
+	
+	// Included for Multi-tenancy support
+	compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.29'
+	compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.29'
+	
+	
 	
 	// Search dependencies
 	compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.11.2.Final'

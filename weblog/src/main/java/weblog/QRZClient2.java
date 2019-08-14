@@ -10,7 +10,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -33,12 +38,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 
-
-public class QRZClient {
+public class QRZClient2 {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -49,9 +50,9 @@ public class QRZClient {
 	private String qrz_username = System.getenv("QRZ_USERNAME");
 	private String qrz_password = System.getenv("QRZ_PASSWORD");
 
-	public QRZClient() {
+	public QRZClient2() {
 		logger.info("QRZClient loading");
-		this.apiClient = Client.create();
+		this.apiClient = ClientBuilder.newClient();
 	}
 
 	protected CallbookEntry lookupCallsign(String callsign) throws QRZCallsignNotFoundException {
@@ -68,36 +69,17 @@ public class QRZClient {
 				logger.info("Session Key: " + this.sessionKey);
 			}
 	
-			try {
-				String lookupUrl = String.format(this.lookup_url, this.sessionKey, callsign);
-				
-				logger.info("Lookup URL: " + lookupUrl);
-	
-				WebResource webResource = apiClient.resource(lookupUrl);
-	
-				ClientResponse response = webResource.accept(MediaType.APPLICATION_XML_TYPE).get(ClientResponse.class);
-	
-				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-				}
-	
-				Document qrzDocument = response.getEntity(Document.class);
-	
-				logger.info("QRZ debug ....");
-				logger.info(this.getXmlString(qrzDocument));
-				if ( qrzDocument.getElementsByTagName("Error").getLength() > 0 ) {
-					logger.error("Callsign not found");
-					throw new QRZCallsignNotFoundException("Callsign not found: " + callsign);
-				}
-				qrzData = this.qrzDocumentToCallbookEntry(qrzDocument);
-				
-			} catch (RuntimeException | XPathException e) {
-				e.printStackTrace();
-			}
+		String lookupUrl = String.format(this.lookup_url, this.sessionKey, callsign);
+		logger.info("Lookup URL: " + lookupUrl);
 		
+		WebTarget lookupWebTarget = apiClient.target(lookupUrl);
+		
+		Invocation.Builder invocationBuilder = lookupWebTarget.request(MediaType.APPLICATION_XML);
+		
+		QRZLookupResponse response = invocationBuilder.get(QRZLookupResponse.class);
 
-		return qrzData;
-
+		return response.getAsCallbookEntry();
+		
 	}
 
 	private Map<String, String> qrzDocumentToMap(Document qrzDocument) throws XPathException {
@@ -196,25 +178,14 @@ public class QRZClient {
 		String loginUrl = String.format(this.login_url, this.qrz_username, this.qrz_password);
 
 		logger.info("QRZ.com login url: " + loginUrl);
+		
+		WebTarget authenticationWebTarget = apiClient.target(loginUrl);
+		
+		Invocation.Builder invocationBuilder = authenticationWebTarget.request(MediaType.APPLICATION_XML);
+		
+		QRZAuthenticationResponse response = invocationBuilder.get(QRZAuthenticationResponse.class);
 
-		WebResource webResource = apiClient.resource(loginUrl);
-		ClientResponse response = webResource.accept(MediaType.APPLICATION_XML_TYPE).get(ClientResponse.class);
-
-		if (response.getStatus() != 200) {
-			throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-		}
-
-		Document output = response.getEntity(Document.class);
-
-		try {
-			Document qrzLoginDocument = output;
-			System.out.println("QRZ login debug (" + this.qrz_username + ") .... \n");
-			System.out.println(this.getXmlString(qrzLoginDocument));
-			this.sessionKey = this.getXmlValue(qrzLoginDocument, "/ns:QRZDatabase/ns:Session/ns:Key/text()");
-			System.out.println("QRZ Session Key: " + this.sessionKey);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.sessionKey = response.getKey();
 	}
 
 	private Document getXmlDocument(String xml) throws Exception {
