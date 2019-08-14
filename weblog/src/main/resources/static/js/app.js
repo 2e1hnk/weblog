@@ -10,6 +10,13 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
 
 var markerLayer = L.featureGroup().addTo(mymap);
 
+var gridLayer = L.maidenhead({ worked: [], confirmed: [] });
+gridLayer._map = mymap;
+
+var layerControl = new L.Control.Layers(null, {
+	'Gridsquares': maidenhead = L.maidenhead()
+}).addTo(mymap);
+
 populate_map(markerLayer);
 
 $("#view-tabs").on("change.zf.tabs", function (event) { 
