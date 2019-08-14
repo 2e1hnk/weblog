@@ -8,7 +8,14 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
     maxZoom: 14
 }).addTo(mymap);
 
-populate_map();
+var markerLayer = L.featureGroup().addTo(mymap);
+
+populate_map(markerLayer);
+
+$("#view-tabs").on("change.zf.tabs", function (event) { 
+	mymap.invalidateSize();
+	mymap.fitBounds(markerLayer.getBounds());
+});
 
 
 // Handle callsign lookup
@@ -27,15 +34,15 @@ $(document).ready(function () {
     updateLiveEditMode();
 });
 
-function populate_map() {
-    $.ajax({
+function populate_map(layer) {
+	$.ajax({
         type: "GET",
         url: "/location/all",
         cache: false,
         timeout: 600000,
         success: function (data) {
         	$.each(data, function(index, value) {
-        		L.marker([value.lat, value.lon]).bindPopup(value.callsign).addTo(mymap);
+        		L.marker([value.lat, value.lon]).bindPopup(value.callsign).addTo(layer);
         	});
         	console.log("AJAX RESULT : ", data);
         },
@@ -44,7 +51,8 @@ function populate_map() {
         },
         complete: function() {
         	$("#callbook-status").html("");
-        	mymap.invalidateSize();
+        	console.log(layer);
+        	mymap.fitBounds(layer.getBounds().pad(0.5));
     	}
     });	
 }
