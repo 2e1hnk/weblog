@@ -3,6 +3,7 @@ package weblog.config;
 import org.springframework.stereotype.Component;
 
 import weblog.TenantNameFilter;
+import weblog.controller.ContactController;
 
 import org.glassfish.jersey.server.ResourceConfig;
 /**
@@ -17,13 +18,13 @@ public class JerseyConfig extends ResourceConfig {
         register(TenantNameFilter.class);
 
         // Register the Resources:
-        // register(CustomerResource.class);
+        register(ContactController.class);
 
         // Uncomment to disable WADL Generation:
         //property("jersey.config.server.wadl.disableWadl", true);
 
         // Uncomment to add Request Tracing:
-        //property("jersey.config.server.tracing.type", "ALL");
-        //property("jersey.config.server.tracing.threshold", "TRACE");
+        property("jersey.config.server.tracing.type", "ALL");
+        property("jersey.config.server.tracing.threshold", "TRACE");
     }
 }

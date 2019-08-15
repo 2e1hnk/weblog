@@ -1,9 +1,18 @@
 package weblog;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.scheduling.annotation.EnableScheduling;
+
+import com.zaxxer.hikari.HikariDataSource;
 
 import weblog.config.StorageProperties;
 
@@ -18,4 +27,49 @@ public class Application {
     
     // Provide multi-tenancy support
     // https://bytefish.de/blog/spring_boot_multitenancy/
+    
+    @Bean
+    public DataSource dataSource() {
+
+        AbstractRoutingDataSource dataSource = new TenantAwareRoutingSource();
+
+        Map<Object,Object> targetDataSources = new HashMap<>();
+
+        targetDataSources.put("2E1HNK", tenantOne());
+        targetDataSources.put("GB1WSG", tenantTwo());
+
+        dataSource.setTargetDataSources(targetDataSources);
+
+        dataSource.afterPropertiesSet();
+
+        return dataSource;
+    }
+
+    public DataSource tenantOne() {
+
+        HikariDataSource dataSource = new HikariDataSource();
+
+        dataSource.setInitializationFailTimeout(0);
+        dataSource.setMaximumPoolSize(5);
+        //dataSource.setDataSourceClassName("org.postgresql.ds.PGSimpleDataSource");
+        dataSource.addDataSourceProperty("url", "jdbc:mysql://localhost:3306/weblog-2e1hnk?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/London");
+        //dataSource.addDataSourceProperty("user", "root");
+        //dataSource.addDataSourceProperty("password", "test_pwd");
+
+        return dataSource;
+    }
+
+    public DataSource tenantTwo() {
+
+        HikariDataSource dataSource = new HikariDataSource();
+
+        dataSource.setInitializationFailTimeout(0);
+        dataSource.setMaximumPoolSize(5);
+        //dataSource.setDataSourceClassName("org.postgresql.ds.PGSimpleDataSource");
+        dataSource.addDataSourceProperty("url", "jdbc:mysql://localhost:3306/weblog-gb1wsg?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Europe/London");
+        //dataSource.addDataSourceProperty("user", "philipp");
+        //dataSource.addDataSourceProperty("password", "test_pwd");
+
+        return dataSource;
+    }
 }
