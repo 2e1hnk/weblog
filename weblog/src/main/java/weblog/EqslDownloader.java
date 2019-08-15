@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import weblog.model.EqslUser;
+
 @Component
 public class EqslDownloader extends ScheduledTasks {
 	

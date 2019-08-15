@@ -67,6 +67,16 @@ dependencies {
 	compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.29'
 	compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.29'
 	
+	// QRZ Lookup
+	compile group: 'org.glassfish.jersey.core', name: 'jersey-common', version: '2.29'
+	compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.29'
+	compile group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.29'
+	compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+	
+	//compile('javax.activation:activation:1.1')
+	compile('org.glassfish.jaxb:jaxb-runtime:2.3.1')
+	
+	compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.29'
 	
 	
 	// Search dependencies

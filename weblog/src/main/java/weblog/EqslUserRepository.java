@@ -7,6 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import weblog.model.EqslUser;
+
 @Repository
 public interface EqslUserRepository extends CrudRepository<EqslUser, Long> {
 	@Query(value="SELECT * FROM eqsl_user c where c.callsign = :callsign", nativeQuery = true) 

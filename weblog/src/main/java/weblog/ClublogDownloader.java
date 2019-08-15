@@ -27,6 +27,8 @@ import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import weblog.model.ClublogUser;
+
 @Component
 public class ClublogDownloader extends ScheduledTasks {
 	

@@ -10,6 +10,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import weblog.model.Contact;
+
 @Repository
 public interface ContactRepository extends CrudRepository<Contact, Long> {
 	@Query(value="SELECT * FROM contact c where c.callsign = :callsign", nativeQuery = true) 
