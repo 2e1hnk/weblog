@@ -30,3 +30,7 @@ li.settings {
 .input-group-no-margin {
 	margin: 0px;
 }
+
+.uppercase {
+	text-transform: uppercase;
+}

@@ -2,11 +2,33 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+	<title>Weblog</title>
+	
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" th:href="@{/webjars/foundation/dist/css/foundation.min.css}">
 	<link rel="stylesheet" th:href="@{/css/app.css}">
 	<link rel="stylesheet" th:href="@{/webjars/foundation-icon-fonts/foundation-icons.css}" type="text/css">
 	<link rel="stylesheet" th:href="@{/webjars/leaflet/leaflet.css}" />
+	
+	<!-- favicon -->
+	<link rel="apple-touch-icon" sizes="57x57" th:href="@{/apple-icon-57x57.png}">
+	<link rel="apple-touch-icon" sizes="60x60" th:href="@{/apple-icon-60x60.png}">
+	<link rel="apple-touch-icon" sizes="72x72" th:href="@{/apple-icon-72x72.png}">
+	<link rel="apple-touch-icon" sizes="76x76" th:href="@{/apple-icon-76x76.png}">
+	<link rel="apple-touch-icon" sizes="114x114" th:href="@{/apple-icon-114x114.png}">
+	<link rel="apple-touch-icon" sizes="120x120" th:href="@{/apple-icon-120x120.png}">
+	<link rel="apple-touch-icon" sizes="144x144" th:href="@{/apple-icon-144x144.png}">
+	<link rel="apple-touch-icon" sizes="152x152" th:href="@{/apple-icon-152x152.png}">
+	<link rel="apple-touch-icon" sizes="180x180" th:href="@{/apple-icon-180x180.png}">
+	<link rel="icon" type="image/png" sizes="192x192" th:href="@{/android-icon-192x192.png}">
+	<link rel="icon" type="image/png" sizes="32x32" th:href="@{/favicon-32x32.png}">
+	<link rel="icon" type="image/png" sizes="96x96" th:href="@{/favicon-96x96.png}">
+	<link rel="icon" type="image/png" sizes="16x16" th:href="@{/favicon-16x16.png}">
+	<link rel="manifest" th:href="@{/manifest.json}">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" th:content="@{/ms-icon-144x144.png}">
+	<meta name="theme-color" content="#ffffff">
 	
 	<!-- fonts -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
@@ -34,13 +56,7 @@
 						<li><a href="/file/download">Export Log as ADIF File</a></li>
 						<li><a href="#">Three</a></li>
 					</ul></li>
-				<li><a href="#"><span sec:authentication="name"><i class="fi-torso"></i> &lt;username&gt;</span></a>
-					<ul class="menu vertical">
-						<li><a href="/profile" th:text="#{lang.profile}"></a></li>
-						<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/admin" th:text="#{lang.admin}"></a></li>
-						<li><a href="/login?logout" th:text="#{lang.logout}"></a></li>
-					</ul>
-				</li>
+				
 				
 				<li class="settings">
 					<div class="switch tiny" style="margin-bottom: 0px; top: 5px;">
@@ -83,7 +99,7 @@
 			</ul>
 			<div class="tabs-content" data-tabs-content="input-panel-tabs">
   				<div class="tabs-panel is-active" id="logging">
-					<form action="#" th:action="${submitUrl} ? ${submitUrl} : @{/log/addcontact}" th:object="${contact}"
+					<form action="#" autocomplete="off" th:action="${submitUrl} ? ${submitUrl} : @{/log/addcontact}" th:object="${contact}"
 						method="post">
 						<div class="grid-container">
 							<div class="grid-x grid-padding-x">
@@ -95,7 +111,7 @@
 								</div>
 								<div class="cell small-12">
 									<label for="callsign"><span th:text="#{lang.callsign}"></span>
-										<input type="text" class="monospace" th:field="*{callsign}" id="callsign" placeholder="Callsign" />
+										<input type="text" class="monospace uppercase" th:field="*{callsign}" id="callsign" placeholder="Callsign" />
 									</label>
 									<div class="callout alert small" th:if="${#fields.hasErrors('callsign')}" th:errors="*{callsign}"></div>
 								</div>
@@ -131,7 +147,7 @@
 								</div>
 								<div class="cell small-6 medium-6">
 									<label for="mode"><span th:text="#{lang.mode}"></span>
-										<input type="text" class="monospace" th:field="*{mode}" data-item-id="mode" />
+										<input type="text" class="monospace uppercase" th:field="*{mode}" data-item-id="mode" />
 									</label>
 								</div>
 								<div class="cell small-12">

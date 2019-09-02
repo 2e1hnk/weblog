@@ -29,7 +29,7 @@ import weblog.service.ContactService;
 import weblog.service.SearchService;
 
 @Controller
-@RequestMapping(path="/log")
+@RequestMapping(path="")
 public class ContactController {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());

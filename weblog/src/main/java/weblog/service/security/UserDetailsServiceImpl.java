@@ -29,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			
 	    // Map our Authority list with the spring security 
 	    List<GrantedAuthority> grantList = new ArrayList<GrantedAuthority>();
-	    for (Authority Authority : user.getAuthority()) {
+	    for (Authority authority : user.getAuthority()) {
 	        // ROLE_USER, ROLE_ADMIN,..
 	        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(authority.getAuthority());
 	        grantList.add(grantedAuthority);

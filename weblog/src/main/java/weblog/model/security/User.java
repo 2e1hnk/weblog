@@ -39,7 +39,7 @@ public class User {
 		this.setUsername(username);
 		this.setPassword(password);
 		for ( GrantedAuthority grantedAuthority : grantedAuthorities ) {
-			this.authority.add(grantedAuthority.getAuthority());
+			//this.authority.add(grantedAuthority.getAuthority());
 		}
 	}
 	
