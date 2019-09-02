@@ -1,6 +1,7 @@
 package weblog.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,8 +20,15 @@ public class Location implements Serializable {
 	private Long id;
 	
 	@NotNull
+	@Column(name = "timestamp")
+	private Date timestamp;
+	
+	@NotNull
 	@Column(name = "callsign")
 	private String callsign;
+	
+	@Column(name = "name")
+	private String name;
 	
 	@Column(name = "lat")
 	private double lat;
@@ -36,12 +44,28 @@ public class Location implements Serializable {
 		this.id = id;
 	}
 
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	public String getCallsign() {
 		return callsign;
 	}
 
 	public void setCallsign(String callsign) {
 		this.callsign = callsign;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public double getLat() {

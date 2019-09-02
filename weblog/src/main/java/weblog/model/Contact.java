@@ -38,6 +38,9 @@ public class Contact {
     @Field
     private String name;
     
+    @Field
+    private String opName;
+    
     private double frequency;
     
     private String band;
@@ -112,6 +115,14 @@ public class Contact {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getOpName() {
+		return opName;
+	}
+
+	public void setOpName(String opName) {
+		this.opName = opName;
 	}
 
 	public double getFrequency() {

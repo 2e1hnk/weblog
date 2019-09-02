@@ -49,7 +49,7 @@ function populate_map(layer) {
         timeout: 600000,
         success: function (data) {
         	$.each(data, function(index, value) {
-        		L.marker([value.lat, value.lon]).bindPopup(value.callsign).addTo(layer);
+        		L.marker([value.lat, value.lon]).bindPopup(value.timestamp + "<br /><b>" + value.callsign + "</b><br />" + value.name).addTo(layer);
         	});
         	console.log("AJAX RESULT : ", data);
         },

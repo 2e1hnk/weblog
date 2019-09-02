@@ -1,6 +1,7 @@
 package weblog.controller;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ import weblog.service.ContactService;
 import weblog.service.SearchService;
 
 @Controller
-@RequestMapping(path="")
+@RequestMapping(path="/log")
 public class ContactController {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -87,7 +88,13 @@ public class ContactController {
         if (result.hasErrors()) {
             return "index";
         }
-         
+        
+        if ( contact.getTimestamp() == null ) {
+        	contact.setTimestamp(new Date());
+        }
+        
+        contact.setCallsign(contact.getCallsign().toUpperCase());
+        
         contactRepository.save(contact);
         
         return "redirect:/log";
