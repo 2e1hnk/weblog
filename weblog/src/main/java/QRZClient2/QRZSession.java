@@ -6,6 +6,9 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class QRZSession {
 	
+	@XmlElement(name="Error")
+	private String errorNode;
+	
 	@XmlElement(name="Key")
     private String keyNode;
 	
@@ -21,6 +24,12 @@ public class QRZSession {
 	@XmlElement(name="Remark")
     private String remarkNode;
     
+	public String getError() {
+		return errorNode;
+	}
+	public void setError(String error) {
+		this.errorNode = error;
+	}
 	public String getKey() {
 		return keyNode;
 	}

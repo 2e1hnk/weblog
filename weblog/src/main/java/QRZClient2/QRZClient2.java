@@ -74,6 +74,10 @@ public class QRZClient2 {
 		Invocation.Builder invocationBuilder = lookupWebTarget.request(MediaType.APPLICATION_XML);
 		
 		QRZLookupResponse response = invocationBuilder.get(QRZLookupResponse.class);
+		
+		if ( response.getSession().getError() != null ) {
+			throw new QRZCallsignNotFoundException(response.getSession().getError());
+		}
 
 		return response;
 		
