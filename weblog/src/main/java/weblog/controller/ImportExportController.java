@@ -3,6 +3,8 @@ package weblog.controller;
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
@@ -27,6 +29,8 @@ import weblog.service.StorageService;
 @Controller
 @RequestMapping(path="/file")
 public class ImportExportController {
+	
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final StorageService storageService;
 
@@ -68,6 +72,8 @@ public class ImportExportController {
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
             RedirectAttributes redirectAttributes) {
 
+    	logger.info("File uploaded " + file.getOriginalFilename());
+    	
         storageService.store(file);
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");

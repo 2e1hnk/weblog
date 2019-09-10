@@ -25,9 +25,9 @@ public class EqslDownloader extends ScheduledTasks {
 	
 	// Weekly, delay of 10 seconds
 	// Useful for testing but disable in prod
-	@Scheduled(fixedRate = 604800,initialDelay = 10000)
+	@Scheduled(fixedRate = 604800000,initialDelay = 10000)
 	public void scheduleTaskWithInitialDelay() {
-		// this.populateEqslUsersTable();
+		//this.populateEqslUsersTable();
 	}
 	
 	// Every Saturday at 3am

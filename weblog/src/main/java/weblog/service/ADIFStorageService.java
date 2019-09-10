@@ -63,6 +63,8 @@ public class ADIFStorageService implements StorageService {
 
     @Override
     public void store(MultipartFile file) {
+    	
+    	logger.info("Importing " + file.getOriginalFilename());
         
     	String filename = StringUtils.cleanPath(file.getOriginalFilename());
         int linesImported = 0, linesSkipped = 0;

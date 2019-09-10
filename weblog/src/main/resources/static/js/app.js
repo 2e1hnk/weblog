@@ -89,6 +89,14 @@ function callsign_lookup(callsign) {
 	        	$('#callbook-grid').html(data[0].grid);
 	        	$('#callbook-address').html(address);
 	            $('#callbook-image').attr('src', data[0].image);
+	            
+	            if ( data[0].qslmgr ) {
+	            	$('callbook-tag-qslmgr').html("QSL via: " + data[0].qslmgr);
+	            	$('callbook-tag-qslmgr').css('visibility', 'visible');
+	            } else {
+	            	$('callbook-tag-qslmgr').html("");
+	            	$('callbook-tag-qslmgr').css('visibility', 'hidden');
+	            }
 	
 	            console.log("AJAX RESULT : ", data);
 	
