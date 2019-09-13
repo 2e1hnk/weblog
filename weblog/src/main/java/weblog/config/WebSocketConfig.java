@@ -17,7 +17,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/rigctl-update").withSockJS();
+        registry.addEndpoint("/event-stream").withSockJS();		// Used to provide a stream of logging events (e.g. new contact logged) 
+        registry.addEndpoint("/rigctl-update").withSockJS();	// Used to send rig updates to weblog (e.g. new frequency, mode etc.)
     }
 
 }

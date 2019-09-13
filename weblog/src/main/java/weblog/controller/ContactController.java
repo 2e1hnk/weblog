@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import weblog.ContactRepository;
+import weblog.EventStreamMessage;
 import weblog.model.Contact;
 import weblog.service.ContactService;
 import weblog.service.SearchService;
@@ -42,6 +43,9 @@ public class ContactController {
 	
 	@Autowired
 	SearchService service;
+	
+	@Autowired
+	private EventStreamController eventStream;
 
     @Autowired
     public ContactController(ContactRepository contactRepository) {
@@ -97,7 +101,32 @@ public class ContactController {
         
         contactRepository.save(contact);
         
-        return "redirect:/log";
+        EventStreamMessage event = new EventStreamMessage("contact", "new", contact.toString());
+        try {
+			eventStream.sendMessage(event);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        
+        // Set up the next contact. We can use this to populate default fields or to
+        // copy over details from the last contact to the next one.
+        Contact nextContact = new Contact();
+        nextContact.setBand(contact.getBand());
+        nextContact.setFrequency(contact.getFrequency());
+        nextContact.setMode(contact.getMode());
+        nextContact.setOpName(contact.getOpName());
+        
+        if ( nextContact.getMode().equals("CW") ) {
+        	nextContact.setRstr("599");
+        	nextContact.setRsts("599");
+        } else {
+        	nextContact.setRstr("59");
+        	nextContact.setRsts("59");
+        }
+        
+        return this.home(model, nextContact, Optional.empty(), Optional.empty(), Optional.empty());
+        
+        //return "redirect:/log";
         // model.addAttribute("contacts", contactRepository.findAll());
         // return "index";
     }
@@ -109,7 +138,7 @@ public class ContactController {
          
         model.addAttribute("contact", contact);
         model.addAttribute("submitUrl", "/log/update/" + id);
-        return "index";
+        return this.home(model, contact, Optional.empty(), Optional.empty(), Optional.empty());
     }
     
     @PostMapping("/update/{id}")
