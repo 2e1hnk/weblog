@@ -87,6 +87,7 @@ public class CallbookEntry {
 		this.setModdate(qrz.getCallsign().getModdate());
 		this.setMqsl(qrz.getCallsign().isMqsl());
 		this.setName(qrz.getCallsign().getName());
+		this.setQslmgr(qrz.getCallsign().getQslmgr());
 		this.setU_views(qrz.getCallsign().getU_views());
 		this.setUser(qrz.getCallsign().getUser());
 		this.setZip(qrz.getCallsign().getZip());

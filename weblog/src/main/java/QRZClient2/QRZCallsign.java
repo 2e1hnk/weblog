@@ -34,6 +34,8 @@ public class QRZCallsign {
 	private boolean lotw;
 	private String user;
 	private String geoloc;
+	private String qslmgr;
+	
 	public String getCall() {
 		return call;
 	}
@@ -201,6 +203,12 @@ public class QRZCallsign {
 	}
 	public void setGeoloc(String geoloc) {
 		this.geoloc = geoloc;
+	}
+	public String getQslmgr() {
+		return qslmgr;
+	}
+	public void setQslmgr(String qslmgr) {
+		this.qslmgr = qslmgr;
 	}
 	@Override
 	public String toString() {

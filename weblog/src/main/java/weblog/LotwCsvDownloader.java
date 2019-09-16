@@ -25,9 +25,9 @@ public class LotwCsvDownloader extends ScheduledTasks {
 	
 	// Weekly, delay of 10 seconds
 	// Useful for testing but disable in prod
-	@Scheduled(fixedRate = 604800,initialDelay = 10000)
+	@Scheduled(fixedRate = 604800000,initialDelay = 10000)
 	public void scheduleTaskWithInitialDelay() {
-		//this.populateLotwUsersTable();
+		// this.populateLotwUsersTable();
 	}
 	
 	// Every Saturday at 3am
