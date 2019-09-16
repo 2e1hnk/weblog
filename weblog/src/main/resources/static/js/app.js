@@ -97,15 +97,33 @@ function callsign_lookup(callsign) {
 		            $('#callbook-image').attr('src', data[0].image);
 		            
 		            if ( data[0].qslmgr ) {
-		            	$('callbook-tag-qslmgr').html("QSL via: " + data[0].qslmgr);
-		            	$('callbook-tag-qslmgr').css('visibility', 'visible');
+		            	$('#callbook-tag-qslmgr').html("QSL via: " + data[0].qslmgr);
+		            	$('#callbook-tag-qslmgr').css('visibility', 'visible');
 		            } else {
-		            	$('callbook-tag-qslmgr').html("");
-		            	$('callbook-tag-qslmgr').css('visibility', 'hidden');
+		            	$('#callbook-tag-qslmgr').html("");
+		            	$('#callbook-tag-qslmgr').css('visibility', 'hidden');
 		            }
 		            
 		            // Show the info box
 		            show_info_box();
+		            
+		            // Populate empty input fields
+		            if ( $('#location').val() == "" ) {
+		            	if ( data[0].grid ) {
+		            		$('#location').val(data[0].grid);
+		            	} else {
+		            		$('#location').val(data[0].address);
+		            	}
+		            }
+		            
+		            if ( $('#name').val() == "" ) {
+		            	$('#name').val(data[0].fname);
+		            }
+		            
+		            if ( $('#location').val() == "" ) {
+		            	$('#location').val(data[0].grid);
+		            }
+		            
 		        } else {
 	        		// Hide the info box
 		        	hide_info_box();
