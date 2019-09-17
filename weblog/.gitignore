@@ -2,7 +2,11 @@
 .gradle
 
 # Ignore Gradle build output directory
-build
+build/tmp
+build/resources
+build/classes
+build/reports
+build/test-results
 
 # Ignore lucene search index
 lucene
