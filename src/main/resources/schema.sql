@@ -1,3 +1,7 @@
+CREATE DATABASE IF NOT EXISTS weblog;
+-- Need to replace the map table with a view, however this only works if the DB has already been initialized
+
+/*
 CREATE OR REPLACE VIEW `map` AS
 	SELECT
 		`contact`.`id` AS `id`,
@@ -16,3 +20,4 @@ CREATE OR REPLACE VIEW `map` AS
 		AND
 		(`callbook_entry`.`lon` IS NOT NULL)
 	);
+*/
