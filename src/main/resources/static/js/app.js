@@ -219,7 +219,7 @@ function updateLiveEditMode() {
 	if ( document.getElementById("liveSwitch").checked ) {
 		// Live mode
 		setInterval(function() {
-			document.getElementById("timestamp").value = moment().format('YYYY-MM-DD HH:mm:ss');
+			document.getElementById("timestamp").value = moment().utc().format('YYYY-MM-DD HH:mm:ss');
 		}, 1000);
 	} else {
 		// Edit mode

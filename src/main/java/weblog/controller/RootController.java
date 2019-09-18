@@ -14,5 +14,10 @@ public class RootController {
     public String home(Model model) {
     	return "redirect:/log/";
     }
+    
+    @GetMapping("/map")
+    public String map(Model model) {
+    	return "map";
+    }
 
 }

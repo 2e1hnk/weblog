@@ -50,6 +50,7 @@
 	<div class="top-bar">
 		<div class="top-bar-left">
 			<ul class="dropdown menu" data-dropdown-menu>
+				<li><img src="/images/international_amateur_radio_symbol.png" class="img-responsive" style="height: 54px;"/></li>
 				<li class="menu-text">WebLog</li>
 				<li><a href="#">File</a>
 					<ul class="menu vertical">
@@ -69,7 +70,14 @@
 						</label>
 					</div>
 				</li>
-				<li>
+
+			</ul>
+		</div>
+		<div class="top-bar-right">
+			<ul class="menu tabs" data-tabs id="view-tabs">
+			  <li class="tabs-title is-active"><a href="#tab-list" aria-selected="true"><i class="fi-list"></i> <span th:text="#{lang.list}"></span></a></li>
+			  <li class="tabs-title"><a data-tabs-target="tab-map" href="#tab-map"><i class="fi-map"></i> <span th:text="#{lang.map}"></span></a></li>
+			  				<li>
 					<form action="/log/find" method="get">
 						<div class="input-group input-group-no-margin">
 							<input class="input-group-field" type="search" placeholder="Search" name="q" />
@@ -79,12 +87,6 @@
 						</div>
 					</form>
 				</li>
-			</ul>
-		</div>
-		<div class="top-bar-right">
-			<ul class="menu tabs" data-tabs id="view-tabs">
-			  <li class="tabs-title is-active"><a href="#tab-list" aria-selected="true"><i class="fi-list"></i> <span th:text="#{lang.list}"></span></a></li>
-			  <li class="tabs-title"><a data-tabs-target="tab-map" href="#tab-map"><i class="fi-map"></i> <span th:text="#{lang.map}"></span></a></li>
 			</ul>
 		</div>
 	</div>
