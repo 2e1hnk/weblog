@@ -10,3 +10,4 @@ build/test-results
 
 # Ignore lucene search index
 lucene
+/build/
