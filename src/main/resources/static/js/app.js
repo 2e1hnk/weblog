@@ -84,7 +84,7 @@ function callsign_lookup(callsign) {
 	        	
 		        	var address = data[0].addr1.length > 0 ? data[0].addr1 + "<br />" : "";
 		        	address = data[0].addr2.length > 0 ? data[0].addr2 + "<br />" : "";
-		        	address = data[0].county.length > 0 ? data[0].addrcounty + "<br />" : "";
+		        	address = !!data[0].county && data[0].county.length > 0 ? data[0].addrcounty + "<br />" : "";
 		        	address = data[0].state.length > 0 ? data[0].state + "<br />" : "";
 		        	address = data[0].zip.length > 0 ? data[0].zip + "<br />" : "";
 		        	address = data[0].country.length > 0 ? data[0].country : "";

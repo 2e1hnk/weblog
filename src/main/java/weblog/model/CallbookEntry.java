@@ -1,10 +1,6 @@
 package weblog.model;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +10,7 @@ import QRZClient2.QRZLookupResponse;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class CallbookEntry {
+	
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
@@ -65,6 +62,7 @@ public class CallbookEntry {
 	}
 	
 	public CallbookEntry(QRZLookupResponse qrz) {
+		System.out.println(qrz.toString());
 		this.setAddr1(qrz.getCallsign().getAddr1());
 		this.setAddr2(qrz.getCallsign().getAddr2());
 		this.setAliases(qrz.getCallsign().getAliases());
@@ -163,12 +161,14 @@ public class CallbookEntry {
 		return lat;
 	}
 	public void setLat(double lat) {
+		System.out.println("Setting Lat to " + lat);
 		this.lat = lat;
 	}
 	public double getLon() {
 		return lon;
 	}
 	public void setLon(double lon) {
+		System.out.println("Setting Lon to " + lon);
 		this.lon = lon;
 	}
 	public String getGrid() {
@@ -235,6 +235,7 @@ public class CallbookEntry {
 		return u_views;
 	}
 	public void setU_views(int u_views) {
+		System.out.print(u_views);
 		this.u_views = u_views;
 	}
 	public int getBio() {

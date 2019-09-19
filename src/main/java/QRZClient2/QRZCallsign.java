@@ -14,8 +14,8 @@ public class QRZCallsign {
 	private String addr2;
 	private String zip;
 	private String country;
-	private Long lat;
-	private Long lon;
+	private double lat;
+	private double lon;
 	private String grid;
 	private int ccode;
 	private String land;
@@ -90,13 +90,13 @@ public class QRZCallsign {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	public Long getLat() {
+	public double getLat() {
 		return lat;
 	}
 	public void setLat(Long lat) {
 		this.lat = lat;
 	}
-	public Long getLon() {
+	public double getLon() {
 		return lon;
 	}
 	public void setLon(Long lon) {

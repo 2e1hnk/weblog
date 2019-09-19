@@ -53,7 +53,9 @@ public class CallbookController {
 	public @ResponseBody Collection<CallbookEntry> getCallbookEntryByCallsign(@PathVariable String callsign) {
 		if ( callbookEntryRepository.findByCallsign(callsign).isEmpty() ) {
 			try {
-				callbookEntryRepository.save(new CallbookEntry(qrzClient.lookupCallsign(callsign)));
+				QRZLookupResponse qrzLookupResponse = qrzClient.lookupCallsign(callsign);
+				CallbookEntry callbookEntry = new CallbookEntry(qrzLookupResponse);
+				callbookEntryRepository.save(callbookEntry);
 			} catch ( QRZCallsignNotFoundException e ) {
 				// Callsign not found, nothing to do
 				logger.error("QRZ Lookup for " + callsign + " returned no results.");
