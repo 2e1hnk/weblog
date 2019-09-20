@@ -1,4 +1,4 @@
-$(document).foundation()
+
 
 // Set up map
 var mymap = L.map('map', {fullscreenControl: true}).setView([51.505, -0.09], 13);
@@ -107,22 +107,14 @@ function callsign_lookup(callsign) {
 		            // Show the info box
 		            show_info_box();
 		            
-		            // Populate empty input fields
-		            if ( $('#location').val() == "" ) {
-		            	if ( data[0].grid ) {
-		            		$('#location').val(data[0].grid);
-		            	} else {
-		            		$('#location').val(data[0].address);
-		            	}
-		            }
-		            
-		            if ( $('#name').val() == "" ) {
-		            	$('#name').val(data[0].fname);
-		            }
-		            
-		            if ( $('#location').val() == "" ) {
-		            	$('#location').val(data[0].grid);
-		            }
+		            // Populate input fields
+	            	if ( data[0].grid ) {
+	            		$('#location').val(data[0].grid);
+	            	} else {
+	            		$('#location').val(data[0].address);
+	            	}
+	            	$('#name').val(data[0].fname);
+	            	$('#location').val(data[0].grid);
 		            
 		        } else {
 	        		// Hide the info box
@@ -185,7 +177,7 @@ function callsign_lookup(callsign) {
 	        cache: false,
 	        timeout: 600000,
 	        success: function (data) {
-	        	var previous_contact_list = "<b>Previous Contacts </b>(" + data.length + ")<br />";
+	        	var previous_contact_list = "<b>Previous Contacts </b><span class='w3-badge w3-scout'>" + data.length + "</span><br />";
 	        	$.each(data, function(index, value) {
 	        		previous_contact_list = previous_contact_list + value.timestamp + '<br />';
 	        	});
@@ -225,4 +217,13 @@ function updateLiveEditMode() {
 		// Edit mode
 		clearInterval();
 	}
+}
+
+function openTab(panelBlock, tabName) {
+	  var i;
+	  var x = document.getElementsByClassName(panelBlock);
+	  for (i = 0; i < x.length; i++) {
+	    x[i].style.display = "none";
+	  }
+	  document.getElementById(tabName).style.display = "block";
 }

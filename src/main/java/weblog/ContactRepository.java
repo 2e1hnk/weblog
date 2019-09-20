@@ -19,4 +19,6 @@ public interface ContactRepository extends CrudRepository<Contact, Long> {
 	
 	Page<Contact> findAllByOrderByTimestampDesc(Pageable pageable);
 	Page<Contact> findAll(Pageable pageable);
+	Contact findTopByOrderByIdDesc();
+	Contact findTopByOrderByIdAsc();
 }

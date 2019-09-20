@@ -3,25 +3,41 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-	<link rel="stylesheet" th:href="@{/webjars/foundation/dist/css/foundation.min.css}">
-	<link rel="stylesheet" th:href="@{/css/app.css}">
-	<link rel="stylesheet" th:href="@{/webjars/foundation-icon-fonts/foundation-icons.css}">
+	<link rel="stylesheet" th:href="@{/webjars/w3-css/w3.css}">
+	<link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
+	<link rel="stylesheet" th:href="@{/css/scout.css}">
 </head>
 <body>
-	<div class="grid-x">
-		<div class="cell small-12 medium-12 large-3 large-offset-4">
-			<form name="f" th:action="@{/login}" method="POST"
-				class="log-in-form">
-				<h4>Login</h4>
-				<div class="callout alert" th:if="${param.error}" th:text="#{message.badCredentials}"></div>
-				<div class="callout success" th:if="${param.logout}" th:text="#{message.logoutSucc}"></div>
-				<label>Username <input type='text' name='username' value='' /></label>
-				<label>Password <input type='password' name='password' /></label>
-				<p>
-					<input type="submit" class="button expanded" value="Log in" onclick="validate()"></input>
-				</p>
-			</form>
+	<div style="width:400px; margin:0 auto; margin-top:100px;" class="w3-border">
+	<form name="f" th:action="@{/login}" method="POST" class="log-in-form">
+		<div class="w3-container w3-scout">
+			<h1><img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 40px; max-width: 40px" /> <span th:text="${@environment.getProperty('INSTANCE_NAME')}">Login</span></h1>
 		</div>
+		
+		<!-- alerts container -->
+		<div class="w3-container" style="padding-top: 25px; padding-bottom: 0px;">
+			<div class="w3-panel w3-pale-red w3-leftbar w3-border-red" th:if="${param.error}" th:text="#{message.badCredentials}"></div>
+			<div class="w3-panel w3-pale-green w3-leftbar w3-border-green" th:if="${param.logout}" th:text="#{message.logoutSucc}"></div>
+		</div>
+		<div class="w3-container" style="padding-top: 25px; padding-bottom: 50px;">
+		
+			<div class="w3-cell-row">
+				<div class="w3-container w3-cell">
+					<label th:text="#{lang.username}">[username]</label>
+					<input class="w3-input" type='text' name='username' value='' />
+				</div>
+			</div>
+			<div class="w3-cell-row">
+				<div class="w3-container w3-cell">
+					<label th:text="#{lang.password}">[password]</label>
+					<input class="w3-input" type='password' name='password' />
+				</div>
+			</div>
+		</div>
+		<div class="w3-container w3-scout">
+			<input type="submit" class="w3-button" value="Log in" onclick="validate()"></input>
+		</div>
+	</form>
 	</div>
 	<script type="text/javascript">
 		function validate() {

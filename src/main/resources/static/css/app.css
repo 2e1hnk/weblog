@@ -43,15 +43,17 @@ li.settings {
 
 .info-box {
 	position: fixed;
-	bottom: -100px;
+	bottom: -150px;
 	right: 0px;
-	height: 100px;
+	height: 150px;
 	width: 1000px;
 	
 	z-index: 1000;
 	
 	border: solid 2px #e6e6e6;
 	background: rgba(255, 255, 255, 0.95);
+	
+	overflow: vertical;
 }
 
 ul.menu > li > form {

@@ -1,272 +1,329 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	
-	<title>Weblog</title>
-	
-	<!-- Compiled and minified CSS -->
-	<link rel="stylesheet" th:href="@{/webjars/foundation/dist/css/foundation.min.css}">
-	<link rel="stylesheet" th:href="@{/css/app.css}">
-	<link rel="stylesheet" th:href="@{/webjars/foundation-icon-fonts/foundation-icons.css}" type="text/css">
-	<link rel="stylesheet" th:href="@{/webjars/leaflet/leaflet.css}" />
-	<link rel="stylesheet" th:href="@{/css/L.fullscreen.css}" />
-	
-	<!-- favicon -->
-	<link rel="apple-touch-icon" sizes="57x57" th:href="@{/apple-icon-57x57.png}">
-	<link rel="apple-touch-icon" sizes="60x60" th:href="@{/apple-icon-60x60.png}">
-	<link rel="apple-touch-icon" sizes="72x72" th:href="@{/apple-icon-72x72.png}">
-	<link rel="apple-touch-icon" sizes="76x76" th:href="@{/apple-icon-76x76.png}">
-	<link rel="apple-touch-icon" sizes="114x114" th:href="@{/apple-icon-114x114.png}">
-	<link rel="apple-touch-icon" sizes="120x120" th:href="@{/apple-icon-120x120.png}">
-	<link rel="apple-touch-icon" sizes="144x144" th:href="@{/apple-icon-144x144.png}">
-	<link rel="apple-touch-icon" sizes="152x152" th:href="@{/apple-icon-152x152.png}">
-	<link rel="apple-touch-icon" sizes="180x180" th:href="@{/apple-icon-180x180.png}">
-	<link rel="icon" type="image/png" sizes="192x192" th:href="@{/android-icon-192x192.png}">
-	<link rel="icon" type="image/png" sizes="32x32" th:href="@{/favicon-32x32.png}">
-	<link rel="icon" type="image/png" sizes="96x96" th:href="@{/favicon-96x96.png}">
-	<link rel="icon" type="image/png" sizes="16x16" th:href="@{/favicon-16x16.png}">
-	<link rel="manifest" th:href="@{/manifest.json}">
-	<meta name="msapplication-TileColor" content="#ffffff">
-	<meta name="msapplication-TileImage" th:content="@{/ms-icon-144x144.png}">
-	<meta name="theme-color" content="#ffffff">
-	
-	<!-- fonts -->
-	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap" rel="stylesheet">
-	
-	<style>
-		input.monospace {
-			font-family: 'Roboto Mono', monospace;
-		}
-		.monospace {
-			font-family: 'Roboto Mono', monospace;
-		}
-		#map { height: 600px; }
-	</style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</title>
+
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" th:href="@{/webjars/w3-css/w3.css}">
+<link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
+<link rel="stylesheet" th:href="@{/css/scout.css}">
+<link rel="stylesheet" th:href="@{/css/app.css}">
+<link rel="stylesheet" th:href="@{/webjars/leaflet/leaflet.css}" />
+<link rel="stylesheet" th:href="@{/css/L.fullscreen.css}" />
+
+<!-- favicon -->
+<link rel="apple-touch-icon" sizes="57x57"
+	th:href="@{/apple-icon-57x57.png}">
+<link rel="apple-touch-icon" sizes="60x60"
+	th:href="@{/apple-icon-60x60.png}">
+<link rel="apple-touch-icon" sizes="72x72"
+	th:href="@{/apple-icon-72x72.png}">
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/apple-icon-76x76.png}">
+<link rel="apple-touch-icon" sizes="114x114"
+	th:href="@{/apple-icon-114x114.png}">
+<link rel="apple-touch-icon" sizes="120x120"
+	th:href="@{/apple-icon-120x120.png}">
+<link rel="apple-touch-icon" sizes="144x144"
+	th:href="@{/apple-icon-144x144.png}">
+<link rel="apple-touch-icon" sizes="152x152"
+	th:href="@{/apple-icon-152x152.png}">
+<link rel="apple-touch-icon" sizes="180x180"
+	th:href="@{/apple-icon-180x180.png}">
+<link rel="icon" type="image/png" sizes="192x192"
+	th:href="@{/android-icon-192x192.png}">
+<link rel="icon" type="image/png" sizes="32x32"
+	th:href="@{/favicon-32x32.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/favicon-96x96.png}">
+<link rel="icon" type="image/png" sizes="16x16"
+	th:href="@{/favicon-16x16.png}">
+<link rel="manifest" th:href="@{/manifest.json}">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage"
+	th:content="@{/ms-icon-144x144.png}">
+<meta name="theme-color" content="#ffffff">
+
+<!-- fonts -->
+<link
+	href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap"
+	rel="stylesheet">
+
+<style>
+input.monospace {
+	font-family: 'Roboto Mono', monospace;
+}
+
+.monospace {
+	font-family: 'Roboto Mono', monospace;
+}
+
+#map {
+	height: 600px;
+}
+</style>
 </head>
 <body>
 
 	<!-- navbar -->
-	<div class="top-bar">
-		<div class="top-bar-left">
-			<ul class="dropdown menu" data-dropdown-menu>
-				<li><img src="/images/international_amateur_radio_symbol.png" class="img-responsive" style="height: 54px;"/></li>
-				<li class="menu-text" style="margin-top: 8px">WebLog</li>
-				<li style="margin-top: 8px;"><a href="#">File</a>
-					<ul class="menu vertical">
-						<li><a href="/file">Import ADIF File</a></li>
-						<li><a href="/file/download">Export Log as ADIF File</a></li>
-						<li><a href="#">Three</a></li>
-					</ul></li>
-				
-				<li class="settings" style="margin-top: 9px;">
-					<div class="switch tiny" style="margin-bottom: 0px; top: 5px;">
-						<input class="switch-input" id="liveSwitch" type="checkbox" name="liveSwitch" />
-						<label class="switch-paddle" for="liveSwitch">
-							<span class="show-for-sr">Live logging?</span>
-							<span class="switch-active" aria-hidden="true" th:text="#{lang.live}"></span>
-							<span class="switch-inactive" aria-hidden="true" th:text="#{lang.edit}"></span>
-						</label>
-					</div>
-				</li>
+	<div class="w3-bar w3-scout">
+		<a href="#" class="w3-bar-item w3-button w3-mobile">
+			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" />
+			<b th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</b>
+		</a>
+		<div class="w3-dropdown-hover">
+			<button class="w3-button">File</button>
+			<div class="w3-dropdown-content w3-bar-block w3-card-4">
+				<a href="/file" class="w3-bar-item w3-button">Import ADIF</a>
+				<a href="/file/download" class="w3-bar-item w3-button">Export as ADIF</a>
+			</div>
+		</div>
 
-			</ul>
-		</div>
-		<div class="top-bar-right">
-			<ul class="menu tabs" data-tabs id="view-tabs">
-			  <li class="tabs-title is-active"><a href="#tab-list" aria-selected="true"><i class="fi-list"></i> <span th:text="#{lang.list}"></span></a></li>
-			  <li class="tabs-title"><a data-tabs-target="tab-map" href="#tab-map"><i class="fi-map"></i> <span th:text="#{lang.map}"></span></a></li>
-		  	  <li>
-				<form action="/log/find" method="get">
-					<div class="input-group input-group-no-margin">
-						<input class="input-group-field" type="search" placeholder="Search" name="q" />
-						<div class="input-group-button">
-					    	<input type="submit" class="button" value="Go" />
-						</div>
-					</div>
-				</form>
-			  </li>
-			</ul>
-		</div>
+		<form style="margin-bottom: 0px;" action="/log/find" method="get">
+			<button class="w3-bar-item w3-right w3-button" type="submit">
+				<i class="fas fa-search"></i>
+			</button>
+			<input type="text"
+				class="w3-bar-item w3-input w3-right w3-scout-light"
+				placeholder="Search..." name="q">
+		</form>
+
+		<a href="#" class="w3-bar-item w3-button w3-right"
+			onclick="openTab('display-tabs-panel', 'display-tab-list')"><i class="fas fa-list"></i> List</a>
+		<a href="#" class="w3-bar-item w3-button w3-right"
+			onclick="openTab('display-tabs-panel', 'display-tab-map')"><i class="fas fa-map"></i> Map</a>
 	</div>
 	<!-- end navbar -->
 
 	<!-- content pane -->
-	<div class="grid-x">
-		<div class="cell small-12 medium-4 large-3">
+	<div class="w3-row">
+		<div class="w3-container w3-quarter">
 			<!-- input panel tabs -->
-			<ul class="tabs" data-tabs id="input-panel-tabs">
-			  <li class="tabs-title is-active"><a href="#logging" aria-selected="true">Logging</a></li>
-			  <li class="tabs-title"><a data-tabs-target="rigctl" href="#rigctl">Rig Control <span id="rigctl-indicator"></span></a></li>
-			</ul>
-			<div class="tabs-content" data-tabs-content="input-panel-tabs">
-  				<div class="tabs-panel is-active" id="logging">
-					<form action="#" autocomplete="off" th:action="${submitUrl} ? ${submitUrl} : @{/log/addcontact}" th:object="${contact}"
-						method="post">
-						<div class="grid-container">
-							<div class="grid-x grid-padding-x">
-								<div class="cell small-12">
-									<label for="datetime"><span th:text="#{lang.date_time}"></span>
-										<input type="datetime" class="input-group-field monospace" th:field="*{timestamp}" id="timestamp" placeholder="Date/Time" ondblclick="javascript: document.getElementById('timestamp').value=new Date()" />
-									</label>
-									<div class="callout alert small" th:if="${#fields.hasErrors('timestamp')}"	th:errors="*{timestamp}"></div>
-								</div>
-								<div class="cell small-12">
-									<label for="callsign"><span th:text="#{lang.callsign}"></span>
-										<input type="text" class="monospace uppercase" th:field="*{callsign}" id="callsign" placeholder="Callsign" />
-									</label>
-									<div class="callout alert small" th:if="${#fields.hasErrors('callsign')}" th:errors="*{callsign}"></div>
-								</div>
-								<div class="cell small-12 medium-6">
-									<label for="rsts"><span th:text="#{lang.report_sent}"></span>
-										<input type="text" class="monospace" th:field="*{rsts}" id="rsts" value="59" />
-									</label>
-								</div>
-								<div class="cell small-12 medium-6">
-									<label for="rsts"><span th:text="#{lang.report_received}"></span>
-										<input type="text" class="monospace" th:field="*{rstr}" id="rstr" value="59" />
-									</label>
-								</div>
-								<div class="cell small-12 medium-6">
-									<label for="location"><span th:text="#{lang.location}"></span>
-										<input type="text" class="monospace" th:field="*{location}" id="location" />
-									</label>
-								</div>
-								<div class="cell small-12 medium-6">
-									<label for="name"><span th:text="#{lang.name}"></span>
-										<input type="text" class="monospace" th:field="*{name}" id="name" />
-									</label>
-								</div>
-								<div class="cell small-12 medium-6">
-									<label for="frequency"><span th:text="#{lang.frequency}"></span>
-										<input type="text" class="monospace" th:field="*{frequency}" data-item-id="frequency" />
-									</label>
-								</div>
-								<div class="cell small-6 medium-6">
-									<label for="band"><span th:text="#{lang.band}"></span>
-										<input type="text" class="monospace" th:field="*{band}" id="band" />
-									</label>
-								</div>
-								<div class="cell small-6 medium-6">
-									<label for="mode"><span th:text="#{lang.mode}"></span>
-										<input type="text" class="monospace uppercase" th:field="*{mode}" data-item-id="mode" />
-									</label>
-								</div>
-								<div class="cell small-6 medium-6">
-									<label for="opName"><span th:text="#{lang.opname}"></span>
-										<input type="text" class="monospace" th:field="*{opName}" data-item-id="opName" />
-									</label>
-								</div>
-								<div class="cell small-12">
-									<fieldset class="fieldset">
-									    <legend>
-									    	<span th:text="#{lang.qsl}"></span>
-									    </legend>
-								        <input id="qsl_req" type="checkbox" th:field="*{qsl_req}"><label for="qsl_req" th:text="#{lang.requested}">Req</label>
-									    <input id="qsl_sent" type="checkbox" th:field="*{qsl_sent}"><label for="qsl_sent" th:text="#{lang.sent}">Sent</label>
-									    <input id="qsl_rcvd" type="checkbox" th:field="*{qsl_rcvd}"><label for="qsl_rcvd" th:text="#{lang.received}">Rcvd</label>
-									</fieldset>
-								</div>
-								<div class="cell small-12">
-									<input type="submit" class="button" th:value="#{lang.log}">
-								</div>
-							</div>
+			<div class="w3-bar w3-scout-light">
+				<button class="w3-bar-item w3-button"
+					onclick="openTab('input-tabs-panel', 'logging')">Logging</button>
+				<button class="w3-bar-item w3-button"
+					onclick="openTab('input-tabs-panel', 'rigctl')">
+					Rig Control <span id="rigctl-indicator"></span>
+				</button>
+			</div>
+
+			<!-- input panel tabs content -->
+
+			<div class="input-tabs-panel is-active" id="logging">
+				<form class="grid-container" action="#" autocomplete="off"
+					th:action="${submitUrl} ? ${submitUrl} : @{/log/addcontact}"
+					th:object="${contact}" method="post">
+
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell">
+							<label for="datetime"><span th:text="#{lang.date_time}"></span></label>
+							<input class="w3-input w3-border monospace" type="datetime"
+								th:field="*{timestamp}" id="timestamp" placeholder="Date/Time"
+								ondblclick="javascript: document.getElementById('timestamp').value=new Date()" />
+							<div class="callout alert small"
+								th:if="${#fields.hasErrors('timestamp')}"
+								th:errors="*{timestamp}"></div>
 						</div>
-					</form>
-				</div>
-				<div class="tabs-panel" id="rigctl">
-					<button type="button" id="connect-1" class="button">Connect to Rig 1</button><br />
-				    <button type="button" id="connect-2" class="button">Connect to Rig 2</button><br />
-				    <button type="button" id="disconnect" class="button" disabled="disabled">Disconnect</button><br />
-				</div>
+					</div>
+
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell">
+							<label for="callsign"><span th:text="#{lang.callsign}"></span></label>
+							<input type="text" class="w3-input w3-border monospace uppercase"
+								th:field="*{callsign}" id="callsign" placeholder="Callsign" />
+							<div class="callout alert small"
+								th:if="${#fields.hasErrors('callsign')}" th:errors="*{callsign}"></div>
+						</div>
+					</div>
+
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell">
+							<label for="rsts"><span th:text="#{lang.report_sent}"></span></label>
+							<input type="text" class="w3-input w3-border monospace"
+								th:field="*{rsts}" id="rsts" value="59" />
+						</div>
+						<div class="w3-container w3-cell">
+							<label for="rsts"><span th:text="#{lang.report_received}"></span></label>
+							<input type="text" class="w3-input w3-border monospace"
+								th:field="*{rstr}" id="rstr" value="59" />
+						</div>
+					</div>
+
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell">
+							<label for="location"><span th:text="#{lang.location}"></span></label>
+							<input type="text" class="w3-input w3-border monospace"
+								th:field="*{location}" id="location" />
+						</div>
+						<div class="w3-container w3-cell">
+							<label for="name"><span th:text="#{lang.name}"></span></label> <input
+								type="text" class="w3-input w3-border monospace"
+								th:field="*{name}" id="name" />
+						</div>
+					</div>
+
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell">
+							<label for="frequency"><span th:text="#{lang.frequency}"></span></label>
+							<input type="text" class="w3-input w3-border monospace"
+								th:field="*{frequency}" data-item-id="frequency" />
+						</div>
+						<div class="w3-container w3-cell">
+							<label for="band"><span th:text="#{lang.band}"></span></label> <input
+								type="text" class="w3-input w3-border monospace"
+								th:field="*{band}" id="band" />
+						</div>
+					</div>
+
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell">
+							<label for="mode"><span th:text="#{lang.mode}"></span></label> <input
+								type="text" class="w3-input w3-border monospace uppercase"
+								th:field="*{mode}" data-item-id="mode" />
+						</div>
+						<div class="w3-container w3-cell">
+							<label for="opName"><span th:text="#{lang.opname}"></span></label>
+							<input type="text" class="w3-input w3-border monospace"
+								th:field="*{opName}" data-item-id="opName" />
+						</div>
+					</div>
+
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell">
+							<fieldset class="fieldset">
+								<legend>
+									<span th:text="#{lang.qsl}"></span>
+								</legend>
+								<input class="w3-check" id="qsl_req" type="checkbox"
+									th:field="*{qsl_req}"><label for="qsl_req"
+									th:text="#{lang.requested}">Req</label><br /> <input
+									class="w3-check" id="qsl_sent" type="checkbox"
+									th:field="*{qsl_sent}"><label for="qsl_sent"
+									th:text="#{lang.sent}">Sent</label><br /> <input
+									class="w3-check" id="qsl_rcvd" type="checkbox"
+									th:field="*{qsl_rcvd}"><label for="qsl_rcvd"
+									th:text="#{lang.received}">Rcvd</label>
+							</fieldset>
+						</div>
+					</div>
+
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell">
+							<input type="submit" class="w3-button w3-scout w3-block"
+								th:value="#{lang.log}">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="input-tabs-panel" id="rigctl" style="display: none;">
+				<button type="button" id="connect-1" class="button">Connect
+					to Rig 1</button>
+				<br />
+				<button type="button" id="connect-2" class="button">Connect
+					to Rig 2</button>
+				<br />
+				<button type="button" id="disconnect" class="button"
+					disabled="disabled">Disconnect</button>
+				<br />
 			</div>
 		</div>
 
+
 		<!-- Info Div -->
 		<div class="info-box">
-			<div class="grid-x">
-				<div class="cell small-12 medium-6">
+			<div class="w3-row">
+				<div class="w3-third w3-container">
 					<div>
-						<span id="callbook-tag-qslmgr" class="label warning" style="visibility: hidden"></span>
-						<span id="callbook-tag-lotw" class="label primary" style="visibility: hidden">LoTW</span>
-						<span id="callbook-tag-eqsl" class="label secondary" style="visibility: hidden">eQSL AG</span>
-						<span id="callbook-tag-clublog" class="label success" style="visibility: hidden">Clublog User</span>
+						<span id="callbook-tag-qslmgr" class="w3-tag w3-scout"
+							style="visibility: hidden"></span> <span id="callbook-tag-lotw"
+							class="w3-tag w3-scout-light" style="visibility: hidden">LoTW</span> <span
+							id="callbook-tag-eqsl" class="w3-tag w3-scout-light"
+							style="visibility: hidden">eQSL AG</span> <span
+							id="callbook-tag-clublog" class="w3-tag w3-scout-light"
+							style="visibility: hidden">Clublog User</span>
 					</div>
 					<div>
-						<span id="callbook-name" class="monospace"></span> <span id="callbook-callsign" class="monospace"></span> <span id="callbook-aliases" class="monospace"></span><br />
-						<span id="callbook-address" class="monospace"></span><br />
-						<span id="callbook-grid" class="monospace"></span>
+						<span id="callbook-name" class="monospace"></span> <span
+							id="callbook-callsign" class="monospace"></span> <span
+							id="callbook-aliases" class="monospace"></span><br /> <span
+							id="callbook-address" class="monospace"></span><br /> <span
+							id="callbook-grid" class="monospace"></span>
 					</div>
 				</div>
-				<div id="previous-contacts" class="cell small-12 medium-3" style="overflow: vertical;">
-				</div>
-				<div class="cell small-12 medium-3">
+				<div id="previous-contacts" class="w3-third w3-container"
+					style="overflow: vertical;"></div>
+				<div class="w3-third w3-container">
 					<img id="callbook-image" class="img-responsive" />
 				</div>
 			</div>
 		</div>
 
-		<div class="cell small-12 medium-8 large-9">
-			<div data-tabs-content="view-tabs">
-  				<div class="tabs-panel is-active" id="tab-list">
-  				
-					<div th:switch="${contacts}">
-						<div th:case="*">
-							<table>
-								<thead>
-									<tr>
-										<th><span th:text="#{lang.date_time}"></span></th>
-										<th><span th:text="#{lang.callsign}"></span></th>
-										<th><span th:text="#{lang.report_sent}"></span></th>
-										<th><span th:text="#{lang.report_received}"></span></th>
-										<th><span th:text="#{lang.band}"></span></th>
-										<th><span th:text="#{lang.mode}"></span></th>
-										<th><span th:text="#{lang.location}"></span></th>
-										<th><span th:text="#{lang.name}"></span></th>
-										<th colspan="2"><span th:text="#{lang.actions}"></span></th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:each="contact : ${contactList}" class="monospace">
-										<td th:text="${contact.timestamp}"></td>
-										<td th:text="${contact.callsign}"></td>
-										<td th:text="${contact.rsts}"></td>
-										<td th:text="${contact.rstr}"></td>
-										<td th:text="${contact.band}"></td>
-										<td th:text="${contact.mode}"></td>
-										<td th:text="${contact.location}"></td>
-										<td th:text="${contact.name}"></td>
-										<td><a class="waves-effect waves-light btn-small"
-											th:href="@{/log/edit/{id}(id=${contact.id})}"><i class="fi-pencil"></i></a></td>
-										<td><a class="waves-effect waves-light btn-small"
-											th:href="@{/log/delete/{id}(id=${contact.id})}"><i class="fi-trash"></i></a></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
+		<div class="w3-container w3-threequarter">
+
+			<div class="display-tabs-panel" id="display-tab-list">
+				<div th:switch="${contacts}">
+					<div th:case="*">
+						<table class="w3-table-all">
+							<thead>
+								<tr>
+									<th><span th:text="#{lang.date_time}"></span></th>
+									<th><span th:text="#{lang.callsign}"></span></th>
+									<th><span th:text="#{lang.report_sent}"></span></th>
+									<th><span th:text="#{lang.report_received}"></span></th>
+									<th><span th:text="#{lang.band}"></span></th>
+									<th><span th:text="#{lang.mode}"></span></th>
+									<th><span th:text="#{lang.location}"></span></th>
+									<th><span th:text="#{lang.name}"></span></th>
+									<th colspan="2"><span th:text="#{lang.actions}"></span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="contact : ${contactList}" class="monospace">
+									<td th:text="${contact.timestamp}"></td>
+									<td th:text="${contact.callsign}"></td>
+									<td th:text="${contact.rsts}"></td>
+									<td th:text="${contact.rstr}"></td>
+									<td th:text="${contact.band}"></td>
+									<td th:text="${contact.mode}"></td>
+									<td th:text="${contact.location}"></td>
+									<td th:text="${contact.name}"></td>
+									<td><a th:href="@{/log/edit/{id}(id=${contact.id})}"><i
+											class="fas fa-edit w3-text-scout"></i></a></td>
+									<td><a th:href="@{/log/delete/{id}(id=${contact.id})}"><i
+											class="fas fa-trash w3-text-scout"></i></a></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
-					<nav aria-label="Pagination" th:if="${totalPages gt 0}">
-					  <ul class="pagination text-center">
-			            <li class="pagination-previous" th:classappend="${currentPage eq 1} ? 'disabled'">
-			            	<a th:href="@{?page={page}(page=${currentPage lt 2 ? 1 : currentPage})}" aria-label="Previous page">Previous <span class="show-for-sr">page</span></a>
-			            </li>
-					    <li class="disabled ellipsis" th:if="${currentPage - 5 > 0}" aria-hidden="true">
-				        </li>
-				        <li class="page-item" th:classappend="${i eq currentPage} ? 'active'" th:each="i : ${#numbers.sequence( currentPage-5, totalPages > 10 + currentPage ? currentPage + 5 : totalPages, 1)}" th:if="${i>0 and i < totalPages}">
-	                        <a class="page-link" th:href="@{|?page=${i}|}" th:text=${i}>1</a>
-	                    </li>
-	                    <li class="disabled ellipsis" th:if="${currentPage + 5 < totalPages}" aria-hidden="true">
-				        </li>
-					    <li class="pagination-next" th:classappend="${currentPage eq totalPages} ? 'disabled'">
-					    	<a th:href="@{|?page=${currentPage+1}|}" aria-label="Next page">Next <span class="show-for-sr">page</span></a>
-					    </li>
-					  </ul>
-					</nav>
 				</div>
-				<div class="tabs-panel" id="tab-map">
-					<div id="map"></div>
+				<div class="w3-center" th:if="${totalPages gt 0}">
+					<div class="w3-bar">
+						<a
+							th:href="@{?page={page}(page=${currentPage lt 2 ? 1 : currentPage})}"
+							class="w3-bar-item w3-button" aria-label="Previous page"
+							th:classappend="${currentPage eq 1} ? 'disabled'">&laquo;</a> <a
+							class="w3-button disabled" th:if="${currentPage - 5 > 0}"
+							aria-hidden="true">...</a> <a class="w3-button"
+							th:classappend="${i eq currentPage} ? 'w3-scout'"
+							th:each="i : ${#numbers.sequence( currentPage-5, totalPages > 10 + currentPage ? currentPage + 5 : totalPages, 1)}"
+							th:if="${i>0 and i < totalPages}" th:href="@{|?page=${i}|}"
+							th:text=${i}>1</a> <a class="w3-button disabled"
+							th:if="${currentPage + 5 < totalPages}" aria-hidden="true">...</a>
+						<a th:href="@{|?page=${currentPage+1}|}" aria-label="Next page"
+							class="w3-button"
+							th:classappend="${currentPage eq totalPages} ? 'disabled'">&raquo;</a>
+					</div>
 				</div>
+
 			</div>
+			<div class="display-tabs-panel" id="display-tab-map"
+				style="display: none;">
+				<div id="map"></div>
+			</div>
+
 		</div>
 	</div>
 	<!-- end content pane -->
@@ -276,15 +333,15 @@
 	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 	<script th:src="@{/webjars/foundation/dist/js/foundation.min.js}"></script>
 	<script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
-    <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+	<script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
 	<script th:src="@{/webjars/momentjs/min/moment.min.js}"></script>
- 	<script th:src="@{/webjars/leaflet/leaflet.js}"></script>
-   	<script th:src="@{/js/rigctl-ws.js}"></script>
-   	<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
-   	<script th:src="@{/js/L.fullscreen.js}"></script>
-   	<script th:src="@{/js/app.js}"></script>
-   	<script>
-
+	<script th:src="@{/webjars/leaflet/leaflet.js}"></script>
+	<script th:src="@{/js/rigctl-ws.js}"></script>
+	<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
+	<script th:src="@{/js/L.fullscreen.js}"></script>
+	<script th:src="@{/js/app.js}"></script>
+	<script>
+		
 	</script>
 </body>
 

@@ -30,8 +30,8 @@ public class EqslDownloader extends ScheduledTasks {
 		//this.populateEqslUsersTable();
 	}
 	
-	// Every Saturday at 3am
-	@Scheduled(cron = "0 3 * * 6 ?")
+	// Every Saturday at 4am
+	@Scheduled(cron = "0 4 * * 6 ?")
 	public void scheduleTaskWithCronExpression() {
 		this.populateEqslUsersTable();
 	}

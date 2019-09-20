@@ -46,10 +46,13 @@ dependencies {
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.1.6.RELEASE'
 	compile group: 'org.springframework.data', name: 'spring-data-commons'
 	compile("org.springframework.boot:spring-boot-starter-websocket")
+	compile("org.ocpsoft.prettytime:prettytime:4.0.1.Final")
 	
 	
 	// Web JARs
     compile("org.webjars:webjars-locator-core")
+    compile("org.webjars.npm:w3-css:4.1.0")
+    compile('org.webjars:font-awesome:5.10.1')
 	compile("org.webjars:foundation:6.4.3-1")
     compile("org.webjars:sockjs-client:1.0.2")
     compile("org.webjars:stomp-websocket:2.3.3")

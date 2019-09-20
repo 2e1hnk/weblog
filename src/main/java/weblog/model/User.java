@@ -20,9 +20,9 @@ public class User {
  
     private String password;
     
-    private Boolean enabled;
-
-	public Long getId() {
+    private Boolean enabled = true;
+    
+    public Long getId() {
 		return id;
 	}
 
@@ -53,6 +53,4 @@ public class User {
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
- 
-    
 }
