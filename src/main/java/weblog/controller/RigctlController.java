@@ -45,9 +45,6 @@ public class RigctlController {
 			e.printStackTrace();
 			return "Error";
 		}
-		
-		
-
 	}
 
 	@MessageMapping("/update/{rigId}")

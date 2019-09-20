@@ -82,12 +82,12 @@ function callsign_lookup(callsign) {
 	        	
 	        	if ( data.length > 0 ) {
 	        	
-		        	var address = data[0].addr1.length > 0 ? data[0].addr1 + "<br />" : "";
-		        	address = data[0].addr2.length > 0 ? data[0].addr2 + "<br />" : "";
+		        	var address = !!data[0].addr1 && data[0].addr1.length > 0 ? data[0].addr1 + "<br />" : "";
+		        	address = !!data[0].addr2 && data[0].addr2.length > 0 ? data[0].addr2 + "<br />" : "";
 		        	address = !!data[0].county && data[0].county.length > 0 ? data[0].addrcounty + "<br />" : "";
-		        	address = data[0].state.length > 0 ? data[0].state + "<br />" : "";
-		        	address = data[0].zip.length > 0 ? data[0].zip + "<br />" : "";
-		        	address = data[0].country.length > 0 ? data[0].country : "";
+		        	address = !!data[0].state && data[0].state.length > 0 ? data[0].state + "<br />" : "";
+		        	address = !!data[0].zip && data[0].zip.length > 0 ? data[0].zip + "<br />" : "";
+		        	address = !!data[0].country && data[0].country.length > 0 ? data[0].country : "";
 		
 		        	$('#callbook-name').html(data[0].fname + " " + data[0].name);
 		        	$('#callbook-callsign').html(data[0].callsign);
