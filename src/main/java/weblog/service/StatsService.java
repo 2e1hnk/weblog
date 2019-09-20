@@ -1,12 +1,14 @@
 package weblog.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import weblog.BandStats;
 import weblog.ContactRepository;
 import weblog.model.Contact;
 
@@ -39,5 +41,9 @@ public class StatsService {
     	stats.put("latestContactTimeAgo", p.format(latestContact.getTimestamp()));
     	
     	return stats;
+    }
+    
+    public List<BandStats> getBandStatsList() {
+    	return contactRepository.findBandStats();
     }
 }

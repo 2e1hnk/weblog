@@ -60,6 +60,7 @@ dependencies {
     compile group: 'org.webjars', name: 'momentjs', version: '2.24.0'
     compile group: 'org.webjars', name: 'leaflet', version: '1.5.1'
     compile group: 'org.webjars', name: 'foundation-icon-fonts', version: 'd596a3cfb3'
+    compile 'org.webjars:chartjs:26962ce-1'
     
     
 	compile 'mysql:mysql-connector-java'
