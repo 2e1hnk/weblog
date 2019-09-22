@@ -266,7 +266,7 @@ input.monospace {
 			<div class="display-tabs-panel" id="display-tab-list">
 				<div th:switch="${contacts}">
 					<div th:case="*">
-						<table class="w3-table-all">
+						<table id="log-table" class="w3-table-all">
 							<thead>
 								<tr>
 									<th><span th:text="#{lang.date_time}"></span></th>

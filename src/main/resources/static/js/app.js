@@ -38,7 +38,93 @@ $(document).ready(function () {
     
     $("#liveSwitch").change(updateLiveEditMode);
     
+    $("#frequency").change(function() {
+    	var freq = $("#frequency").val();
+    	
+    	console.log("New frequency", freq);
+    	
+    	var band = "N/A";
+    	if ( freq >= 135700 && freq <= 137800 ) {
+    		band = "2200M";
+    	}
+    	if ( freq >= 472000 && freq <= 479000 ) {
+    		band = "630M";
+    	}
+    	if ( freq >= 1810000 && freq <= 2000000 ) {
+    		band = "160M";
+    	}
+    	if ( freq >= 3500000 && freq <= 3800000 ) {
+    		band = "80M";
+    	}
+    	if ( freq >= 5258500 && freq <= 5406500 ) {
+    		band = "60M";
+    	}
+    	if ( freq >= 7000000 && freq <= 7200000 ) {
+    		band = "40M";
+    	}
+    	if ( freq >= 10100000 && freq <= 10150000 ) {
+    		band = "30M";
+    	}
+    	if ( freq >= 14000000 && freq <= 14350000 ) {
+    		band = "20M";
+    	}
+    	if ( freq >= 18068000 && freq <= 18168000 ) {
+    		band = "17M";
+    	}
+    	if ( freq >= 21000000 && freq <= 21450000 ) {
+    		band = "15M";
+    	}
+    	if ( freq >= 24890000 && freq <= 24990000 ) {
+    		band = "12M";
+    	}
+    	if ( freq >= 28000000 && freq <= 29700000 ) {
+    		band = "10M";
+    	}
+    	if ( freq >= 50000000 && freq <= 52000000 ) {
+    		band = "6M";
+    	}
+    	if ( freq >= 70000000 && freq <= 70500000 ) {
+    		band = "4M";
+    	}
+    	if ( freq >= 144000000 && freq <= 147000000 ) {
+    		band = "2M";
+    	}
+    	if ( freq >= 430000000 && freq <= 440000000 ) {
+    		band = "70CM";
+    	}
+    	if ( freq >= 1240000000 && freq <= 1325000000 ) {
+    		band = "23CM";
+    	}
+    	if ( freq >= 2310000000 && freq <= 2450000000 ) {
+    		band = "13CM";
+    	}
+    	if ( freq >= 3400000000 && freq <= 3410000000 ) {
+    		band = "9CM";
+    	}
+    	if ( freq >= 5650000000 && freq <= 5850000000 ) {
+    		band = "6CM";
+    	}
+    	if ( freq >= 10000000000 && freq <= 10500000000 ) {
+    		band = "3CM";
+    	}
+    	if ( freq >= 24000000000 && freq <= 24250000000 ) {
+    		band = "12MM";
+    	}
+    	if ( freq >= 47000000000 && freq <= 47200000000 ) {
+    		band = "6MM";
+    	}
+    	if ( freq >= 75500000000 && freq <= 81000000000 ) {
+    		band = "4MM";
+    	}
+    	if ( freq >= 134000000000 && freq <= 136000000000 ) {
+    		band = "2MM";
+    	}
+    	$("#band").val(band);
+    });
+    
     updateLiveEditMode();
+    
+    
 });
 
 function populate_map(layer) {

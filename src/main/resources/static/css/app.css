@@ -63,3 +63,7 @@ ul.menu > li > form {
 .menu-align {
 	padding-top: 18px !important;
 }
+
+#log-table {
+	margin-top: 20px;
+}
