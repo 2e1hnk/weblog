@@ -21,7 +21,7 @@ var RigCtl = function() {
 	        	if ( message.frequency > 0 ) {
 	        		$('[data-item-id="frequency"]').val(message.frequency);
 	        	}
-	        	if ( message.mode != "" ) {
+	        	if ( message.mode ) {
 	        		$('[data-item-id="mode"]').val(message.mode);
 	        	}
 	        	// $('#frequency').val(message.frequency);
