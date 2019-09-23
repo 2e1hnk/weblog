@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello WebSocket</title>
+    <title>DX Cluster</title>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
@@ -12,194 +12,66 @@
 		<h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
 	    enabled. Please enable Javascript and reload this page!</h2>
 	</noscript>
-
-	<form>
-		<label for="connect">WebSocket connection:</label>
-	    <button id="connect-1" type="submit">Connect to Rig 1</button>
-	    <button id="connect-2" type="submit">Connect to Rig 2</button>
-	    <button id="disconnect" type="submit" disabled="disabled">Disconnect</button>
-	</form>
-
-	<form class="form-inline">
-		<div>
-		    <label for="name">Frequency</label>
-		    <input type="text" id="frequency" class="form-control" placeholder="Updated frequency here...">
-		</div>
-		<div>
-		    <label for="name">Mode</label>
-		    <input type="text" id="mode" class="form-control" placeholder="Updated mode here...">
-		</div>
-		<button id="send" class="btn btn-default" type="submit">Send</button>
-	</form>
-
-	<table id="conversation" class="table table-striped">
-	    <thead>
-	    <tr>
-	        <th>Rig</th>
-	        <th>Frequency</th>
-	        <th>Mode</th>
-	    </tr>
-	    </thead>
-	    <tbody id="greetings">
-	    </tbody>
-	</table>
-
-	<table id="event-stream" class="table table-striped">
-	    <thead>
-	    <tr>
-	        <th>Message</th>
-	    </tr>
-	    </thead>
-	    <tbody id="events">
-	    </tbody>
+	
+	<table id="dx-spots-table" class="table table-striped">
+		<thead>
+			<tr>
+				<th>Time</th>
+				<th>Spotter</th>
+				<th>DX</th>
+				<th>Grid</th>
+				<th>Frequency</th>
+				<th>Comments</th>
+			</tr>
+		</thead>
+		<tbody id="dx-spots">
+			<tr></tr>
+		</tbody>
 	</table>
 
 	<script>
-		var RigCtl = function() {
-			
-			this.config = {
-				stompClient: null,
-				currentRigId: null			
-			};
-			
-			this.connect = function(rigId) {
-				this.config.currentRigId = rigId;
-			    var socket = new SockJS('/rigctl-update');
-			    this.config.stompClient = Stomp.over(socket);
-			    console.log("connecting to rig " + rigId);
-			    this.config.stompClient.connect({}, function (frame) {
-			        setConnected(true);
-			        console.log('Connected: ' + frame);
-			        rigCtl.config.stompClient.subscribe('/topic/rigctl/' + rigId, function (rigctlMessage) {
-			        	console.log("RigctlMessage", rigctlMessage);
-			        	console.log("RigctlMessage parsed", JSON.parse(rigctlMessage.body));
-			            RigCtl.showUpdate(JSON.parse(rigctlMessage.body));
-			        });
-			    });		
-			};
-			
-			this.disconnect = function() {
-			    if (this.config.stompClient !== null) {
-			    	this.config.stompClient.disconnect();
-			    }
-			    setConnected(false);
-			    console.log("Disconnected");
-			};
-			
-			this.sendUpdate = function() {
-				this.config.stompClient.send("/app/update/" + this.config.currentRigId, {}, JSON.stringify({'rigId': this.config.currentRigId, 'frequency': $("#frequency").val(), 'mode': $("#mode").val()}));
-			};
-			
-			this.showUpdate = function(message) {
-			    $("#greetings").append("<tr><td>" + message.rigId + "</td><td>" + message.frequency + "</td><td>" + message.mode + "</td></tr>");
-			}
+	var DxClusterClient = function() {
 		
+		this.config = {
+			stompClient: null			
+		};
+		
+		this.connect = function() {
+			var socket = new SockJS('/dx-spots');
+		    this.config.stompClient = Stomp.over(socket);
+		    console.log("connecting to dx spots broker");
+		    this.config.stompClient.connect({}, function (frame) {
+		        //setConnected(true);
+		        console.log('Connected: ' + frame);
+		        dxClusterClient.config.stompClient.subscribe('/topic/dx-spots', function (dxSpotMessage) {
+		        	console.log("dxSpotMessage", dxSpotMessage);
+		        	console.log("dxSpotMessage parsed", JSON.parse(dxSpotMessage.body));
+		        	dxClusterClient.showUpdate(JSON.parse(dxSpotMessage.body));
+		        });
+		    });		
+		};
+		
+		this.disconnect = function() {
+		    if (this.config.stompClient !== null) {
+		    	this.config.stompClient.disconnect();
+		    }
+		    //setConnected(false);
+		    console.log("Disconnected");
+		};
+		
+		this.sendUpdate = function() {
+			//this.config.stompClient.send("/app/update/" + this.config.currentRigId, {}, JSON.stringify({'rigId': this.config.currentRigId, 'frequency': $("#frequency").val(), 'mode': $("#mode").val()}));
+		};
+		
+		this.showUpdate = function(message) {
+		    $("#dx-spots > tr:first").before("<tr><td>" + message.time + "</td><td>" + message.spotter + "</td><td>" + message.dx + "</td><td>" + message.grid + "</td><td>" + message.frequency + "</td><td>" + message.comments + "</td></tr>");
 		}
 	
-		var rigCtl = new RigCtl();
+	}
 
-		var EventStream = function() {
-			
-			this.config = {
-				stompClient: null			
-			};
-			
-			this.connect = function() {
-				var socket = new SockJS('/event-stream');
-			    this.config.stompClient = Stomp.over(socket);
-			    console.log("connecting to event stream");
-			    this.config.stompClient.connect({}, function (frame) {
-			        console.log('Connected: ' + frame);
-			        eventStream.config.stompClient.subscribe('/topic/event-stream', function (event) {
-			        	console.log("event-stream message", event);
-			        	EventStream.showUpdate(JSON.parse(event.body));
-			        });
-			    });		
-			};
-			
-			this.disconnect = function() {
-			    if (this.config.stompClient !== null) {
-			    	this.config.stompClient.disconnect();
-			    }
-			    setConnected(false);
-			    console.log("event-stream disconnected");
-			};
-			
-			/*
-			this.sendUpdate = function() {
-				this.config.stompClient.send("/app/update/" + this.config.currentRigId, {}, JSON.stringify({'rigId': this.config.currentRigId, 'frequency': $("#frequency").val(), 'mode': $("#mode").val()}));
-			};
-			*/
-			
-			this.showUpdate = function(message) {
-			    $("#events").append("<tr><td>" + message + "</td></tr>");
-			}
-		
-		}
-		
-		var eventStream = new EventStream();
-		eventStream.connect();
+	var dxClusterClient = new DxClusterClient();
+	dxClusterClient.connect();
 
-		//var stompClient = null;
-		//var currentRigId = null;
-		
-		function setConnected(connected) {
-			$("#connect-1").prop("disabled", connected);
-			$("#connect-2").prop("disabled", connected);
-		    $("#disconnect").prop("disabled", !connected);
-		    if (connected) {
-		        $("#conversation").show();
-		    }
-		    else {
-		        $("#conversation").hide();
-		    }
-		    $("#greetings").html("");
-		}
-		/*
-		function connect(rigId) {
-			currentRigId = rigId;
-		    var socket = new SockJS('/rigctl-update');
-		    stompClient = Stomp.over(socket);
-		    console.log("connecting to rig " + rigId);
-		    stompClient.connect({}, function (frame) {
-		        setConnected(true);
-		        console.log('Connected: ' + frame);
-		        stompClient.subscribe('/topic/rigctl/' + rigId, function (rigctlMessage) {
-		        	console.log("RigctlMessage", rigctlMessage);
-		        	console.log("RigctlMessage parsed", JSON.parse(rigctlMessage.body));
-		            showUpdate(JSON.parse(rigctlMessage.body));
-		        });
-		    });
-		}
-		
-		function disconnect() {
-		    if (stompClient !== null) {
-		        stompClient.disconnect();
-		    }
-		    setConnected(false);
-		    console.log("Disconnected");
-		}
-		
-		function sendUpdate() {
-		    stompClient.send("/app/update/" + currentRigId, {}, JSON.stringify({'rigId': currentRigId, 'frequency': $("#frequency").val(), 'mode': $("#mode").val()}));
-		}
-		
-		function showUpdate(message) {
-		    $("#greetings").append("<tr><td>" + message.rigId + "</td><td>" + message.frequency + "</td><td>" + message.mode + "</td></tr>");
-		}
-		*/
-		$(function () {
-		    $("form").on('submit', function (e) {
-		        e.preventDefault();
-		    });
-		    $( "#connect-1" ).click(function() { rigCtl.connect(1); });
-		    $( "#connect-2" ).click(function() { rigCtl.connect(2); });
-		    $( "#disconnect" ).click(function() { rigCtl.disconnect(); });
-		    $( "#send" ).click(function() { rigCtl.sendUpdate(); });
-		    // Use this to auto-connect
-		    //$( document ).ready(function() { rigCtl.connect(1); });
-		});
-		
 	</script>
 </body>
 </html>

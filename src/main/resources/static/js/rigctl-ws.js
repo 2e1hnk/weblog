@@ -13,7 +13,7 @@ var RigCtl = function() {
 	    this.config.stompClient.connect({}, function (frame) {
 	        setConnected(true);
 	        console.log('rigctl: connected: ' + frame);
-	        $("#rigctl-indicator").html("<i class='fas fa-link'></i>");
+	        $("#rigctl-indicator").html("<i class='fas fa-link w3-text-scout'></i>");
 	        rigCtl.config.stompClient.subscribe('/topic/rigctl/' + rigId, function (rigctlMessage) {
 	        	console.log("RigctlMessage", rigctlMessage);
 	        	message = JSON.parse(rigctlMessage.body);
@@ -24,8 +24,6 @@ var RigCtl = function() {
 	        	if ( message.mode ) {
 	        		$('[data-item-id="mode"]').val(message.mode);
 	        	}
-	        	// $('#frequency').val(message.frequency);
-	    		// $('#mode').val(message.mode);
 	        });
 	    });		
 	};

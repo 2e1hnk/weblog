@@ -67,3 +67,8 @@ ul.menu > li > form {
 #log-table {
 	margin-top: 20px;
 }
+
+.w3-sidebar {
+	width: 400px !important;
+	max-width: 100%;
+}

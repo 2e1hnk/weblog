@@ -80,6 +80,8 @@ input.monospace {
 				<a href="/file/download" class="w3-bar-item w3-button">Export as ADIF</a>
 			</div>
 		</div>
+		
+		<button class="w3-button w3-right" onclick="openRightMenu()">&#9776;</button>
 
 		<form style="margin-bottom: 0px;" action="/log/find" method="get">
 			<button class="w3-bar-item w3-right w3-button" type="submit">
@@ -96,6 +98,25 @@ input.monospace {
 			onclick="openTab('display-tabs-panel', 'display-tab-map')"><i class="fas fa-map"></i> Map</a>
 	</div>
 	<!-- end navbar -->
+	
+	<!-- Right menu (DX Cluster etc.) -->
+	<div class="w3-sidebar w3-bar-block w3-card w3-animate-right" style="display:none;right:0" id="rightMenu">
+	  <button onclick="closeRightMenu()" class="w3-bar-item w3-button w3-large w3-right">&times;</button>
+	  <table id="dx-cluster-table" class="w3-table-all">
+	  	<thead>
+	  		<tr>
+	  			<th>Time</th>
+	  			<th>Spotter</th>
+	  			<th>DX</th>
+	  			<th>Freq</th>
+	  		</tr>
+	  	</thead>
+	  	<tbody id="dx-spots">
+	  		<tr>
+	  		</tr>
+	  	</tbody>
+	  </table>
+	</div>
 
 	<!-- content pane -->
 	<div class="w3-row">
@@ -219,15 +240,18 @@ input.monospace {
 				</form>
 			</div>
 			<div class="input-tabs-panel" id="rigctl" style="display: none;">
-				<button type="button" id="connect-1" class="button">Connect
+				<p>
+				<button type="button" id="connect-1" class="w3-button w3-scout">Connect
 					to Rig 1</button>
-				<br />
-				<button type="button" id="connect-2" class="button">Connect
+				</p>
+				<p>
+				<button type="button" id="connect-2" class="w3-button w3-scout">Connect
 					to Rig 2</button>
-				<br />
-				<button type="button" id="disconnect" class="button"
+				</p>
+				<p>
+				<button type="button" id="disconnect" class="w3-button w3-scout"
 					disabled="disabled">Disconnect</button>
-				<br />
+				</p>
 			</div>
 		</div>
 
@@ -265,7 +289,7 @@ input.monospace {
 
 			<div class="display-tabs-panel" id="display-tab-list">
 				<div th:switch="${contacts}">
-					<div th:case="*">
+					<div class="w3-responsive" th:case="*">
 						<table id="log-table" class="w3-table-all">
 							<thead>
 								<tr>
@@ -340,6 +364,7 @@ input.monospace {
 	<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
 	<script th:src="@{/js/L.fullscreen.js}"></script>
 	<script th:src="@{/js/app.js}"></script>
+	<script th:src="@{/js/dx-cluster.js}"></script>
 	<script>
 		
 	</script>
