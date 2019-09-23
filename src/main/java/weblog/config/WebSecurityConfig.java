@@ -38,9 +38,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
    @Override
    protected void configure(HttpSecurity http) throws Exception {
-      http
+/*      http
       	 .csrf().disable()
-
          .authorizeRequests()
             .antMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/location/**", "/rigctl/**", "/map").permitAll()
             .anyRequest().authenticated()
@@ -51,6 +50,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .logout()
             .permitAll();
+*/
+	      http
+	      	 .csrf().disable()
+	         .authorizeRequests()
+	            .antMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/location/**", "/map").permitAll()
+	         .and()
+	            .httpBasic()
+	            .realmName("Weblog API")
+	         .and().authorizeRequests()
+	            .anyRequest().authenticated()
+	            .and()
+	         .formLogin()
+	            .loginPage("/login")
+	            .permitAll()
+	            .and()
+	            .logout()
+	            .permitAll();
 
    }
    @Autowired
