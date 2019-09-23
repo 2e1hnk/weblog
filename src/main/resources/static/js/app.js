@@ -19,11 +19,12 @@ var layerControl = new L.Control.Layers(null, {
 
 populate_map(markerLayer);
 
-$("#view-tabs").on("change.zf.tabs", function (event) { 
+/*
+$("#tab-map").click(function (event) { 
 	mymap.invalidateSize();
 	mymap.fitBounds(markerLayer.getBounds());
 });
-
+*/
 
 // Handle callsign lookup
 

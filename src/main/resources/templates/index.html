@@ -92,10 +92,10 @@ input.monospace {
 				placeholder="Search..." name="q">
 		</form>
 
-		<a href="#" class="w3-bar-item w3-button w3-right"
+		<a href="#" id="tab-list" class="w3-bar-item w3-button w3-right"
 			onclick="openTab('display-tabs-panel', 'display-tab-list')"><i class="fas fa-list"></i> List</a>
-		<a href="#" class="w3-bar-item w3-button w3-right"
-			onclick="openTab('display-tabs-panel', 'display-tab-map')"><i class="fas fa-map"></i> Map</a>
+		<a href="#" id="tab-map" class="w3-bar-item w3-button w3-right"
+			onclick="openTab('display-tabs-panel', 'display-tab-map'); mymap.invalidateSize(); mymap.fitBounds(markerLayer.getBounds());"><i class="fas fa-map"></i> Map</a>
 	</div>
 	<!-- end navbar -->
 	
