@@ -322,3 +322,11 @@ function openRightMenu() {
 function closeRightMenu() {
   document.getElementById("rightMenu").style.display = "none";
 }
+
+function openLeftMenu() {
+  document.getElementById("leftMenu").style.display = "block";
+}
+
+function closeLeftMenu() {
+  document.getElementById("leftMenu").style.display = "none";
+}

@@ -69,19 +69,15 @@ input.monospace {
 
 	<!-- navbar -->
 	<div class="w3-bar w3-scout">
+		<button class="w3-bar-item w3-button" onclick="openLeftMenu()">☰</button>
 		<a href="#" class="w3-bar-item w3-button w3-mobile">
 			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" />
 			<b th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</b>
 		</a>
-		<div class="w3-dropdown-hover">
-			<button class="w3-button">File</button>
-			<div class="w3-dropdown-content w3-bar-block w3-card-4">
-				<a href="/file" class="w3-bar-item w3-button">Import ADIF</a>
-				<a href="/file/download" class="w3-bar-item w3-button">Export as ADIF</a>
-			</div>
-		</div>
 		
-		<button class="w3-button w3-right" onclick="openRightMenu()">&#9776;</button>
+		<button class="w3-bar-item w3-button"><span class="w3-large" id="rigctl-indicator"></span></button>
+		
+		<button class="w3-button w3-right" onclick="openRightMenu()"><i class="fa fa-globe w3-large"></i></button>
 
 		<form style="margin-bottom: 0px;" action="/log/find" method="get">
 			<button class="w3-bar-item w3-right w3-button" type="submit">
@@ -99,7 +95,26 @@ input.monospace {
 	</div>
 	<!-- end navbar -->
 	
-	<!-- Right menu (DX Cluster etc.) -->
+	<!-- Left sidebar menu (File import/export, settings etc.) -->
+	<div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="leftMenu">
+	  <button onclick="closeLeftMenu()" class="w3-bar-item w3-large">Close &times;</button>
+	  <h3 class="w3-bar-item">Files</h3>
+	  	<a href="/file" class="w3-bar-item w3-button">Import ADIF</a>
+		<a href="/file/download" class="w3-bar-item w3-button">Export as ADIF</a>
+	  <hr />
+	  <h3 class="w3-bar-item">Rig Control</h3>
+	  	<button type="button" id="connect-1" class="w3-bar-item w3-button w3-scout">Connect to Rig 1</button>
+		<button type="button" id="connect-2" class="w3-bar-item w3-button w3-scout">Connect to Rig 2</button>
+		<button type="button" id="disconnect" class="w3-bar-item w3-button w3-scout" disabled="disabled">Disconnect</button>
+	  <hr />
+	  <h3 class="w3-bar-item">Settings</h3>
+	  	<span class="w3-bar-item">
+		  	<input class="w3-check" type="checkbox" checked="checked" id="liveSwitch">
+			<label>Live Logging</label>
+		</span>
+	</div>
+	
+	<!-- Right sidebar menu (DX Cluster etc.) -->
 	<div class="w3-sidebar w3-bar w3-card w3-animate-right" style="display:none;right:0" id="rightMenu">
 		<button class="w3-bar-item w3-button"><i class="fa fa-globe w3-xlarge"></i> DX Cluster (<span class="w3-small" th:text="${@environment.getProperty('DXCLUSTER_HOST')}">[DX Cluster Hostname]</span>)</button>
   		<button onclick="closeRightMenu()" class="w3-bar-item w3-button w3-large w3-right">&times;</button>
@@ -122,19 +137,9 @@ input.monospace {
 	<!-- content pane -->
 	<div class="w3-row">
 		<div class="w3-container w3-quarter">
-			<!-- input panel tabs -->
-			<div class="w3-bar w3-scout-light">
-				<button class="w3-bar-item w3-button"
-					onclick="openTab('input-tabs-panel', 'logging')">Logging</button>
-				<button class="w3-bar-item w3-button"
-					onclick="openTab('input-tabs-panel', 'rigctl')">
-					Rig Control <span id="rigctl-indicator"></span>
-				</button>
-			</div>
 
 			<!-- input panel tabs content -->
 
-			<div class="input-tabs-panel is-active" id="logging">
 				<form class="grid-container" action="#" autocomplete="off"
 					th:action="${submitUrl} ? ${submitUrl} : @{/log/addcontact}"
 					th:object="${contact}" method="post">
@@ -239,28 +244,13 @@ input.monospace {
 						</div>
 					</div>
 				</form>
-			</div>
-			<div class="input-tabs-panel" id="rigctl" style="display: none;">
-				<p>
-				<button type="button" id="connect-1" class="w3-button w3-scout">Connect
-					to Rig 1</button>
-				</p>
-				<p>
-				<button type="button" id="connect-2" class="w3-button w3-scout">Connect
-					to Rig 2</button>
-				</p>
-				<p>
-				<button type="button" id="disconnect" class="w3-button w3-scout"
-					disabled="disabled">Disconnect</button>
-				</p>
-			</div>
 		</div>
 
 
 		<!-- Info Div -->
 		<div class="info-box">
 			<div class="w3-row">
-				<div class="w3-third w3-container">
+				<div class="w3-half w3-container">
 					<div>
 						<span id="callbook-tag-qslmgr" class="w3-tag w3-scout"
 							style="visibility: hidden"></span> <span id="callbook-tag-lotw"
@@ -278,16 +268,16 @@ input.monospace {
 							id="callbook-grid" class="monospace"></span>
 					</div>
 				</div>
-				<div id="previous-contacts" class="w3-third w3-container"
-					style="overflow: vertical;"></div>
-				<div class="w3-third w3-container">
+				<div id="previous-contacts" class="w3-quarter w3-container"
+					style="overflow: vertical;">
+				</div>
+				<div class="w3-quarter w3-container">
 					<img id="callbook-image" class="img-responsive" />
 				</div>
 			</div>
 		</div>
 
 		<div class="w3-container w3-threequarter">
-
 			<div class="display-tabs-panel" id="display-tab-list">
 				<div th:switch="${contacts}">
 					<div class="w3-responsive" th:case="*">

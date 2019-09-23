@@ -185,8 +185,12 @@ public class Contact {
 		if ( this.getMode() != null ) {
 			sb.append(String.format("<MODE:%d>%s", this.getMode().length(), this.getMode()));
 		}
-		sb.append(String.format("<RST_SENT:%d>%s", this.getRsts().length(), this.getRsts()));
-		sb.append(String.format("<RST_RCVD:%d>%s", this.getRstr().length(), this.getRstr()));
+		if ( this.getRsts() != null ) {
+			sb.append(String.format("<RST_SENT:%d>%s", this.getRsts().length(), this.getRsts()));
+		}
+		if ( this.getRstr() != null ) {
+			sb.append(String.format("<RST_RCVD:%d>%s", this.getRstr().length(), this.getRstr()));
+		}
 		//sb.append(String.format("<GRIDSQUARE:%d>%s", this.getGrid().length(), this.getGrid()));
 		sb.append("<EOR>\n");
 		

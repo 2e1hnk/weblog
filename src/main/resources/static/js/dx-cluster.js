@@ -2,7 +2,7 @@
 		
 		this.config = {
 			stompClient: null,
-			maxRows: 20
+			maxRows: 15
 		};
 		
 		this.connect = function() {
