@@ -49,90 +49,95 @@ public class DXClusterClient implements ApplicationListener<ApplicationReadyEven
 //	@EventListener
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
-		try {
-			TelnetClient telnetClient = new TelnetClient();
-			
-			logger.info(String.format("Connecting to DX Cluster %s:%s as %s", host, port, user));
-
-			telnetClient.connect(host, Integer.parseInt(port));
-			
-			logger.info(telnetClient.toString());
-
-			InputStream inStream = telnetClient.getInputStream();
-			BufferedReader r = new BufferedReader(new InputStreamReader(inStream));
-
-			OutputStream outStream = telnetClient.getOutputStream();
-			BufferedWriter w = new BufferedWriter(new OutputStreamWriter(outStream));
-
-			boolean running = true;
-
-			while (running) {
-
-				boolean lineComplete = false;
-				String line = "";
+		boolean running = true;
+	
+		while (running) {
+			try {
+				TelnetClient telnetClient = new TelnetClient();
 				
-				while ( !lineComplete ) {
+				logger.info(String.format("Connecting to DX Cluster %s:%s as %s", host, port, user));
+	
+				telnetClient.connect(host, Integer.parseInt(port));
+				
+				InputStream inStream = telnetClient.getInputStream();
+				BufferedReader r = new BufferedReader(new InputStreamReader(inStream));
+	
+				OutputStream outStream = telnetClient.getOutputStream();
+				BufferedWriter w = new BufferedWriter(new OutputStreamWriter(outStream));
+	
+				while (running) {
+	
+					boolean lineComplete = false;
+					String line = "";
 					
-					String nextChar = Character.toString((char) r.read());
-					
-					if ( nextChar.equals("\r") || nextChar.equals("\n") ) {
-						try {
-							if ( !line.equals("") ) {
-								logger.info(line);
-								
-								Matcher dxMatch = dxRegex.matcher(line);
-								Matcher wxMatch = wxRegex.matcher(line);
-								
-								if (dxMatch.find()) {
-
-									Spot spot = new Spot(dxMatch.group(1), Double.valueOf(dxMatch.group(2)), dxMatch.group(3),
-									dxMatch.group(4), Integer.parseInt(dxMatch.group(5)));
-
-									if (dxMatch.group(6) != null) {
-										spot.setGridsquare(dxMatch.group(6));
-									}
-
-									logger.info("Received spot: " + spot.toString());
+					while ( !lineComplete ) {
+						
+						String nextChar = Character.toString((char) r.read());
+						
+						if ( nextChar.equals("\r") || nextChar.equals("\n") ) {
+							try {
+								if ( !line.equals("") ) {
+									logger.info(line);
 									
-									telnetDXClusterMessagePublisher.publishEvent(spot);
-
-								} else if (wxMatch.find()) {
-									// TODO: something
-								} else {
-									// Unrecognised line, log it for now
-									logger.error("UNRECOGNISED DX CLUSTER MESSAGE: " + line);
+									Matcher dxMatch = dxRegex.matcher(line);
+									Matcher wxMatch = wxRegex.matcher(line);
+									
+									if (dxMatch.find()) {
+	
+										Spot spot = new Spot(dxMatch.group(1), Double.valueOf(dxMatch.group(2)), dxMatch.group(3),
+										dxMatch.group(4), Integer.parseInt(dxMatch.group(5)));
+	
+										if (dxMatch.group(6) != null) {
+											spot.setGridsquare(dxMatch.group(6));
+										}
+	
+										logger.info("Received spot: " + spot.toString());
+										
+										telnetDXClusterMessagePublisher.publishEvent(spot);
+	
+									} else if (wxMatch.find()) {
+										// TODO: something
+									} else {
+										// Unrecognised line, log it for now
+										logger.error("UNRECOGNISED DX CLUSTER MESSAGE: " + line);
+									}
+									lineComplete = true;
+									
 								}
-								lineComplete = true;
-								
+							} catch (Exception e) {
+								logger.error("Oops, exception thrown!", e);
+								e.printStackTrace();
 							}
-						} catch (Exception e) {
-							logger.error("Oops, exception thrown!", e);
-							e.printStackTrace();
+							line = "";
+							continue;
 						}
-						line = "";
-						continue;
+						
+						line += nextChar;
+						
+						if ( line.equals(login_prompt) ) {
+							logger.info("Logging in to telnet server " + host + ":" + port);
+							w.write(user + "\n");
+							w.flush();
+							line = "";
+							lineComplete = true;
+							continue;
+						}
 					}
-					
-					line += nextChar;
-					
-					if ( line.equals(login_prompt) ) {
-						logger.info("Logging in to telnet server " + host + ":" + port);
-						w.write(user + "\n");
-						w.flush();
-						line = "";
-						lineComplete = true;
-						continue;
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 				}
+			} catch (IOException e) {
+				// Couldn't connect, wait 10 secs then retry
 				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Thread.sleep(10000);
+					logger.info("Attempting reconnection to DXCluster " + host + ":" + port);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
 				}
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 }

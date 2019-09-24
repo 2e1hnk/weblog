@@ -51,74 +51,87 @@
 	href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap"
 	rel="stylesheet">
 
-<style>
-input.monospace {
-	font-family: 'Roboto Mono', monospace;
-}
-
-.monospace {
-	font-family: 'Roboto Mono', monospace;
-}
-
-#map {
-	height: 600px;
-}
-</style>
+	<style>
+	input.monospace {
+		font-family: 'Roboto Mono', monospace;
+	}
+	
+	.monospace {
+		font-family: 'Roboto Mono', monospace;
+	}
+	
+	#map {
+		height: 600px;
+	}
+	</style>
 </head>
 <body>
 
 	<!-- navbar -->
 	<div class="w3-bar w3-scout">
-		<button class="w3-bar-item w3-button" onclick="openLeftMenu()">☰</button>
-		<a href="#" class="w3-bar-item w3-button w3-mobile">
+		<button class="w3-bar-item w3-button" id="left-menu-button" style="margin-top: 2px;" onclick="toggleLeftMenu()"><i class="fas fa-bars w3-large"></i></button>
+		
+		<a href="#" class="w3-bar-item w3-button">
 			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" />
 			<b th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</b>
 		</a>
 		
 		<button class="w3-bar-item w3-button"><span class="w3-large" id="rigctl-indicator"></span></button>
 		
-		<button class="w3-button w3-right" onclick="openRightMenu()"><i class="fa fa-globe w3-large"></i></button>
+		<button class="w3-button w3-right" style="margin-top: 2px;" id="right-menu-button" onclick="toggleRightMenu()"><i class="fa fa-globe w3-large"></i></button>
 
 		<form style="margin-bottom: 0px;" action="/log/find" method="get">
-			<button class="w3-bar-item w3-right w3-button" type="submit">
+			<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small" style="margin-top: 2px;" type="submit">
 				<i class="fas fa-search"></i>
 			</button>
 			<input type="text"
-				class="w3-bar-item w3-input w3-right w3-scout-light"
+				class="w3-bar-item w3-input w3-right w3-scout-light w3-hide-small"
 				placeholder="Search..." name="q">
 		</form>
 
-		<a href="#" id="tab-list" class="w3-bar-item w3-button w3-right"
-			onclick="openTab('display-tabs-panel', 'display-tab-list')"><i class="fas fa-list"></i> List</a>
-		<a href="#" id="tab-map" class="w3-bar-item w3-button w3-right"
-			onclick="openTab('display-tabs-panel', 'display-tab-map'); mymap.invalidateSize(); mymap.fitBounds(markerLayer.getBounds());"><i class="fas fa-map"></i> Map</a>
 	</div>
 	<!-- end navbar -->
 	
 	<!-- Left sidebar menu (File import/export, settings etc.) -->
-	<div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="leftMenu">
-	  <button onclick="closeLeftMenu()" class="w3-bar-item w3-large">Close &times;</button>
-	  <h3 class="w3-bar-item">Files</h3>
-	  	<a href="/file" class="w3-bar-item w3-button">Import ADIF</a>
-		<a href="/file/download" class="w3-bar-item w3-button">Export as ADIF</a>
-	  <hr />
-	  <h3 class="w3-bar-item">Rig Control</h3>
-	  	<button type="button" id="connect-1" class="w3-bar-item w3-button w3-scout">Connect to Rig 1</button>
-		<button type="button" id="connect-2" class="w3-bar-item w3-button w3-scout">Connect to Rig 2</button>
-		<button type="button" id="disconnect" class="w3-bar-item w3-button w3-scout" disabled="disabled">Disconnect</button>
-	  <hr />
-	  <h3 class="w3-bar-item">Settings</h3>
-	  	<span class="w3-bar-item">
-		  	<input class="w3-check" type="checkbox" checked="checked" id="liveSwitch">
-			<label>Live Logging</label>
-		</span>
+	<div class="w3-sidebar w3-card w3-animate-left" style="display:none; " id="leftMenu">
+		<div class="w3-bar">
+		  <form style="margin-bottom: 0px; margin-top:10px; margin-left: 10px; margin-right: 10px" action="/log/find" method="get">
+		  	<div class="w3-bar">
+				<input type="text" style="width:280px; margin-right: 0px; height: 38px;"
+					class="w3-bar-item w3-input w3-scout-light"
+					placeholder="Search..." name="q">
+				<button class="w3-bar-item w3-button w3-scout" type="submit" style="margin-left: 0px; height: 38px;">
+					<i class="fas fa-search"></i>
+				</button>
+			</div>
+		  </form>
+		</div>
+	  
+	  <div class=" w3-bar-block ">
+		  <h3 class="w3-bar-item"><i class="fas fa-file"></i> Files</h3>
+		  	<a href="/file" class="w3-bar-item w3-button">Import ADIF</a>
+			<a href="/file/download" class="w3-bar-item w3-button">Export as ADIF</a>
+		  
+		  <h3 class="w3-bar-item"><i class="fas fa-digital-tachograph"></i> Rig Control</h3>
+		  	<button type="button" id="connect-1" class="w3-bar-item w3-button w3-scout">Connect to Rig 1</button>
+			<button type="button" id="connect-2" class="w3-bar-item w3-button w3-scout">Connect to Rig 2</button>
+			<button type="button" id="disconnect" class="w3-bar-item w3-button w3-scout" disabled="disabled">Disconnect</button>
+		  
+		  <h3 class="w3-bar-item"><i class="fas fa-cogs"></i> Settings</h3>
+		  	<span class="w3-bar-item">
+			  	<input class="w3-check" type="checkbox" checked="checked" id="liveSwitch">
+				<label>Live Logging</label>
+			</span>
+		</div>
 	</div>
+	
+	<!-- Overlay -->
+	<div class="w3-overlay" id="page-overlay" onclick="closeLeftMenu()" style="cursor:pointer"></div>
 	
 	<!-- Right sidebar menu (DX Cluster etc.) -->
 	<div class="w3-sidebar w3-bar w3-card w3-animate-right" style="display:none;right:0" id="rightMenu">
 		<button class="w3-bar-item w3-button"><i class="fa fa-globe w3-xlarge"></i> DX Cluster (<span class="w3-small" th:text="${@environment.getProperty('DXCLUSTER_HOST')}">[DX Cluster Hostname]</span>)</button>
-  		<button onclick="closeRightMenu()" class="w3-bar-item w3-button w3-large w3-right">&times;</button>
-	  <table id="dx-cluster-table" class="w3-table-all">
+  	  <table id="dx-cluster-table" class="w3-table-all">
 	  	<thead>
 	  		<tr>
 	  			<th>Time</th>
@@ -140,7 +153,7 @@ input.monospace {
 
 			<!-- input panel tabs content -->
 
-				<form class="grid-container" action="#" autocomplete="off"
+				<form class="grid-container" style="margin-top: 10px;" action="#" autocomplete="off"
 					th:action="${submitUrl} ? ${submitUrl} : @{/log/addcontact}"
 					th:object="${contact}" method="post">
 
@@ -277,7 +290,13 @@ input.monospace {
 			</div>
 		</div>
 
-		<div class="w3-container w3-threequarter">
+		<div class="w3-container w3-threequarter" style="margin-top: 10px;">
+			<div class="w3-bar">
+				<a href="#" id="tab-list" class="w3-bar-item w3-button w3-right"
+					onclick="openTab('display-tabs-panel', 'display-tab-list')"><i class="fas fa-list"></i> List</a>
+				<a href="#" id="tab-map" class="w3-bar-item w3-button w3-right"
+					onclick="openTab('display-tabs-panel', 'display-tab-map'); mymap.invalidateSize(); mymap.fitBounds(markerLayer.getBounds());"><i class="fas fa-map"></i> Map</a>
+			</div>
 			<div class="display-tabs-panel" id="display-tab-list">
 				<div th:switch="${contacts}">
 					<div class="w3-responsive" th:case="*">

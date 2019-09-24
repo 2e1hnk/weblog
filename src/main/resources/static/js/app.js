@@ -315,18 +315,48 @@ function openTab(panelBlock, tabName) {
 	  document.getElementById(tabName).style.display = "block";
 }
 
+var leftMenuOpen = false;	// Default to closed
+var rightMenuOpen = false;	// Default to closed
+
+
+function toggleRightMenu() {
+	if ( rightMenuOpen ) {
+		closeRightMenu();
+	} else {
+		openRightMenu();
+	}
+}
+
 function openRightMenu() {
   document.getElementById("rightMenu").style.display = "block";
+  document.getElementById("right-menu-button").innerHTML = "<i class=\"fas fa-times w3-large\"></i>";
+  rightMenuOpen = true;
 }
 
 function closeRightMenu() {
   document.getElementById("rightMenu").style.display = "none";
+  document.getElementById("right-menu-button").innerHTML = "<i class=\"fa fa-globe w3-large\"></i>";
+  rightMenuOpen = false;
+}
+
+function toggleLeftMenu() {
+	if ( leftMenuOpen ) {
+		closeLeftMenu();
+	} else {
+		openLeftMenu();
+	}
 }
 
 function openLeftMenu() {
-  document.getElementById("leftMenu").style.display = "block";
+	document.getElementById("page-overlay").style.display = "block";
+	document.getElementById("leftMenu").style.display = "block";
+	document.getElementById("left-menu-button").innerHTML = "<i class=\"fas fa-times w3-large\"></i>";
+	leftMenuOpen = true;
 }
 
 function closeLeftMenu() {
-  document.getElementById("leftMenu").style.display = "none";
+	document.getElementById("page-overlay").style.display = "none";
+	document.getElementById("leftMenu").style.display = "none";
+	document.getElementById("left-menu-button").innerHTML = "<i class=\"fas fa-bars w3-large\"></i>";
+	leftMenuOpen = false;
 }

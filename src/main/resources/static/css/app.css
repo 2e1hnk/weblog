@@ -64,11 +64,15 @@ ul.menu > li > form {
 	padding-top: 18px !important;
 }
 
-#log-table {
-	margin-top: 20px;
-}
-
 .w3-sidebar {
 	width: 350px !important;
 	max-width: 100%;
+}
+
+#leftMenu {
+	z-index: 99;
+}
+
+#left-menu-button {
+	z-index: 98;
 }
