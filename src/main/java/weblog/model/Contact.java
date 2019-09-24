@@ -72,9 +72,18 @@ public class Contact {
 		return adifDateFormatter.format(this.getTimestamp());
 	}
 
+	private String getCabrilloDate() {
+		DateFormat cabrilloDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+		return cabrilloDateFormatter.format(this.getTimestamp());
+	}
+
 	private String getAdifTime() {
 		DateFormat adifTimeFormatter = new SimpleDateFormat("HHmm");
 		return adifTimeFormatter.format(this.getTimestamp());
+	}
+
+	private String getCabrilloTime() {
+		return this.getAdifTime();
 	}
 
 	public String getCallsign() {
@@ -195,5 +204,33 @@ public class Contact {
 		sb.append("<EOR>\n");
 		
 		return sb.toString();
+	}
+	
+	public String toADIF() {
+		return this.toString();
+	}
+	
+	public String toCabrillo() {
+		return String.format("QSO: %d %s %s %s %s %s 001 %s %s 001", this.getFrequency(), this.getCabrilloMode(), this.getCabrilloDate(), this.getCabrilloTime(), "MYCALL", this.getRsts(), this.getCallsign(), this.getRstr());
+	}
+	
+	private String getCabrilloMode() {
+		switch ( this.getMode() ) {
+		case "SSB":
+		case "USB":
+		case "LSB":
+		case "AM":
+			return "PH";
+		case "CW":
+		case "CWR":
+			return "CW";
+		case "FM":
+			return "FM";
+		case "RTTY":
+			return "RY";
+		default:
+			// Treat data as the default type because there are so many possibilities
+			return "DG";
+		}
 	}
 }
