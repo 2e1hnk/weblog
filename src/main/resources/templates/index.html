@@ -150,10 +150,12 @@
 	<!-- content pane -->
 	<div class="w3-row">
 		<div class="w3-container w3-quarter">
-
+			<!-- Show/hide button (on mobile) -->
+			<button onclick="toggleSmallPanel('log-input-header', 'log-input-form')" id="log-input-header" class="w3-button w3-block w3-left-align w3-hide-large w3-hide-medium"><i class="fas fa-chevron-down"></i> Show Log Input</button>
+			
 			<!-- input panel tabs content -->
 
-				<form class="grid-container" style="margin-top: 10px;" action="#" autocomplete="off"
+				<form id="log-input-form" class="grid-container w3-hide-small" style="margin-top: 10px;" action="#" autocomplete="off"
 					th:action="${submitUrl} ? ${submitUrl} : @{/log/addcontact}"
 					th:object="${contact}" method="post">
 

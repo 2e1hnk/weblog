@@ -37,6 +37,7 @@ public class StatsService {
     	stats.put("TotalContacts", Long.toString(this.getTotalContacts()));
     	stats.put("firstContactTimeAgo", p.format(firstContact.getTimestamp()));
     	stats.put("latestContactCallsign", latestContact.getCallsign());
+    	stats.put("latestContactName", latestContact.getName());
     	stats.put("latestContactTime", latestContact.getTimestamp().toString());
     	stats.put("latestContactTimeAgo", p.format(latestContact.getTimestamp()));
     	

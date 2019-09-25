@@ -3,6 +3,7 @@ package weblog.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,9 +21,14 @@ public class LocationController {
         this.locationRepository = locationRepository;
     }
     
-	@GetMapping(path="/all")
+    @GetMapping(path="/all")
 	public @ResponseBody Iterable<Location> getLocations() {
 		return locationRepository.findAll();
+	}
+    
+    @GetMapping(path="/from/{id}")
+	public @ResponseBody Iterable<Location> getLocationFrom(@PathVariable Long id) {
+		return locationRepository.findByIdGreaterThan(id);
 	}
     
     // Get list of contacts by callsign (used for ajax requests from log page)

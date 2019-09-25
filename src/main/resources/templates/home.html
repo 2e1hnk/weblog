@@ -83,58 +83,100 @@ input.monospace {
 	<!-- end navbar -->
 
 	<!-- content pane -->
-	<div class="w3-row">
-		<div class="w3-container w3-half">
-			<div class="w3-row" style="margin-top: 20px;">
-				<div class="w3-container w3-third">
-					<div class="w3-card">
-						<header class="w3-container w3-scout-l3">
-						  <h4>Total Contacts Logged</h4>
-						</header>
-						<div class="w3-container">
-						  <h1 th:text="${TotalContacts}"></h1>
-						</div>
-						<footer class="w3-container w3-scout-l3">
-						  <h5>Since <span th:text="${firstContactTimeAgo}"></span></h5>
-						</footer>
-					</div>
-				</div>
-
-				<div class="w3-container w3-third">
-					<div class="w3-card">
-						<header class="w3-container w3-scout-l3">
-						  <h4>Last Contact was with</h4>
-						</header>
-						<div class="w3-container">
-						  <h1 th:text="${latestContactCallsign}"></h1>
-						</div>
-						<footer class="w3-container w3-scout-l3">
-						  <h5 th:text="${latestContactTimeAgo}">Footer</h5>
-						</footer>
-					</div>
-				</div>
-
-				<div class="w3-container w3-third">
-					<div class="w3-card">
-						<header class="w3-container w3-scout-l3">
-						  <h4>Total Contacts Logged</h4>
-						</header>
-						<div class="w3-container">
-						  <h1 th:text="${TotalContacts}"></h1>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="w3-row" style="margin-top: 20px;">
+	<div class="w3-row" style="margin-top: 20px;">
+		<div class="w3-container w3-quarter">
+			<table class="w3-table w3-striped w3-card">
+				<tr>
+					<th>HF</th>
+					<td>Contacts</td>
+				</tr>
+				<tr>
+					<td>160M</td>
+					<td th:text="${band_160M}"></td>
+				</tr>
+				<tr>
+					<td>80M</td>
+					<td th:text="${band_80M}"></td>
+				</tr>
+				<tr>
+					<td>60M</td>
+					<td th:text="${band_60M}"></td>
+				</tr>
+				<tr>
+					<td>40M</td>
+					<td th:text="${band_40M}"></td>
+				</tr>
+				<tr>
+					<td>30M</td>
+					<td th:text="${band_30M}"></td>
+				</tr>
+				<tr>
+					<td>20M</td>
+					<td th:text="${band_20M}"></td>
+				</tr>
+				<tr>
+					<td>17M</td>
+					<td th:text="${band_17M}"></td>
+				</tr>
+				<tr>
+					<td>15M</td>
+					<td th:text="${band_15M}"></td>
+				</tr>
+				<tr>
+					<td>12M</td>
+					<td th:text="${band_12M}"></td>
+				</tr>
+				<tr>
+					<td>10M</td>
+					<td th:text="${band_10M}"></td>
+				</tr>
+				<tr>
+					<th colspan="2">VHF/UHF</th>
+				</tr>
+				<tr>
+					<td>6M</td>
+					<td th:text="${band_6M}"></td>
+				</tr>
+				<tr>
+					<td>4M</td>
+					<td th:text="${band_4M}"></td>
+				</tr>
+				<tr>
+					<td>2M</td>
+					<td th:text="${band_2M}"></td>
+				</tr>
+				<tr>
+					<td>70CM</td>
+					<td th:text="${band_70CM}"></td>
+				</tr>
+			</table>
+		</div>
+		<div class="w3-container w3-quarter">
+			<div class="w3-card">
+				<header class="w3-container w3-scout-l3">
+				  <h4>Total Contacts Logged</h4>
+				</header>
 				<div class="w3-container">
-					<div class="w3-card">
-						<canvas id="bandStatsChart"></canvas>
-						2M Contacts: <span th:text="${band_2M}"></span>
-					</div>
+				  <h1 th:text="${TotalContacts}"></h1>
 				</div>
+				<footer class="w3-container w3-scout-l3">
+				  <h5>Since <span th:text="${firstContactTimeAgo}"></span></h5>
+				</footer>
+			</div>
+			<br />
+			<div class="w3-card">
+				<header class="w3-container w3-scout-l3">
+				  <h4>Last Contact was with</h4>
+				</header>
+				<div class="w3-container">
+				  <h1 th:text="${latestContactCallsign}"></h1>
+				  <h3 th:text="${latestContactName}"></h3>
+				</div>
+				<footer class="w3-container w3-scout-l3">
+				  <h5 th:text="${latestContactTimeAgo}">Footer</h5>
+				</footer>
 			</div>
 		</div>
-
 		<div class="w3-container w3-half">
 			<div id="map"></div>
 		</div>

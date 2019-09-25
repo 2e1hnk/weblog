@@ -7,4 +7,5 @@ import weblog.model.Location;
 
 @Repository
 public interface LocationRepository extends CrudRepository<Location, Long> {
+	Iterable<Location> findByIdGreaterThan(Long id);
 }

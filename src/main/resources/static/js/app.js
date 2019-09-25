@@ -1,7 +1,7 @@
-
-
 // Set up map
 var mymap = L.map('map', {fullscreenControl: true}).setView([51.505, -0.09], 13);
+
+var maxZoom = 8;
 
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -10,6 +10,7 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
 
 var markerLayer = L.featureGroup().addTo(mymap);
 
+// Add Maidenhead Grid Layer
 var gridLayer = L.maidenhead({ worked: [], confirmed: [] });
 gridLayer._map = mymap;
 
@@ -17,14 +18,120 @@ var layerControl = new L.Control.Layers(null, {
 	'Gridsquares': maidenhead = L.maidenhead()
 }).addTo(mymap);
 
-populate_map(markerLayer);
+// Add auto-update custom control
+	var autoupdate = true;
+	var isProgramaticMove = false;
+	var latest_id = 0;
+	var autoUpdateControl = L.Control
+		.extend({
 
-/*
-$("#tab-map").click(function (event) { 
-	mymap.invalidateSize();
-	mymap.fitBounds(markerLayer.getBounds());
-});
-*/
+			options : {
+				position : 'topleft'
+			//control position - allowed: 'topleft', 'topright', 'bottomleft', 'bottomright'
+			},
+
+			onAdd : function(map) {
+				var container = L.DomUtil
+						.create('div',
+								'leaflet-bar leaflet-control leaflet-control-custom auto-update-container');
+				container.innerHTML = '<a href="#" title="Automatically update map when new contacts are logged" role="button" aria-label="Automatically pan and zoom to show all contacts"><i id="autoupdateIcon" class="fas fa-search-location" style="padding-top: 5px"></i></a>'
+				container.style.fontSize = '20px';
+				container.style.backgroundColor = 'white';
+				container.style.borderColor = 'red';
+
+				container.onclick = function() {
+					toggleAutoUpdate();
+				}
+				return container;
+			},
+
+		});
+	mymap.addControl(new autoUpdateControl());
+
+// Disable auto update when user pans/zooms the map (but not on a programatic pan/zoom)
+	mymap.on('zoomstart', function() {
+		console.log("isProgramaticMove", isProgramaticMove);
+		if (!isProgramaticMove) {
+			disableAutoUpdate();
+		}
+	})
+	
+	mymap.on('dragstart', function() {
+		console.log("isProgramaticMove", isProgramaticMove);
+		if (!isProgramaticMove) {
+			disableAutoUpdate();
+		}
+	})
+	
+// Auto-update control functions
+	function toggleAutoUpdate() {
+		if (autoupdate) {
+			disableAutoUpdate();
+		} else {
+			enableAutoUpdate();
+		}
+	}
+
+	function enableAutoUpdate() {
+		autoupdate = true;
+		$('.auto-update-container').css('border-color', 'red');
+		console.log("Auto update enabled");
+
+		// Move map to correct position
+		isProgramaticMove = true;
+		if (markerClusterGroup.getBounds().length > 0) {
+			if (map.getBoundsZoom(markerClusterGroup.getBounds()) > maxZoom) {
+				map.setView(markerClusterGroup.getBounds().getCenter(),
+						maxZoom);
+			} else {
+				map.fitBounds(markerClusterGroup.getBounds());
+			}
+		}
+		isProgramaticMove = false;
+	}
+
+	function disableAutoUpdate() {
+		autoupdate = false;
+		$('.auto-update-container').css('border-color',
+				'rgba(0, 0, 0, 0.2)');
+		console.log("Auto update disabled");
+	}
+
+// Update map markers
+	function update() {
+		var jqxhr = $.get("/location/from/" + latest_id,
+				function(data) {
+					if (data.length > 0) {
+						$.each(data, function(index, value) {
+							console.log("Adding", value);
+							
+							L.marker([ value.lat, value.lon ]).bindPopup(
+									"<br /><b>"	+ value.callsign + "</b><br />" + value.name + "<br />"
+											+ value.timestamp).addTo(markerLayer);
+														
+							latest_id = value.id;
+						});
+						
+						if (autoupdate) {
+							isProgramaticMove = true;
+							if (mymap.getBoundsZoom(markerLayer.getBounds()) > maxZoom) {
+								mymap.setView(markerLayer.getBounds().getCenter(), maxZoom);
+							} else {
+								mymap.fitBounds(markerLayer.getBounds());
+							}
+						}
+					}
+					isProgramaticMove = false;
+
+				});
+	}
+
+	update();
+	setInterval(update, 10000);
+
+	
+//populate_map(markerLayer);
+
 
 // Handle callsign lookup
 
@@ -360,3 +467,17 @@ function closeLeftMenu() {
 	document.getElementById("left-menu-button").innerHTML = "<i class=\"fas fa-bars w3-large\"></i>";
 	leftMenuOpen = false;
 }
+
+function toggleSmallPanel(header_id, target_id) {
+	
+	  var targetPanel = document.getElementById(target_id);
+	  var targetHeader = document.getElementById(header_id);
+	
+	  if (targetPanel.className.indexOf("w3-hide-small") == -1) {
+		  targetPanel.className += " w3-hide-small";
+		  targetHeader.innerHtml = "<i class=\"fas fa-chevron-up\"></i> Hide Log Input";
+	  } else {
+		  targetPanel.className = targetPanel.className.replace(" w3-hide-small", "");
+		  targetHeader.innerHtml = "<i class=\"fas fa-chevron-down\"></i> Show Log Input";
+	  }
+	}
