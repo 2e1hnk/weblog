@@ -79,12 +79,12 @@ var layerControl = new L.Control.Layers(null, {
 
 		// Move map to correct position
 		isProgramaticMove = true;
-		if (markerClusterGroup.getBounds().length > 0) {
-			if (map.getBoundsZoom(markerClusterGroup.getBounds()) > maxZoom) {
-				map.setView(markerClusterGroup.getBounds().getCenter(),
+		if (markerLayer.getBounds().length > 0) {
+			if (mymap.getBoundsZoom(markerLayer.getBounds()) > maxZoom) {
+				mymap.setView(markerLayer.getBounds().getCenter(),
 						maxZoom);
 			} else {
-				map.fitBounds(markerClusterGroup.getBounds());
+				mymap.fitBounds(markerLayer.getBounds());
 			}
 		}
 		isProgramaticMove = false;
@@ -481,3 +481,12 @@ function toggleSmallPanel(header_id, target_id) {
 		  targetHeader.innerHtml = "<i class=\"fas fa-chevron-down\"></i> Show Log Input";
 	  }
 	}
+
+function toggleElement(id) {
+	var x = document.getElementById(id);
+	  if (x.className.indexOf("w3-hide") == -1) {
+		  x.className += "w3-hide";
+	  } else {
+		  x.className = x.className.replace("w3-hide", "");
+	  }
+}
