@@ -13,6 +13,11 @@ public class QRZLookupResponse {
 	
 	@XmlElement(name="Session")
 	private QRZSession Session;
+	
+	public QRZLookupResponse() {
+		
+	}
+	
 	public QRZCallsign getCallsign() {
 		return Callsign;
 	}

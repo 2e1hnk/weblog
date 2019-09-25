@@ -2,8 +2,10 @@ package QRZClient2;
 
 import java.util.Date;
 
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class QRZCallsign {
 	private String call;
 	private String aliases;
@@ -19,15 +21,24 @@ public class QRZCallsign {
 	private String grid;
 	private int ccode;
 	private String land;
+	
 	@XmlElement(name="class") private String licenseclass;	// called 'class' in XML
+
 	private String codes;
+	
 	private String email;
 	private int u_views;
 	private int bio;
+	
+	@XmlJavaTypeAdapter(DateAdapter.class)
 	private Date biodate;
+	
 	private String image;
 	private String imageinfo;
+	
+	@XmlJavaTypeAdapter(DateAdapter.class)
 	private Date moddate;
+	
 	private boolean eqsl;
 	private boolean mqsl;
 	private String iota;
@@ -35,6 +46,17 @@ public class QRZCallsign {
 	private String user;
 	private String geoloc;
 	private String qslmgr;
+	private int ituzone;
+	private int gmtoffset;
+	private boolean dst;
+	private String timezone;
+	private int areacode;
+	private int born;
+	private int cqzone;
+	
+	public QRZCallsign() {
+		
+	}
 	
 	public String getCall() {
 		return call;
@@ -93,13 +115,13 @@ public class QRZCallsign {
 	public double getLat() {
 		return lat;
 	}
-	public void setLat(Long lat) {
+	public void setLat(double lat) {
 		this.lat = lat;
 	}
 	public double getLon() {
 		return lon;
 	}
-	public void setLon(Long lon) {
+	public void setLon(double lon) {
 		this.lon = lon;
 	}
 	public String getGrid() {
@@ -209,6 +231,54 @@ public class QRZCallsign {
 	}
 	public void setQslmgr(String qslmgr) {
 		this.qslmgr = qslmgr;
+	}
+	public String getLicenseclass() {
+		return licenseclass;
+	}
+	public void setLicenseclass(String licenseclass) {
+		this.licenseclass = licenseclass;
+	}
+	public int getItuzone() {
+		return ituzone;
+	}
+	public void setItuzone(int ituzone) {
+		this.ituzone = ituzone;
+	}
+	public int getGmtoffset() {
+		return gmtoffset;
+	}
+	public void setGmtoffset(int gmtoffset) {
+		this.gmtoffset = gmtoffset;
+	}
+	public boolean isDst() {
+		return dst;
+	}
+	public void setDst(boolean dst) {
+		this.dst = dst;
+	}
+	public String getTimezone() {
+		return timezone;
+	}
+	public void setTimezone(String timezone) {
+		this.timezone = timezone;
+	}
+	public int getAreacode() {
+		return areacode;
+	}
+	public void setAreacode(int areacode) {
+		this.areacode = areacode;
+	}
+	public int getBorn() {
+		return born;
+	}
+	public void setBorn(int born) {
+		this.born = born;
+	}
+	public int getCqzone() {
+		return cqzone;
+	}
+	public void setCqzone(int cqzone) {
+		this.cqzone = cqzone;
 	}
 	@Override
 	public String toString() {

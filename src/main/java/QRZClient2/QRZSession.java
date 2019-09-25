@@ -23,6 +23,10 @@ public class QRZSession {
 	
 	@XmlElement(name="Remark")
     private String remarkNode;
+	
+	public QRZSession() {
+		
+	}
     
 	public String getError() {
 		return errorNode;
