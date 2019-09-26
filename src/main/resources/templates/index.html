@@ -69,7 +69,7 @@
 
 	<!-- navbar -->
 	<div class="w3-bar w3-scout">
-		<button class="w3-bar-item w3-button" id="left-menu-button" style="margin-top: 2px;" onclick="toggleLeftMenu()"><i class="fas fa-bars w3-large"></i></button>
+		<button class="w3-bar-item w3-button" id="left-menu-button" style="margin-top: 2px; z-index:10002;" onclick="toggleLeftMenu()"><i class="fas fa-bars w3-large"></i></button>
 		
 		<a href="#" class="w3-bar-item w3-button">
 			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" />
@@ -93,7 +93,7 @@
 	<!-- end navbar -->
 	
 	<!-- Left sidebar menu (File import/export, settings etc.) -->
-	<div class="w3-sidebar w3-card w3-animate-left" style="display:none; " id="leftMenu">
+	<div class="w3-sidebar w3-card w3-animate-left" style="display:none;z-index:10001;" id="leftMenu">
 		<div class="w3-bar">
 		  <form style="margin-bottom: 0px; margin-top:10px; margin-left: 10px; margin-right: 10px" action="/log/find" method="get">
 		  	<div class="w3-bar">
@@ -126,10 +126,10 @@
 	</div>
 	
 	<!-- Overlay -->
-	<div class="w3-overlay" id="page-overlay" onclick="closeLeftMenu()" style="cursor:pointer"></div>
+	<div class="w3-overlay" id="page-overlay" onclick="closeLeftMenu()" style="cursor:pointer; z-index:10000; margin-top: 38px;"></div>
 	
 	<!-- Right sidebar menu (DX Cluster etc.) -->
-	<div class="w3-sidebar w3-bar w3-card w3-animate-right" style="display:none;right:0" id="rightMenu">
+	<div class="w3-sidebar w3-bar w3-card w3-animate-right" style="display:none;right:0;z-index: 9997;" id="rightMenu">
 		<button class="w3-bar-item w3-button"><i class="fa fa-globe w3-xlarge"></i> DX Cluster (<span class="w3-small" th:text="${@environment.getProperty('DXCLUSTER_HOST')}">[DX Cluster Hostname]</span>)</button>
   	  <table id="dx-cluster-table" class="w3-table-all">
 	  	<thead>

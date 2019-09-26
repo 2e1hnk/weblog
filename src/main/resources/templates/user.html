@@ -1,0 +1,26 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+	<form action="/adduser" method="post">
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Username</th>
+				<th>Enabled</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="contact : ${contactList}">
+				<td th:text="${user.id}"></td>
+				<td th:text="${user.username}"></td>
+				<td th:text="${user.enabled}"></td>
+			</tr>
+		</tbody>
+			
+	</table>
+	</form>
+</body>
+</html>

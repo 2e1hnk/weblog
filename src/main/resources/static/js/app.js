@@ -10,13 +10,15 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
 
 var markerLayer = L.featureGroup().addTo(mymap);
 
-// Add Maidenhead Grid Layer
+// TODO: Add Maidenhead Grid Layer
+/*
 var gridLayer = L.maidenhead({ worked: [], confirmed: [] });
 gridLayer._map = mymap;
 
 var layerControl = new L.Control.Layers(null, {
 	'Gridsquares': maidenhead = L.maidenhead()
 }).addTo(mymap);
+*/
 
 // Add auto-update custom control
 	var autoupdate = true;
@@ -79,12 +81,12 @@ var layerControl = new L.Control.Layers(null, {
 
 		// Move map to correct position
 		isProgramaticMove = true;
-		if (markerLayer.getBounds().length > 0) {
-			if (mymap.getBoundsZoom(markerLayer.getBounds()) > maxZoom) {
-				mymap.setView(markerLayer.getBounds().getCenter(),
+		if (markerLayer.getLayers().length > 0) {
+			if (mymap.getBoundsZoom(markerLayer.getBounds().pad(0.2)) > maxZoom) {
+				mymap.setView(markerLayer.getBounds().pad(0.2).getCenter(),
 						maxZoom);
 			} else {
-				mymap.fitBounds(markerLayer.getBounds());
+				mymap.fitBounds(markerLayer.getBounds().pad(0.2));
 			}
 		}
 		isProgramaticMove = false;
@@ -114,14 +116,15 @@ var layerControl = new L.Control.Layers(null, {
 						
 						if (autoupdate) {
 							isProgramaticMove = true;
-							if (mymap.getBoundsZoom(markerLayer.getBounds()) > maxZoom) {
-								mymap.setView(markerLayer.getBounds().getCenter(), maxZoom);
+							if (mymap.getBoundsZoom(markerLayer.getBounds().pad(0.2)) > maxZoom) {
+								mymap.setView(markerLayer.getBounds().pad(0.2).getCenter(), maxZoom);
 							} else {
-								mymap.fitBounds(markerLayer.getBounds());
+								mymap.fitBounds(markerLayer.getBounds().pad(0.2));
 							}
+							isProgramaticMove = false;
 						}
 					}
-					isProgramaticMove = false;
+					
 
 				});
 	}

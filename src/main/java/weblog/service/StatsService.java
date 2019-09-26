@@ -29,17 +29,21 @@ public class StatsService {
     public Map<String, String> getStatsTable() {
     	
     	PrettyTime p = new PrettyTime();
-    	Contact firstContact = contactRepository.findTopByOrderByIdAsc();
-    	Contact latestContact = contactRepository.findTopByOrderByIdDesc();
     	
     	Map<String, String> stats = new HashMap<String, String>();
     	
     	stats.put("TotalContacts", Long.toString(this.getTotalContacts()));
-    	stats.put("firstContactTimeAgo", p.format(firstContact.getTimestamp()));
-    	stats.put("latestContactCallsign", latestContact.getCallsign());
-    	stats.put("latestContactName", latestContact.getName());
-    	stats.put("latestContactTime", latestContact.getTimestamp().toString());
-    	stats.put("latestContactTimeAgo", p.format(latestContact.getTimestamp()));
+    	
+    	if ( contactRepository.count() > 0) {
+	    	Contact firstContact = contactRepository.findTopByOrderByIdAsc();
+	    	Contact latestContact = contactRepository.findTopByOrderByIdDesc();
+	    	
+	    	stats.put("firstContactTimeAgo", p.format(firstContact.getTimestamp()));
+	    	stats.put("latestContactCallsign", latestContact.getCallsign());
+	    	stats.put("latestContactName", latestContact.getName());
+	    	stats.put("latestContactTime", latestContact.getTimestamp().toString());
+	    	stats.put("latestContactTimeAgo", p.format(latestContact.getTimestamp()));
+    	}
     	
     	return stats;
     }

@@ -34,7 +34,8 @@
 		
 		this.showUpdate = function(message) {
 		    $("#dx-spots > tr:first").before(
-		    		"<tr onclick=\"toggleElement('" + message.time + "-" + message.spotter + "-" + message.dx + "');\"><td class=\"monospace\">" + message.time + 
+		    		"<tr onclick=\"toggleElement('" + message.time + "-" + message.spotter + "-" + message.dx + "');\">" +
+		    		"<td class=\"monospace\">" + ('0000' + message.time).slice(-4) + 
 		    		"</td><td class=\"monospace\">" + message.spotter + 
 		    		"</td><td class=\"monospace\">" + message.dx + 
 		    	//	"</td><td class=\"monospace\">" + message.grid + 
@@ -42,7 +43,7 @@
 		    		"</td></tr><tr id='" + message.time + "-" + message.spotter + "-" + message.dx + "' class=\"w3-hide\"><td colspan=\"4\" class=\"monospace\">" + message.comments + 
 		    		"</td></tr>");
 		    // Delete extra rows
-		    var rowsToDelete = $('#dx-spots > tr').length - this.config.maxRows;
+		    var rowsToDelete = $('#dx-spots > tr').length - (this.config.maxRows * 2);
 		    
 		    console.log("Rows to delete", rowsToDelete);
 		    

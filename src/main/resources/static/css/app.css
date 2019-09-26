@@ -68,11 +68,3 @@ ul.menu > li > form {
 	width: 350px !important;
 	max-width: 100%;
 }
-
-#leftMenu {
-	z-index: 99;
-}
-
-#left-menu-button {
-	z-index: 98;
-}
