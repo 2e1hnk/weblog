@@ -35,6 +35,9 @@ public class Location implements Serializable {
 	
 	@Column(name = "lon")
 	private double lon;
+	
+	@Column(name = "band")
+	private String band;
 
 	public Long getId() {
 		return id;
@@ -82,6 +85,14 @@ public class Location implements Serializable {
 
 	public void setLon(double lon) {
 		this.lon = lon;
+	}
+
+	public String getBand() {
+		return band;
+	}
+
+	public void setBand(String band) {
+		this.band = band;
 	}
 	
 }
