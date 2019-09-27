@@ -49,8 +49,12 @@ var RigCtl = function() {
 }
 
 $(function () {
-    $( "#connect-1" ).click(function() { rigCtl.connect(1); });
-    $( "#connect-2" ).click(function() { rigCtl.connect(2); });
+    $( ".websocket-connect" ).each(function(){
+    	$(this).click(function() {
+    		rigCtl.connect($(this).attr('id'));
+    	});
+    });
+    //$( ".websocket-connect" ).click(function() { rigCtl.connect(2); });
     $( "#disconnect" ).click(function() { rigCtl.disconnect(); });
     $( "#send" ).click(function() { rigCtl.sendUpdate(); });
     // Use this to auto-connect
@@ -60,8 +64,7 @@ $(function () {
 var rigCtl = new RigCtl();
 
 function setConnected(connected) {
-	$("#connect-1").prop("disabled", connected);
-	$("#connect-2").prop("disabled", connected);
+	$(".websocket-connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
     	$("#conversation").show();
