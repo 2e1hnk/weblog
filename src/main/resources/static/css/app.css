@@ -68,3 +68,8 @@ ul.menu > li > form {
 	width: 350px !important;
 	max-width: 100%;
 }
+
+button.navbar-button {
+	padding-top: 10px !important;
+	padding-bottom: 10px !important;
+}

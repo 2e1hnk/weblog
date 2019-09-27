@@ -99,6 +99,9 @@ var layerControl = new L.Control.Layers(null, {
 		console.log("Auto update disabled");
 	}
 
+// Band to Icon mapping
+var bandIcon = {};
+
 // Update map markers
 	function update() {
 		var jqxhr = $.get("/location/from/" + latest_id,
@@ -107,9 +110,19 @@ var layerControl = new L.Control.Layers(null, {
 						$.each(data, function(index, value) {
 							console.log("Adding", value);
 							
-							L.marker([ value.lat, value.lon ]).bindPopup(
-									"<br /><b>"	+ value.callsign + "</b><br />" + value.name + "<br />"
-											+ value.timestamp).addTo(markerLayer);
+							if ( !(value.band in bandIcon) ) {
+								var nextIconIndex = Object.keys(bandIcon).length;
+								console.log("nextIconIndex", nextIconIndex);
+								bandIcon[value.band] = icons[nextIconIndex];
+							}
+							
+							console.log("bandIcon", bandIcon);
+							
+							var contactDate = moment.utc(value.timestamp).format("YYYY-MM-DD HH:mm");
+							
+							L.marker([ value.lat, value.lon ], {icon: bandIcon[value.band]}).bindPopup(
+									"<h1>"	+ value.callsign + "</h1><h4>" + value.name + "</h4><p>Time: "
+											+ contactDate + "<br />Band: " + value.band + "</p>").addTo(markerLayer);
 														
 							latest_id = value.id;
 						});
