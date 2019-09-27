@@ -12,6 +12,7 @@
 <link rel="stylesheet" th:href="@{/css/app.css}">
 <link rel="stylesheet" th:href="@{/webjars/leaflet/leaflet.css}" />
 <link rel="stylesheet" th:href="@{/css/L.fullscreen.css}" />
+<link rel="stylesheet" th:href="@{/css/flag-icon.min.css}" />
 
 <!-- favicon -->
 <link rel="apple-touch-icon" sizes="57x57"
@@ -69,24 +70,55 @@
 
 	<!-- navbar -->
 	<div class="w3-bar w3-scout">
-		<button class="w3-bar-item w3-button" id="left-menu-button" style="margin-top: 2px; z-index:10002;" onclick="toggleLeftMenu()"><i class="fas fa-bars w3-large"></i></button>
+		<button class="w3-bar-item w3-button navbar-button" id="left-menu-button" style="z-index:10002;" onclick="toggleLeftMenu()"><i class="fas fa-bars w3-large"></i></button>
 		
 		<a href="#" class="w3-bar-item w3-button">
 			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" />
 			<b th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</b>
 		</a>
 		
-		<button class="w3-bar-item w3-button"><span class="w3-large" id="rigctl-indicator"></span></button>
+		<button class="w3-bar-item w3-button w3-hide-small"><span class="w3-large" id="rigctl-indicator"></span></button>
 		
-		<button class="w3-button w3-right" style="margin-top: 2px;" id="right-menu-button" onclick="toggleRightMenu()"><i class="fa fa-globe w3-large"></i></button>
+		<button class="w3-button w3-right navbar-button" id="right-menu-button" onclick="toggleRightMenu()"><i class="fa fa-globe w3-large"></i></button>
+
+		<div class="w3-dropdown-hover w3-right">
+		    <button class="w3-button navbar-button"><i class="far fa-user-circle w3-large"></i></button>
+		    <div class="w3-dropdown-content w3-card-4" style="right:0">
+		    	<div class="w3-bar w3-center">
+			    	<a href="?lang=en" class="w3-bar-item w3-button">
+			    		<span class="flag-icon flag-icon-gb"></span>
+			    	</a>
+				    <a href="?lang=fr" class="w3-bar-item w3-button">
+			    		<span class="flag-icon flag-icon-fr"></span>
+			    	</a>
+				    <a href="?lang=es" class="w3-bar-item w3-button">
+			    		<span class="flag-icon flag-icon-es"></span>
+			    	</a>
+			        <a href="?lang=ru" class="w3-bar-item w3-button">
+			    		<span class="flag-icon flag-icon-ru"></span>
+			    	</a>
+			        <a href="?lang=de" class="w3-bar-item w3-button">
+			    		<span class="flag-icon flag-icon-de"></span>
+			    	</a>
+			        <a href="?lang=it" class="w3-bar-item w3-button">
+			    		<span class="flag-icon flag-icon-it"></span>
+			    	</a>
+			    </div>
+			    <div class="w3-bar-block">
+				    <a href="#" class="w3-bar-item w3-button"><i class="fas fa-user-circle"></i> <span th:text="#{lang.updateProfile}"></span></a>
+				    <hr />
+				    <a href="/login?logout" class="w3-bar-item w3-button"><i class="fas fa-sign-out-alt"></i> <span th:text="#{lang.logout}"></span></a>
+				</div>
+		    </div>
+		</div>
 
 		<form style="margin-bottom: 0px;" action="/log/find" method="get">
-			<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small" style="margin-top: 2px;" type="submit">
+			<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small w3-scout-light w3-text-scout navbar-button" type="submit">
 				<i class="fas fa-search"></i>
 			</button>
 			<input type="text"
 				class="w3-bar-item w3-input w3-right w3-scout-light w3-hide-small"
-				placeholder="Search..." name="q">
+				th:placeholder="#{lang.search}" name="q">
 		</form>
 
 	</div>
@@ -95,11 +127,11 @@
 	<!-- Left sidebar menu (File import/export, settings etc.) -->
 	<div class="w3-sidebar w3-card w3-animate-left" style="display:none;z-index:10001;" id="leftMenu">
 		<div class="w3-bar">
-		  <form style="margin-bottom: 0px; margin-top:10px; margin-left: 10px; margin-right: 10px" action="/log/find" method="get">
+		  <form style="margin-bottom: 0px; margin-top:10px; margin-left: 16px; margin-right: 16px" action="/log/find" method="get">
 		  	<div class="w3-bar">
-				<input type="text" style="width:280px; margin-right: 0px; height: 38px;"
+				<input type="text" style="width:268px; margin-right: 0px; height: 38px;"
 					class="w3-bar-item w3-input w3-scout-light"
-					placeholder="Search..." name="q">
+					th:placeholder="#{lang.search}" name="q">
 				<button class="w3-bar-item w3-button w3-scout" type="submit" style="margin-left: 0px; height: 38px;">
 					<i class="fas fa-search"></i>
 				</button>
@@ -107,21 +139,26 @@
 		  </form>
 		</div>
 	  
-	  <div class=" w3-bar-block ">
-		  <h3 class="w3-bar-item"><i class="fas fa-file"></i> Files</h3>
-		  	<a href="/adif" class="w3-bar-item w3-button">Import ADIF</a>
-			<a href="/adif/download" class="w3-bar-item w3-button">Export as ADIF</a>
+	  <div class="w3-bar-block">
+		  <h3 class="w3-bar-item"><i class="fas fa-digital-tachograph"></i> <span th:text="#{lang.rigCtl}"></span></h3>
+		  	<div class="w3-show-inline-block">
+			  	<div class="w3-bar" style="margin-left: 16px; margin-right: 16px">
+				  	<button type="button" id="1" class="w3-btn w3-scout websocket-connect">Rig 1</button>
+					<button type="button" id="2" class="w3-btn w3-scout websocket-connect">Rig 2</button>
+					<button type="button" id="disconnect" class="w3-btn w3-scout" disabled="disabled" th:text="#{lang.disconnect}"></button>
+				</div>
+			</div>
 		  
-		  <h3 class="w3-bar-item"><i class="fas fa-digital-tachograph"></i> Rig Control</h3>
-		  	<button type="button" id="connect-1" class="w3-bar-item w3-button w3-scout">Connect to Rig 1</button>
-			<button type="button" id="connect-2" class="w3-bar-item w3-button w3-scout">Connect to Rig 2</button>
-			<button type="button" id="disconnect" class="w3-bar-item w3-button w3-scout" disabled="disabled">Disconnect</button>
-		  
-		  <h3 class="w3-bar-item"><i class="fas fa-cogs"></i> Settings</h3>
+		  <h3 class="w3-bar-item"><i class="fas fa-cogs"></i> <span th:text="#{lang.settings}"></span></h3>
 		  	<span class="w3-bar-item">
 			  	<input class="w3-check" type="checkbox" checked="checked" id="liveSwitch">
-				<label>Live Logging</label>
+				<label th:text="#{lang.liveLogging}"></label>
 			</span>
+			
+		  <h3 class="w3-bar-item"><i class="fas fa-tools"></i> <span th:text="#{lang.admin}"></span></h3>
+		  	<a href="/adif" class="w3-bar-item w3-button"><i class="fas fa-file-import"></i> <span th:text="#{lang.import}"></span> ADIF</a>
+			<a href="/adif/download" class="w3-bar-item w3-button"><i class="fas fa-file-export"></i> <span th:text="#{lang.export}"></span> ADIF</a>
+		  	<a href="/admin/users" class="w3-bar-item w3-button"><i class="fas fa-users"></i> <span th:text="#{lang.users}"></span></a>
 		</div>
 	</div>
 	
@@ -130,14 +167,14 @@
 	
 	<!-- Right sidebar menu (DX Cluster etc.) -->
 	<div class="w3-sidebar w3-bar w3-card w3-animate-right" style="display:none;right:0;z-index: 9997;" id="rightMenu">
-		<button class="w3-bar-item w3-button"><i class="fa fa-globe w3-xlarge"></i> DX Cluster (<span class="w3-small" th:text="${@environment.getProperty('DXCLUSTER_HOST')}">[DX Cluster Hostname]</span>)</button>
+		<button class="w3-bar-item w3-button"><i class="fa fa-globe w3-xlarge"></i> <span th:text="#{lang.dxCluster}"></span> (<span class="w3-small" th:text="${@environment.getProperty('DXCLUSTER_HOST')}">[DX Cluster Hostname]</span>)</button>
   	  <table id="dx-cluster-table" class="w3-table-all">
 	  	<thead>
 	  		<tr>
-	  			<th>Time</th>
-	  			<th>Spotter</th>
-	  			<th>DX</th>
-	  			<th>Freq</th>
+	  			<th th:text="#{lang.time}"></th>
+	  			<th th:text="#{lang.spotter}"></th>
+	  			<th th:text="#{lang.dx}"></th>
+	  			<th th:text="#{lang.freq}"></th>
 	  		</tr>
 	  	</thead>
 	  	<tbody id="dx-spots">
@@ -151,7 +188,7 @@
 	<div class="w3-row">
 		<div class="w3-container w3-quarter">
 			<!-- Show/hide button (on mobile) -->
-			<button onclick="toggleSmallPanel('log-input-header', 'log-input-form')" id="log-input-header" class="w3-button w3-block w3-left-align w3-hide-large w3-hide-medium"><i class="fas fa-chevron-down"></i> Show Log Input</button>
+			<button onclick="toggleSmallPanel('log-input-header', 'log-input-form')" id="log-input-header" class="w3-button w3-block w3-left-align w3-hide-large w3-hide-medium"><i class="fas fa-chevron-down"></i> <span th:text="#{lang.showLogInput}"></span></button>
 			
 			<!-- input panel tabs content -->
 
@@ -163,7 +200,7 @@
 						<div class="w3-container w3-cell">
 							<label for="datetime"><span th:text="#{lang.date_time}"></span></label>
 							<input class="w3-input w3-border monospace" type="datetime"
-								th:field="*{timestamp}" id="timestamp" placeholder="Date/Time"
+								th:field="*{timestamp}" id="timestamp" th:placeholder="#{lang.date_time}"
 								ondblclick="javascript: document.getElementById('timestamp').value=new Date()" />
 							<div class="callout alert small"
 								th:if="${#fields.hasErrors('timestamp')}"
@@ -175,7 +212,7 @@
 						<div class="w3-container w3-cell">
 							<label for="callsign"><span th:text="#{lang.callsign}"></span></label>
 							<input type="text" class="w3-input w3-border monospace uppercase"
-								th:field="*{callsign}" id="callsign" placeholder="Callsign" />
+								th:field="*{callsign}" id="callsign" th:placeholder="#{lang.callsign}" />
 							<div class="callout alert small"
 								th:if="${#fields.hasErrors('callsign')}" th:errors="*{callsign}"></div>
 						</div>
@@ -241,13 +278,13 @@
 								</legend>
 								<input class="w3-check" id="qsl_req" type="checkbox"
 									th:field="*{qsl_req}"><label for="qsl_req"
-									th:text="#{lang.requested}">Req</label><br /> <input
+									th:text="#{lang.requested}"></label><br /> <input
 									class="w3-check" id="qsl_sent" type="checkbox"
 									th:field="*{qsl_sent}"><label for="qsl_sent"
-									th:text="#{lang.sent}">Sent</label><br /> <input
+									th:text="#{lang.sent}"></label><br /> <input
 									class="w3-check" id="qsl_rcvd" type="checkbox"
 									th:field="*{qsl_rcvd}"><label for="qsl_rcvd"
-									th:text="#{lang.received}">Rcvd</label>
+									th:text="#{lang.received}"></label>
 							</fieldset>
 						</div>
 					</div>
@@ -273,7 +310,7 @@
 							id="callbook-tag-eqsl" class="w3-tag w3-scout-light"
 							style="visibility: hidden">eQSL AG</span> <span
 							id="callbook-tag-clublog" class="w3-tag w3-scout-light"
-							style="visibility: hidden">Clublog User</span>
+							style="visibility: hidden" th:text="#{lang.clublogUser}"></span>
 					</div>
 					<div>
 						<span id="callbook-name" class="monospace"></span> <span
@@ -295,9 +332,9 @@
 		<div class="w3-container w3-threequarter" style="margin-top: 10px;">
 			<div class="w3-bar">
 				<a href="#" id="tab-list" class="w3-bar-item w3-button w3-right"
-					onclick="openTab('display-tabs-panel', 'display-tab-list')"><i class="fas fa-list"></i> List</a>
+					onclick="openTab('display-tabs-panel', 'display-tab-list')"><i class="fas fa-list"></i> <span th:text="#{lang.list}"></span></a>
 				<a href="#" id="tab-map" class="w3-bar-item w3-button w3-right"
-					onclick="openTab('display-tabs-panel', 'display-tab-map'); mymap.invalidateSize(); mymap.fitBounds(markerLayer.getBounds());"><i class="fas fa-map"></i> Map</a>
+					onclick="openTab('display-tabs-panel', 'display-tab-map'); mymap.invalidateSize(); mymap.fitBounds(markerLayer.getBounds());"><i class="fas fa-map"></i> <span th:text="#{lang.map}"></span></a>
 			</div>
 			<div class="display-tabs-panel" id="display-tab-list">
 				<div th:switch="${contacts}">
@@ -375,6 +412,7 @@
 	<script th:src="@{/js/rigctl-ws.js}"></script>
 	<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
 	<script th:src="@{/js/L.fullscreen.js}"></script>
+	<script th:src="@{/js/L.icons.js}"></script>
 	<script th:src="@{/js/app.js}"></script>
 	<script th:src="@{/js/dx-cluster.js}"></script>
 	<script>
