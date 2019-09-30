@@ -9,7 +9,7 @@ CREATE OR REPLACE VIEW `map` AS
 	    COALESCE(
 			(SELECT
 				`location` AS `grid`
-			FROM `weblog`.`contact` `subquery_contact`
+			FROM `contact` `subquery_contact`
 	        WHERE
 				`subquery_contact`.`id` = `contact`.`id`
 	            AND
