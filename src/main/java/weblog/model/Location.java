@@ -39,6 +39,9 @@ public class Location implements Serializable {
 	@Column(name = "band")
 	private String band;
 
+	@Column(name = "grid")
+	private String grid;
+
 	public Long getId() {
 		return id;
 	}
@@ -93,6 +96,14 @@ public class Location implements Serializable {
 
 	public void setBand(String band) {
 		this.band = band;
+	}
+
+	public String getGrid() {
+		return grid;
+	}
+
+	public void setGrid(String grid) {
+		this.grid = grid;
 	}
 	
 }
