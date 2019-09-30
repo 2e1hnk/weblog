@@ -18,7 +18,7 @@ L.Maidenhead = L.LayerGroup.extend({
 	initialize: function (grids, options) {
 		L.LayerGroup.prototype.initialize.call(this);
 		L.Util.setOptions(this, options);
-    this.grids = grids;
+		this.grids = grids;
 	},
 
 	onAdd: function (map) {
@@ -100,8 +100,8 @@ L.Maidenhead = L.LayerGroup.extend({
 			} else {
 				this.addLayer(L.rectangle(bounds, {color: this.options.color, weight: 1, fill:false, interactive: false}));
 			}
-			//var pont = map.latLngToLayerPoint([gridLat,gridLon]);
-			//console.log(pont.x);
+			// var pont = map.latLngToLayerPoint([gridLat,gridLon]);
+			// console.log(pont.x);
 			this.addLayer(this._getLabel(gridLon+unit-(unit/lcor),gridLat+(unit/2)+(unit/lcor*c)));
 			}
 		}
@@ -145,13 +145,10 @@ L.Maidenhead = L.LayerGroup.extend({
 	  }
       return locator;
 	},
-
-
-
-
 });
 
-// Grids should be an object of two arrays, grids are expected to be 6-figure grids:
+// Grids should be an object of two arrays, grids are expected to be 6-figure
+// grids:
 //
 // { worked: ["AB01cd", "EF23gh"], confirmed: ["AB01cd"] }
 //

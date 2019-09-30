@@ -1,24 +1,24 @@
 // Set up map
-var mymap = L.map('map', {fullscreenControl: true}).setView([51.505, -0.09], 13);
+var map = L.map('map', {fullscreenControl: true}).setView([51.505, -0.09], 13);
 
 var maxZoom = 8;
 
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 14
-}).addTo(mymap);
+}).addTo(map);
 
-var markerLayer = L.featureGroup().addTo(mymap);
+var markerLayer = L.featureGroup().addTo(map);
 
 // TODO: Add Maidenhead Grid Layer
-/*
+
 var gridLayer = L.maidenhead({ worked: [], confirmed: [] });
-gridLayer._map = mymap;
+gridLayer._map = map;
 
 var layerControl = new L.Control.Layers(null, {
-	'Gridsquares': maidenhead = L.maidenhead()
-}).addTo(mymap);
-*/
+	'Gridsquares': maidenhead = gridLayer
+}).addTo(map);
+
 
 // Add auto-update custom control
 	var autoupdate = true;
@@ -48,17 +48,17 @@ var layerControl = new L.Control.Layers(null, {
 			},
 
 		});
-	mymap.addControl(new autoUpdateControl());
+	map.addControl(new autoUpdateControl());
 
 // Disable auto update when user pans/zooms the map (but not on a programatic pan/zoom)
-	mymap.on('zoomstart', function() {
+	map.on('zoomstart', function() {
 		console.log("isProgramaticMove", isProgramaticMove);
 		if (!isProgramaticMove) {
 			disableAutoUpdate();
 		}
 	})
 	
-	mymap.on('dragstart', function() {
+	map.on('dragstart', function() {
 		console.log("isProgramaticMove", isProgramaticMove);
 		if (!isProgramaticMove) {
 			disableAutoUpdate();
@@ -82,11 +82,11 @@ var layerControl = new L.Control.Layers(null, {
 		// Move map to correct position
 		isProgramaticMove = true;
 		if (markerLayer.getLayers().length > 0) {
-			if (mymap.getBoundsZoom(markerLayer.getBounds().pad(0.2)) > maxZoom) {
-				mymap.setView(markerLayer.getBounds().pad(0.2).getCenter(),
+			if (map.getBoundsZoom(markerLayer.getBounds().pad(0.2)) > maxZoom) {
+				map.setView(markerLayer.getBounds().pad(0.2).getCenter(),
 						maxZoom);
 			} else {
-				mymap.fitBounds(markerLayer.getBounds().pad(0.2));
+				map.fitBounds(markerLayer.getBounds().pad(0.2));
 			}
 		}
 		isProgramaticMove = false;
@@ -123,16 +123,18 @@ var bandIcon = {};
 							L.marker([ value.lat, value.lon ], {icon: bandIcon[value.band]}).bindPopup(
 									"<h1>"	+ value.callsign + "</h1><h4>" + value.name + "</h4><p>Time: "
 											+ contactDate + "<br />Band: " + value.band + "</p>").addTo(markerLayer);
-														
+
+							gridLayer.grids.worked.push(value.grid);
+							
 							latest_id = value.id;
 						});
 						
 						if (autoupdate) {
 							isProgramaticMove = true;
-							if (mymap.getBoundsZoom(markerLayer.getBounds().pad(0.2)) > maxZoom) {
-								mymap.setView(markerLayer.getBounds().pad(0.2).getCenter(), maxZoom);
+							if (map.getBoundsZoom(markerLayer.getBounds().pad(0.2)) > maxZoom) {
+								map.setView(markerLayer.getBounds().pad(0.2).getCenter(), maxZoom);
 							} else {
-								mymap.fitBounds(markerLayer.getBounds().pad(0.2));
+								map.fitBounds(markerLayer.getBounds().pad(0.2));
 							}
 							isProgramaticMove = false;
 						}
@@ -269,7 +271,7 @@ function populate_map(layer) {
         complete: function() {
         	$("#callbook-status").html("");
         	console.log(layer);
-        	mymap.fitBounds(layer.getBounds().pad(0.5));
+        	map.fitBounds(layer.getBounds().pad(0.5));
     	}
     });	
 }
