@@ -176,7 +176,7 @@
 	<!-- Right sidebar menu (DX Cluster etc.) -->
 	<div class="w3-sidebar w3-bar w3-card w3-animate-right" style="display:none;right:0;z-index: 9997;" id="rightMenu">
 		<button class="w3-bar-item w3-button"><i class="fa fa-globe w3-xlarge"></i> <span th:text="#{lang.dxCluster}"></span> (<span class="w3-small" th:text="${@environment.getProperty('DXCLUSTER_HOST')}">[DX Cluster Hostname]</span>)</button>
-  	  <table id="dx-cluster-table" class="w3-table-all">
+  	  <table id="dx-cluster-table" class="w3-table w3-stripped w3-bordered">
 	  	<thead>
 	  		<tr>
 	  			<th th:text="#{lang.time}"></th>
@@ -194,7 +194,7 @@
 
 	<!-- content pane -->
 	<div class="w3-row">
-		<div class="w3-container w3-quarter">
+		<div class="w3-container w3-col s12 m5 l3">
 			<!-- Show/hide button (on mobile) -->
 			<button onclick="toggleSmallPanel('log-input-header', 'log-input-form')" id="log-input-header" class="w3-button w3-block w3-left-align w3-hide-large w3-hide-medium"><i class="fas fa-chevron-down"></i> <span th:text="#{lang.showLogInput}"></span></button>
 			
@@ -308,7 +308,7 @@
 
 
 		<!-- Info Div -->
-		<div class="info-box">
+		<div class="info-box w3-hide-small">
 			<div class="w3-row">
 				<div class="w3-half w3-container">
 					<div>
@@ -337,12 +337,12 @@
 			</div>
 		</div>
 
-		<div class="w3-container w3-threequarter" style="margin-top: 10px;">
+		<div class="w3-container w3-col s12 m7 l9" style="margin-top: 10px;">
 			<div class="w3-bar">
 				<a href="#" id="tab-list" class="w3-bar-item w3-button w3-right"
 					onclick="openTab('display-tabs-panel', 'display-tab-list')"><i class="fas fa-list"></i> <span th:text="#{lang.list}"></span></a>
 				<a href="#" id="tab-map" class="w3-bar-item w3-button w3-right"
-					onclick="openTab('display-tabs-panel', 'display-tab-map'); mymap.invalidateSize(); mymap.fitBounds(markerLayer.getBounds());"><i class="fas fa-map"></i> <span th:text="#{lang.map}"></span></a>
+					onclick="openTab('display-tabs-panel', 'display-tab-map'); map.invalidateSize(); map.fitBounds(markerLayer.getBounds());"><i class="fas fa-map"></i> <span th:text="#{lang.map}"></span></a>
 			</div>
 			<div class="display-tabs-panel" id="display-tab-list">
 				<div th:switch="${contacts}">
@@ -404,7 +404,6 @@
 				style="display: none;">
 				<div id="map"></div>
 			</div>
-
 		</div>
 	</div>
 	<!-- end content pane -->
@@ -419,6 +418,7 @@
 	<script th:src="@{/webjars/leaflet/leaflet.js}"></script>
 	<script th:src="@{/js/rigctl-ws.js}"></script>
 	<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
+	<script th:src="@{/js/L.Heatmap.min.js}"></script>
 	<script th:src="@{/js/L.fullscreen.js}"></script>
 	<script th:src="@{/js/L.icons.js}"></script>
 	<script th:src="@{/js/app.js}"></script>

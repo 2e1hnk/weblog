@@ -38,8 +38,8 @@ L.Maidenhead = L.LayerGroup.extend({
 	},
 
 	redraw: function () {
-		var d3 =         new Array(20,10,10,10,10,10,1 ,1 ,1 ,1 ,1/24,1/24,1/24,1/24,1/24,1/240,1/240,1/240,1/240,1/240/24,1/240/24 );
-		var lat_cor =    new Array(0 ,8 ,8 ,8 ,10,14,6 ,8 ,8 ,8 ,1.4 ,2.5 ,3   ,3.5 ,4   ,4    ,3.5  ,3.5  ,3    ,1.8     ,1.6      );
+		var d3 =         new Array(20,10,10,10,1,1,   1 ,1 ,1 ,1 ,1/24,1/24,1/24,1/24,1/24,1/240,1/240,1/240,1/240,1/240/24,1/240/24 );
+		var lat_cor =    new Array(0 ,8 ,8 ,8 ,2.5,2.2, 6 ,8 ,8 ,8 ,1.4 ,2.5 ,3   ,3.5 ,4   ,4    ,3.5  ,3.5  ,3    ,1.8     ,1.6      );
 		var bounds = this._map.getBounds();
 		var zoom = this._map.getZoom();
 		var unit = d3[zoom];
@@ -82,13 +82,8 @@ L.Maidenhead = L.LayerGroup.extend({
 		for (var gridLon = left; gridLon < right; gridLon += (unit*2)) {
 			for (var gridLat = bottom; gridLat < top; gridLat += unit) {
 			var bounds = [[gridLat,gridLon],[gridLat+unit,gridLon+(unit*2)]];
-
-      console.log("Checking:", bounds);
-      console.log("Locator:", this._getLocator(gridLon+unit,gridLat+unit/2));
-
+      
 			if(grid_two.includes(this._getLocator(gridLon+unit,gridLat+unit/2)) || grid_four.includes(this._getLocator(gridLon+unit,gridLat+unit/2))) {
-
-        console.log("Found!");
 
 				if(grid_two_confirmed.includes(this._getLocator(gridLon+unit,gridLat+unit/2)) || grid_four_confirmed.includes(this._getLocator(gridLon+unit,gridLat+unit/2))) {
 
@@ -109,7 +104,7 @@ L.Maidenhead = L.LayerGroup.extend({
 	},
 
 	_getLabel: function(lon,lat) {
-	  var title_size = new Array(0 ,10,12,16,20,26,12,16,24,36,12  ,14  ,20  ,36  ,60  ,12   ,20   ,36   ,60   ,12      ,24       );
+	  var title_size = new Array(0 ,10,12,16,7,12,12,16,24,36,12  ,14  ,20  ,36  ,60  ,12   ,20   ,36   ,60   ,12      ,24       );
 	  var zoom = this._map.getZoom();
 	  var size = title_size[zoom]+'px';
 	  var title = '<span style="cursor: default;"><font style="color:'+this.options.color+'; font-size:'+size+'; font-weight: 900; word-wrap: normal;">' + this._getLocator(lon,lat) + '</font></span>';
@@ -122,7 +117,7 @@ L.Maidenhead = L.LayerGroup.extend({
 	  var ydiv_arr=new Array(10, 1, 1/24, 1/240, 1/240/24);
 	  var d1 = "ABCDEFGHIJKLMNOPQR".split("");
 	  var d2 = "ABCDEFGHIJKLMNOPQRSTUVWX".split("");
-	  var d4 =         new Array(0 ,1 ,1 ,1 ,1 ,1 ,2 ,2 ,2 ,2 ,3   ,3   ,3   ,3   ,3   ,4    ,4    ,4    ,4    ,5       ,5        );
+	  var d4 =         new Array(0 ,1 ,1 ,1 ,2 ,2 ,2 ,2 ,2 ,2 ,3   ,3   ,3   ,3   ,3   ,4    ,4    ,4    ,4    ,5       ,5        );
       var locator = "";
       var x = lon;
       var y = lat;

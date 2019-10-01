@@ -8,15 +8,25 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
     maxZoom: 14
 }).addTo(map);
 
+// Marker Layer
+
 var markerLayer = L.featureGroup().addTo(map);
 
-// TODO: Add Maidenhead Grid Layer
+// Maidenhead Grid Layer
 
 var gridLayer = L.maidenhead({ worked: [], confirmed: [] });
 gridLayer._map = map;
 
+// Heatmap Layer
+
+//var heatmapLayer = L.heatLayer([], {radius: 25}).addTo(map);
+
+// Add layers
+
 var layerControl = new L.Control.Layers(null, {
-	'Gridsquares': maidenhead = gridLayer
+	'Gridsquares': maidenhead = gridLayer,
+	'Markers': markerLayer,
+//	'Heatmap': heatmapLayer
 }).addTo(map);
 
 
@@ -120,11 +130,16 @@ var bandIcon = {};
 							
 							var contactDate = moment.utc(value.timestamp).format("YYYY-MM-DD HH:mm");
 							
+							// Add marker
 							L.marker([ value.lat, value.lon ], {icon: bandIcon[value.band]}).bindPopup(
 									"<h1>"	+ value.callsign + "</h1><h4>" + value.name + "</h4><p>Time: "
 											+ contactDate + "<br />Band: " + value.band + "</p>").addTo(markerLayer);
 
+							// Add to grid map
 							gridLayer.grids.worked.push(value.grid);
+							
+							// Add to heatmap
+//							heatmapLayer.addLatLng([value.lat, value.lon, 1]);
 							
 							latest_id = value.id;
 						});
@@ -507,4 +522,29 @@ function toggleElement(id) {
 	  } else {
 		  x.className = x.className.replace("w3-hide", "");
 	  }
+}
+
+function checkLog(callsign) {
+	$('#checkLogResults').empty();
+	$.ajax({
+        type: "GET",
+        url: "/log/search/" + callsign,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+        	$('#checkLogResults').empty();
+        	if ( data.length < 1 ) {
+        		$('#checkLogResults').html("Sorry, nothing in the log");
+        	}
+        	$.each(data, function(index, value) {
+        		$('#checkLogResults').append("<tr><td>" + value.timestamp + "</td><td>" + value.callsign + "</td><td>" + value.band + "</td><td>" + value.mode + "</td></tr>");
+        	});
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
+        },
+        complete: function() {
+        	$("#callbook-status").html("");
+    	}
+    });	
 }

@@ -72,7 +72,7 @@ input.monospace {
 
 	<!-- navbar -->
 	<div class="w3-bar w3-scout">
-		<a href="#" class="w3-bar-item w3-button w3-mobile">
+		<a href="#" class="w3-bar-item w3-button">
 			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" />
 			<b th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</b>
 		</a>
@@ -84,7 +84,7 @@ input.monospace {
 
 	<!-- content pane -->
 	<div class="w3-row" style="margin-top: 20px;">
-		<div class="w3-container w3-quarter">
+		<div class="w3-quarter">
 			<div class="w3-container">
 				<header class="w3-container w3-scout-l3">
 				  <h4>Total Contacts Logged</h4>
@@ -109,9 +109,50 @@ input.monospace {
 				  <h5 th:text="${latestContactTimeAgo}">Footer</h5>
 				</footer>
 			</div>
-		</div>
-		<div id="map" class="w3-container w3-half">
+			<br />
+			<div class="w3-container">
+				<header class="w3-container w3-scout-l3">
+				  <h4>Check the Log</h4>
+				</header>
+				<div class="w3-container w3-scout-l5">
+				  <input type="text" class="w3-input" placeholder="Your callsign" id="checkLogCallsign" />
+				</div>
+				<footer class="w3-container w3-scout-l3">
+				  <button class="w3-button w3-right" onclick="document.getElementById('checkLogModal').style.display='block';checkLog(document.getElementById('checkLogCallsign').value)">Check Log</button>
+				</footer>
+			</div>
 			
+			<!-- Check Log Modal -->
+			<div id="checkLogModal" class="w3-modal" style="z-index: 2000;">
+			  <div class="w3-modal-content">
+			    <header class="w3-container w3-scout">
+			      <span onclick="document.getElementById('checkLogModal').style.display='none'"
+			      class="w3-button w3-display-topright">&times;</span>
+			      <h2>Log Check</h2>
+			    </header>
+			    <div class="w3-container">
+			      <table class="w3-table w3-striped">
+			      	<thead>
+			      		<tr>
+			      			<th>Date/Time</th>
+			      			<th>Callsign</th>
+			      			<th>Band</th>
+			      			<th>Mode</th>
+			      		</tr>
+			      	</thead>
+			      	<tbody id="checkLogResults" >
+			      		
+			      	</tbody>
+			      </table>
+			    </div>
+			    <footer class="w3-container w3-scout">
+			      <p>QSL Cards will be sent via the bureau. Please send cards to us directly to our callsign (no QSL Mgr). Logs will also be uploaded to LoTW and eQSL.</p>
+			    </footer>
+			  </div>
+			</div> <!-- End Check log -->
+		</div>
+		<div class="w3-container w3-half">
+			<div id="map" class="w3-container"></div>
 		</div>
 		<div class="w3-container w3-quarter">
 			<table class="w3-table w3-striped">
@@ -198,6 +239,7 @@ input.monospace {
 	<script th:src="@{/webjars/chartjs/Chart.min.js}"></script>
 	<script th:src="@{/js/rigctl-ws.js}"></script>
 	<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
+	<script th:src="@{/js/L.Heatmap.min.js}"></script>
 	<script th:src="@{/js/L.fullscreen.js}"></script>
 	<script th:src="@{/js/L.icons.js}"></script>
 	<script th:src="@{/js/app.js}"></script>

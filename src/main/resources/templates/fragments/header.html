@@ -1,0 +1,83 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</title>
+
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" th:href="@{/webjars/w3-css/w3.css}">
+<link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
+<link rel="stylesheet" th:href="@{/css/scout.css}">
+<link rel="stylesheet" th:href="@{/css/app.css}">
+<link rel="stylesheet" th:href="@{/webjars/leaflet/leaflet.css}" />
+<link rel="stylesheet" th:href="@{/css/L.fullscreen.css}" />
+
+<!-- favicon -->
+<link rel="apple-touch-icon" sizes="57x57"
+	th:href="@{/apple-icon-57x57.png}">
+<link rel="apple-touch-icon" sizes="60x60"
+	th:href="@{/apple-icon-60x60.png}">
+<link rel="apple-touch-icon" sizes="72x72"
+	th:href="@{/apple-icon-72x72.png}">
+<link rel="apple-touch-icon" sizes="76x76"
+	th:href="@{/apple-icon-76x76.png}">
+<link rel="apple-touch-icon" sizes="114x114"
+	th:href="@{/apple-icon-114x114.png}">
+<link rel="apple-touch-icon" sizes="120x120"
+	th:href="@{/apple-icon-120x120.png}">
+<link rel="apple-touch-icon" sizes="144x144"
+	th:href="@{/apple-icon-144x144.png}">
+<link rel="apple-touch-icon" sizes="152x152"
+	th:href="@{/apple-icon-152x152.png}">
+<link rel="apple-touch-icon" sizes="180x180"
+	th:href="@{/apple-icon-180x180.png}">
+<link rel="icon" type="image/png" sizes="192x192"
+	th:href="@{/android-icon-192x192.png}">
+<link rel="icon" type="image/png" sizes="32x32"
+	th:href="@{/favicon-32x32.png}">
+<link rel="icon" type="image/png" sizes="96x96"
+	th:href="@{/favicon-96x96.png}">
+<link rel="icon" type="image/png" sizes="16x16"
+	th:href="@{/favicon-16x16.png}">
+<link rel="manifest" th:href="@{/manifest.json}">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage"
+	th:content="@{/ms-icon-144x144.png}">
+<meta name="theme-color" content="#ffffff">
+
+<!-- fonts -->
+<link
+	href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap"
+	rel="stylesheet">
+
+<style>
+htmp, body {
+	height: 100%;
+}
+input.monospace {
+	font-family: 'Roboto Mono', monospace;
+}
+
+.monospace {
+	font-family: 'Roboto Mono', monospace;
+}
+
+#map {
+	min-height: 550px;
+}
+</style>
+</head>
+<body>
+
+	<!-- navbar -->
+	<div class="w3-bar w3-scout">
+		<a href="#" class="w3-bar-item w3-button w3-mobile">
+			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" />
+			<b th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</b>
+		</a>
+		
+		<a href="/log" class="w3-bar-item w3-button w3-right">Log Input</a>
+
+	</div>
+	<!-- end navbar -->
