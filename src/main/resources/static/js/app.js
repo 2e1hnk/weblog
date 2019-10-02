@@ -1,3 +1,13 @@
+// Enable/disable various features
+
+var features = {
+		heatmap: true,
+}
+
+var config = {
+	defaultHeatmapIntensity: 100,
+}
+
 // Set up map
 var map = L.map('map', {fullscreenControl: true}).setView([51.505, -0.09], 13);
 
@@ -17,18 +27,12 @@ var markerLayer = L.featureGroup().addTo(map);
 var gridLayer = L.maidenhead({ worked: [], confirmed: [] });
 gridLayer._map = map;
 
-// Heatmap Layer
-
-//var heatmapLayer = L.heatLayer([], {radius: 25}).addTo(map);
-
 // Add layers
 
 var layerControl = new L.Control.Layers(null, {
 	'Gridsquares': maidenhead = gridLayer,
-	'Markers': markerLayer,
-//	'Heatmap': heatmapLayer
+	'Markers': markerLayer
 }).addTo(map);
-
 
 // Add auto-update custom control
 	var autoupdate = true;
@@ -62,18 +66,26 @@ var layerControl = new L.Control.Layers(null, {
 
 // Disable auto update when user pans/zooms the map (but not on a programatic pan/zoom)
 	map.on('zoomstart', function() {
-		console.log("isProgramaticMove", isProgramaticMove);
+		console.log("isProgramaticMove (zoomStart)", isProgramaticMove);
 		if (!isProgramaticMove) {
 			disableAutoUpdate();
 		}
-	})
+	});
 	
 	map.on('dragstart', function() {
-		console.log("isProgramaticMove", isProgramaticMove);
+		console.log("isProgramaticMove (dragStart)", isProgramaticMove);
 		if (!isProgramaticMove) {
 			disableAutoUpdate();
 		}
-	})
+	});
+	
+// Handle the end of a zoom, if the 
+	map.on('zoomend', function() {
+		console.log("zoom end, autoupdate?", autoupdate);
+		if ( autoupdate ) {
+			enableAutoUpdate();
+		}
+	});
 	
 // Auto-update control functions
 	function toggleAutoUpdate() {
@@ -108,6 +120,21 @@ var layerControl = new L.Control.Layers(null, {
 				'rgba(0, 0, 0, 0.2)');
 		console.log("Auto update disabled");
 	}
+	
+// Leaflet post-load. This is called when the map is actually displayed to a user. Put stuff in here
+// that can't be loaded when the map canvas is not visible (i.e. has zero height). Try to avoid using
+// this where possible
+var heatmapLayer;
+function mapPostLoad() {
+	// Heatmap Layer
+	if ( features.heatmap && !map.hasLayer(heatmapLayer) ) {
+		heatmapLayer = L.heatLayer([], {radius: 25}).addTo(map);
+		layerControl.addOverlay(heatmapLayer, "Heatmap");
+		markerLayer.eachLayer(function (marker){
+			heatmapLayer.addLatLng([marker.getLatLng().lat, marker.getLatLng().lng, config.defaultHeatmapIntensity]);
+		});
+	}
+}
 
 // Band to Icon mapping
 var bandIcon = {};
@@ -138,8 +165,10 @@ var bandIcon = {};
 							// Add to grid map
 							gridLayer.grids.worked.push(value.grid);
 							
-							// Add to heatmap
-//							heatmapLayer.addLatLng([value.lat, value.lon, 1]);
+							// Note - the heatmap may or may not have been created at this point
+							if ( map.hasLayer(heatmapLayer) ) {
+								heatmapLayer.addLatLng([value.lat, value.lon, config.defaultHeatmapIntensity]);
+							}
 							
 							latest_id = value.id;
 						});
@@ -151,7 +180,9 @@ var bandIcon = {};
 							} else {
 								map.fitBounds(markerLayer.getBounds().pad(0.2));
 							}
-							isProgramaticMove = false;
+							
+							// This gets executed before the zoom ends, so we need to delay it a bit
+							setTimeout(function() {isProgramaticMove = false;}, 200);
 						}
 					}
 					

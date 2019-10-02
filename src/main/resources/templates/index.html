@@ -342,7 +342,7 @@
 				<a href="#" id="tab-list" class="w3-bar-item w3-button w3-right"
 					onclick="openTab('display-tabs-panel', 'display-tab-list')"><i class="fas fa-list"></i> <span th:text="#{lang.list}"></span></a>
 				<a href="#" id="tab-map" class="w3-bar-item w3-button w3-right"
-					onclick="openTab('display-tabs-panel', 'display-tab-map'); map.invalidateSize(); map.fitBounds(markerLayer.getBounds());"><i class="fas fa-map"></i> <span th:text="#{lang.map}"></span></a>
+					onclick="openTab('display-tabs-panel', 'display-tab-map'); map.invalidateSize(); map.fitBounds(markerLayer.getBounds()); mapPostLoad();"><i class="fas fa-map"></i> <span th:text="#{lang.map}"></span></a>
 			</div>
 			<div class="display-tabs-panel" id="display-tab-list">
 				<div th:switch="${contacts}">
