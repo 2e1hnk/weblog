@@ -9,7 +9,7 @@ var config = {
 }
 
 // Set up map
-var map = L.map('map', {fullscreenControl: true}).setView([51.505, -0.09], 13);
+var map = L.map('map', {fullscreenControl: true, layers: markerLayer}).setView([51.505, -0.09], 13);
 
 var maxZoom = 8;
 
@@ -21,6 +21,7 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
 // Marker Layer
 
 var markerLayer = L.featureGroup().addTo(map);
+var markerClusterLayer = L.markerClusterGroup().addTo(map);
 
 // Maidenhead Grid Layer
 
@@ -31,6 +32,7 @@ gridLayer._map = map;
 
 var layerControl = new L.Control.Layers(null, {
 	'Gridsquares': maidenhead = gridLayer,
+	'Clustered Markers': markerClusterLayer,
 	'Markers': markerLayer
 }).addTo(map);
 
@@ -39,30 +41,71 @@ var layerControl = new L.Control.Layers(null, {
 	var isProgramaticMove = false;
 	var latest_id = 0;
 	var autoUpdateControl = L.Control
-		.extend({
+	.extend({
+		options : {
+			position : 'topleft'
+		//control position - allowed: 'topleft', 'topright', 'bottomleft', 'bottomright'
+		},
 
-			options : {
-				position : 'topleft'
-			//control position - allowed: 'topleft', 'topright', 'bottomleft', 'bottomright'
-			},
+		onAdd : function(map) {
+			var container = L.DomUtil
+					.create('div',
+							'leaflet-bar leaflet-control leaflet-control-custom auto-update-container');
+			container.innerHTML = '<a href="#" title="Automatically update map when new contacts are logged" role="button" aria-label="Automatically pan and zoom to show all contacts"><i id="autoupdateIcon" class="fas fa-search-location" style="padding-top: 5px"></i></a>'
+			container.style.fontSize = '20px';
+			container.style.backgroundColor = 'white';
+			container.style.borderColor = 'red';
 
-			onAdd : function(map) {
-				var container = L.DomUtil
-						.create('div',
-								'leaflet-bar leaflet-control leaflet-control-custom auto-update-container');
-				container.innerHTML = '<a href="#" title="Automatically update map when new contacts are logged" role="button" aria-label="Automatically pan and zoom to show all contacts"><i id="autoupdateIcon" class="fas fa-search-location" style="padding-top: 5px"></i></a>'
-				container.style.fontSize = '20px';
-				container.style.backgroundColor = 'white';
-				container.style.borderColor = 'red';
+			container.onclick = function() {
+				toggleAutoUpdate();
+			}
+			return container;
+		},
 
-				container.onclick = function() {
-					toggleAutoUpdate();
+	});
+map.addControl(new autoUpdateControl());
+
+// Add cluster/uncluster control
+var clusterControl = L.Control.extend({
+	options : {
+		position : 'topleft'
+	//control position - allowed: 'topleft', 'topright', 'bottomleft', 'bottomright'
+	},
+
+	onAdd : function(map) {
+		var container = L.DomUtil
+				.create('div',
+						'leaflet-bar leaflet-control leaflet-control-custom leaflet-control-cluster');
+		container.innerHTML = '<a href="#" title="Group/ungroup contacts" role="button" aria-label="Group/ungroup contacts"></a>'
+		
+
+		container.onclick = function() {
+			
+			if ( map.hasLayer(markerClusterLayer) ) {
+				if ( L.DomUtil.hasClass(container, 'leaflet-control-cluster-clustered')) {
+					L.DomUtil.removeClass(container, 'leaflet-control-cluster-clustered');
 				}
-				return container;
-			},
+				if ( map.hasLayer(markerClusterLayer) ) {
+					map.removeLayer(markerClusterLayer);
+				}
+				if ( !map.hasLayer(markerLayer) ) {
+					map.addLayer(markerLayer);
+				}
+			} else {
+				L.DomUtil.addClass(container, 'leaflet-control-cluster-clustered');
+				if ( map.hasLayer(markerLayer) ) {
+					map.removeLayer(markerLayer);
+				}
+				if ( !map.hasLayer(markerClusterLayer) ) {
+					map.addLayer(markerClusterLayer);
+				}
+			}
+		}
+		return container;
+	},
 
-		});
-	map.addControl(new autoUpdateControl());
+});
+map.addControl(new clusterControl());
 
 // Disable auto update when user pans/zooms the map (but not on a programatic pan/zoom)
 	map.on('zoomstart', function() {
@@ -158,9 +201,11 @@ var bandIcon = {};
 							var contactDate = moment.utc(value.timestamp).format("YYYY-MM-DD HH:mm");
 							
 							// Add marker
-							L.marker([ value.lat, value.lon ], {icon: bandIcon[value.band]}).bindPopup(
+							var marker = L.marker([ value.lat, value.lon ], {icon: bandIcon[value.band]}).bindPopup(
 									"<h1>"	+ value.callsign + "</h1><h4>" + value.name + "</h4><p>Time: "
-											+ contactDate + "<br />Band: " + value.band + "</p>").addTo(markerLayer);
+											+ contactDate + "<br />Band: " + value.band + "</p>");
+							markerLayer.addLayer(marker);
+							markerClusterLayer.addLayer(marker);
 
 							// Add to grid map
 							gridLayer.grids.worked.push(value.grid);

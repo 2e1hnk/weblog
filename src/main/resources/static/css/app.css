@@ -112,13 +112,9 @@ button.navbar-button {
 .circle-div-icon {
 	background-color: #f00;
 	border-radius:100px;
-	box-shadow: 0 0 10px rgba(0,0,0,0.1);
-	  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.1);
-	  -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.1);
-	  -o-box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 .map-icon-0 {
-	background-color: #f00;
+	bachground-color: #f00;
 }
 .map-icon-1 {
 	background-color: #0f0;
