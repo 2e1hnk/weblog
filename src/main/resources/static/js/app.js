@@ -148,7 +148,7 @@ var bandIcon = {};
 							console.log("Adding", value);
 							
 							if ( !(value.band in bandIcon) ) {
-								var nextIconIndex = Object.keys(bandIcon).length;
+								var nextIconIndex = Object.keys(bandIcon).length % icons.length;
 								console.log("nextIconIndex", nextIconIndex);
 								bandIcon[value.band] = icons[nextIconIndex];
 							}

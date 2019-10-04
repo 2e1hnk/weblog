@@ -109,3 +109,62 @@ button.navbar-button {
   background-color: DodgerBlue !important;
   color: #ffffff;
 }
+.circle-div-icon {
+	background-color: #f00;
+	border-radius:100px;
+	box-shadow: 0 0 10px rgba(0,0,0,0.1);
+	  -moz-box-shadow: 0 0 10px rgba(0,0,0,0.1);
+	  -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.1);
+	  -o-box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.map-icon-0 {
+	background-color: #f00;
+}
+.map-icon-1 {
+	background-color: #0f0;
+}
+.map-icon-2 {
+	background-color: #00f;
+}
+.map-icon-3 {
+	background-color: #ff0;
+}
+.map-icon-4 {
+	background-color: #f0f;
+}
+.map-icon-5 {
+	background-color: #0ff;
+}
+.map-icon-6 {
+	background-color: #f80;
+}
+.map-icon-7 {
+	background-color: #f88;
+}
+.map-icon-8 {
+	background-color: #f08;
+}
+.map-icon-9 {
+	background-color: #ff8;
+}
+.map-icon-10 {
+	background-color: #8f0;
+}
+.map-icon-11 {
+	background-color: #8f8;
+}
+.map-icon-12 {
+	background-color: #0f8;
+}
+.map-icon-13 {
+	background-color: #80f;
+}
+.map-icon-14 {
+	background-color: #88f;
+}
+.map-icon-15 {
+	background-color: #08f;
+}
+.map-icon-16 {
+	background-color: #f8f;
+}
