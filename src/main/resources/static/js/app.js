@@ -560,7 +560,7 @@ function checkLog(callsign) {
 	$('#checkLogResults').empty();
 	$.ajax({
         type: "GET",
-        url: "/log/search/" + callsign,
+        url: "/search/" + callsign,
         cache: false,
         timeout: 600000,
         success: function (data) {

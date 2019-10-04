@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	      http
 	      	 .csrf().disable()
 	         .authorizeRequests()
-	            .antMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/location/**", "/map").permitAll()
+	            .antMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/location/**", "/map", "/search/**").permitAll()
 	         .and()
 	            .httpBasic()
 	            .realmName("Weblog API")
