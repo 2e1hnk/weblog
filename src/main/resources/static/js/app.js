@@ -373,6 +373,7 @@ function callsign_lookup(callsign) {
 	            	}
 	            	$('#name').val(data[0].fname);
 	            	$('#location').val(data[0].grid);
+	            	$('#email').val(data[0].email);
 		            
 		        } else {
 	        		// Hide the info box

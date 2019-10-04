@@ -8,7 +8,7 @@
 <!-- Compiled and minified CSS -->
 <link rel="stylesheet" th:href="@{/webjars/w3-css/w3.css}">
 <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
-<link rel="stylesheet" th:href="@{/css/scout.css}">
+<link rel="stylesheet" th:href="@{/css/scout.theme.css}">
 <link rel="stylesheet" th:href="@{/css/app.css}">
 <link rel="stylesheet" th:href="@{/webjars/leaflet/leaflet.css}" />
 <link rel="stylesheet" th:href="@{/css/L.fullscreen.css}" />
@@ -69,7 +69,7 @@
 <body>
 
 	<!-- navbar -->
-	<div class="w3-bar w3-scout">
+	<div class="w3-bar w3-theme">
 		<button class="w3-bar-item w3-button navbar-button" id="left-menu-button" style="z-index:10002;" onclick="toggleLeftMenu()"><i class="fas fa-bars w3-large"></i></button>
 		
 		<a href="#" class="w3-bar-item w3-button">
@@ -121,11 +121,11 @@
 		</div>
 
 		<form style="margin-bottom: 0px;" action="/log/find" method="get">
-			<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small w3-scout-light w3-text-scout navbar-button" type="submit">
+			<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small w3-theme-light w3-text-theme navbar-button" type="submit">
 				<i class="fas fa-search"></i>
 			</button>
 			<input type="text"
-				class="w3-bar-item w3-input w3-right w3-scout-light w3-hide-small"
+				class="w3-bar-item w3-input w3-right w3-theme-light w3-hide-small"
 				th:placeholder="#{lang.search}" name="q">
 		</form>
 
@@ -138,9 +138,9 @@
 		  <form style="margin-bottom: 0px; margin-top:10px; margin-left: 16px; margin-right: 16px" action="/log/find" method="get">
 		  	<div class="w3-bar">
 				<input type="text" style="width:268px; margin-right: 0px; height: 38px;"
-					class="w3-bar-item w3-input w3-scout-light"
+					class="w3-bar-item w3-input w3-theme-light"
 					th:placeholder="#{lang.search}" name="q">
-				<button class="w3-bar-item w3-button w3-scout" type="submit" style="margin-left: 0px; height: 38px;">
+				<button class="w3-bar-item w3-button w3-theme" type="submit" style="margin-left: 0px; height: 38px;">
 					<i class="fas fa-search"></i>
 				</button>
 			</div>
@@ -151,9 +151,9 @@
 		  <h3 class="w3-bar-item"><i class="fas fa-digital-tachograph"></i> <span th:text="#{lang.rigCtl}"></span></h3>
 		  	<div class="w3-show-inline-block">
 			  	<div class="w3-bar" style="margin-left: 16px; margin-right: 16px">
-				  	<button type="button" id="1" class="w3-btn w3-scout websocket-connect">Rig 1</button>
-					<button type="button" id="2" class="w3-btn w3-scout websocket-connect">Rig 2</button>
-					<button type="button" id="disconnect" class="w3-btn w3-scout" disabled="disabled" th:text="#{lang.disconnect}"></button>
+				  	<button type="button" id="1" class="w3-btn w3-theme websocket-connect">Rig 1</button>
+					<button type="button" id="2" class="w3-btn w3-theme websocket-connect">Rig 2</button>
+					<button type="button" id="disconnect" class="w3-btn w3-theme" disabled="disabled" th:text="#{lang.disconnect}"></button>
 				</div>
 			</div>
 		  
@@ -258,7 +258,7 @@
 							<input type="text" class="w3-input w3-border monospace"
 								th:field="*{frequency}" data-item-id="frequency" />
 						</div>
-						<div class="w3-container w3-cell">
+						<div class="w3-container w3-cell autocomplete">
 							<label for="band"><span th:text="#{lang.band}"></span></label> <input
 								type="text" class="w3-input w3-border monospace"
 								th:field="*{band}" id="band" />
@@ -266,7 +266,7 @@
 					</div>
 
 					<div class="w3-cell-row">
-						<div class="w3-container w3-cell">
+						<div class="w3-container w3-cell autocomplete">
 							<label for="mode"><span th:text="#{lang.mode}"></span></label> <input
 								type="text" class="w3-input w3-border monospace uppercase"
 								th:field="*{mode}" data-item-id="mode" />
@@ -275,6 +275,55 @@
 							<label for="opName"><span th:text="#{lang.opname}"></span></label>
 							<input type="text" class="w3-input w3-border monospace"
 								th:field="*{opName}" data-item-id="opName" />
+						</div>
+					</div>
+					
+					<button
+						onclick="toggleElement('extended-info'); return false;"
+						id="log-input-extended"
+						class="w3-button w3-block w3-left-align">
+							<i class="fas fa-chevron-down"></i>
+							<span th:text="#{lang.showExtendedInfo}"></span>
+					</button>
+					
+					<div id="extended-info" class="w3-hide">
+						<div class="w3-cell-row">
+							<div class="w3-container w3-cell">
+								<label for="power"><span th:text="#{lang.power}"></span></label> <input
+									type="text" class="w3-input w3-border monospace uppercase"
+									th:field="*{power}" data-item-id="power" />
+							</div>
+							<div class="w3-container w3-cell">
+								<label for="rig"><span th:text="#{lang.rig}"></span></label>
+								<input type="text" class="w3-input w3-border monospace"
+									th:field="*{rig}" data-item-id="rig" />
+							</div>
+						</div>
+
+						<div class="w3-cell-row">
+							<div class="w3-container w3-cell">
+								<label for="antennaAz"><span th:text="#{lang.azimuth}"></span></label> <input
+									type="text" class="w3-input w3-border monospace uppercase"
+									th:field="*{antennaAz}" data-item-id="antennaAz" />
+							</div>
+							<div class="w3-container w3-cell">
+								<label for="antennaEl"><span th:text="#{lang.elevation}"></span></label>
+								<input type="text" class="w3-input w3-border monospace"
+									th:field="*{antennaEl}" data-item-id="antennaEl" />
+							</div>
+						</div>
+
+						<div class="w3-cell-row">
+							<div class="w3-container w3-cell">
+								<label for="antennaPath"><span th:text="#{lang.path}"></span></label> <input
+									type="text" class="w3-input w3-border monospace uppercase"
+									th:field="*{antennaPath}" data-item-id="antennaPath" />
+							</div>
+							<div class="w3-container w3-cell">
+								<label for="email"><span th:text="#{lang.email}"></span></label>
+								<input type="text" class="w3-input w3-border monospace"
+									th:field="*{email}" data-item-id="email" />
+							</div>
 						</div>
 					</div>
 
@@ -299,7 +348,7 @@
 
 					<div class="w3-cell-row">
 						<div class="w3-container w3-cell">
-							<input type="submit" class="w3-button w3-scout w3-block"
+							<input type="submit" class="w3-button w3-theme w3-block"
 								th:value="#{lang.log}">
 						</div>
 					</div>
@@ -312,12 +361,12 @@
 			<div class="w3-row">
 				<div class="w3-half w3-container">
 					<div>
-						<span id="callbook-tag-qslmgr" class="w3-tag w3-scout"
+						<span id="callbook-tag-qslmgr" class="w3-tag w3-theme"
 							style="visibility: hidden"></span> <span id="callbook-tag-lotw"
-							class="w3-tag w3-scout-light" style="visibility: hidden">LoTW</span> <span
-							id="callbook-tag-eqsl" class="w3-tag w3-scout-light"
+							class="w3-tag w3-theme-light" style="visibility: hidden">LoTW</span> <span
+							id="callbook-tag-eqsl" class="w3-tag w3-theme-light"
 							style="visibility: hidden">eQSL AG</span> <span
-							id="callbook-tag-clublog" class="w3-tag w3-scout-light"
+							id="callbook-tag-clublog" class="w3-tag w3-theme-light"
 							style="visibility: hidden" th:text="#{lang.clublogUser}"></span>
 					</div>
 					<div>
@@ -372,9 +421,9 @@
 									<td th:text="${contact.location}"></td>
 									<td th:text="${contact.name}"></td>
 									<td><a th:href="@{/log/edit/{id}(id=${contact.id})}"><i
-											class="fas fa-edit w3-text-scout"></i></a></td>
+											class="fas fa-edit w3-text-theme"></i></a></td>
 									<td><a th:href="@{/log/delete/{id}(id=${contact.id})}"><i
-											class="fas fa-trash w3-text-scout"></i></a></td>
+											class="fas fa-trash w3-text-theme"></i></a></td>
 								</tr>
 							</tbody>
 						</table>
@@ -388,7 +437,7 @@
 							th:classappend="${currentPage eq 1} ? 'disabled'">&laquo;</a> <a
 							class="w3-button disabled" th:if="${currentPage - 5 > 0}"
 							aria-hidden="true">...</a> <a class="w3-button"
-							th:classappend="${i eq currentPage} ? 'w3-scout'"
+							th:classappend="${i eq currentPage} ? 'w3-theme'"
 							th:each="i : ${#numbers.sequence( currentPage-5, totalPages > 10 + currentPage ? currentPage + 5 : totalPages, 1)}"
 							th:if="${i>0 and i < totalPages}" th:href="@{|?page=${i}|}"
 							th:text=${i}>1</a> <a class="w3-button disabled"
@@ -422,9 +471,15 @@
 	<script th:src="@{/js/L.fullscreen.js}"></script>
 	<script th:src="@{/js/L.icons.js}"></script>
 	<script th:src="@{/js/app.js}"></script>
+	<script th:src="@{/js/autocomplete.js}"></script>
 	<script th:src="@{/js/dx-cluster.js}"></script>
 	<script>
+	// Autocomplete functionality
+		var bands = ["160M", "80M", "60M", "40M", "30M", "20M", "17M", "15M", "12M", "10M", "6M", "4M", "2M", "70CM"];
+		autocomplete(document.getElementById("band"), bands);
 		
+		var modes = ["USB", "LSB", "SSB", "CW", "FM", "AM", "PSK31", "PSK63", "RTTY", "FT8", "FT4", "JS8CALL", "JT9", "FSK441", "JT65", "JT4", "QRA64"];
+		autocomplete(document.getElementById("mode"), modes);
 	</script>
 </body>
 

@@ -50,6 +50,15 @@ public class Contact {
 	private boolean qsl_req;
 	private boolean qsl_sent;
 	private boolean qsl_rcvd;
+	
+	// Extended Fields
+	private int antennaAz;		// Azimuth (0-359)
+	private int antennaEl;		// Elevation (0-90)
+	private String antennaPath;	// Propagation Path (L [long], S [short], O [other], G [greyline])
+	private String email;
+	private int power;
+	private String rig;			// Rig name/description
+	
     
     public long getId() {
 		return id;
@@ -180,6 +189,54 @@ public class Contact {
 
 	public void setQsl_rcvd(boolean qsl_rcvd) {
 		this.qsl_rcvd = qsl_rcvd;
+	}
+
+	public int getAntennaAz() {
+		return antennaAz;
+	}
+
+	public void setAntennaAz(int antennaAz) {
+		this.antennaAz = antennaAz;
+	}
+
+	public int getAntennaEl() {
+		return antennaEl;
+	}
+
+	public void setAntennaEl(int antennaEl) {
+		this.antennaEl = antennaEl;
+	}
+
+	public String getAntennaPath() {
+		return antennaPath;
+	}
+
+	public void setAntennaPath(String antennaPath) {
+		this.antennaPath = antennaPath;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public int getPower() {
+		return power;
+	}
+
+	public void setPower(int power) {
+		this.power = power;
+	}
+
+	public String getRig() {
+		return rig;
+	}
+
+	public void setRig(String rig) {
+		this.rig = rig;
 	}
 
 	public String toString() {
