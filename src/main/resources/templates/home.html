@@ -77,7 +77,7 @@ input.monospace {
 	<div class="w3-bar w3-theme">
 		<a href="#" class="w3-bar-item w3-button">
 			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" />
-			<b th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</b>
+			<b th:text="${@environment.getProperty('INSTANCE_NAME')} ?: 'Weblog'"></b>
 		</a>
 		
 		<a href="/log" class="w3-bar-item w3-button w3-right">Log Input</a>

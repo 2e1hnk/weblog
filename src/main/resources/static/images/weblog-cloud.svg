@@ -1,0 +1,19 @@
+<svg id="Capa_1" height="270" viewBox="0 0 570 270" width="570" xmlns="http://www.w3.org/2000/svg">
+  <circle fill="white" cx="100" cy="250" r="10"/>
+  <path stroke="white" stroke-width="20" stroke-linecap="round" d="M120 250h30z" />
+  <circle fill="white" cx="170" cy="250" r="10"/>
+  <circle fill="white" cx="200" cy="250" r="10"/>
+  <path stroke="white" stroke-width="20" stroke-linecap="round" d="M240 250h30z" />
+  <path stroke="white" stroke-width="20" stroke-linecap="round" d="M280 250h30z" />
+  <path stroke="white" stroke-width="20" stroke-linecap="round" d="M320 250h30z" />
+  <path stroke="white" stroke-width="20" stroke-linecap="round" d="M380 250h30z" />
+  <path stroke="white" stroke-width="20" stroke-linecap="round" d="M420 250h30z" />
+  <circle fill="white" cx="470" cy="250" r="10"/>
+
+  <path stroke="white" fill="transparent" stroke-width="20" stroke-linecap="round" d="M70 250 h -10 c -80 0, 0 -200, 120 -100 c -100 -150, 300 -150, 200 0 c 100 -100, 180 100, 120 100 " />
+
+
+  <!--
+  <path d="m102 416h109c5.522 0 10-4.477 10-10s-4.478-10-10-10h-109c-44.448 0-82-36.636-82-80 0-56.162 57.729-93.527 108.767-75.416 3.13 1.111 6.611.594 9.284-1.38s4.191-5.146 4.051-8.467c-2.648-62.625 52.137-114.737 113.898-114.737 62.224 0 116.566 51.758 113.898 114.737-.141 3.32 1.378 6.494 4.051 8.468s6.151 2.491 9.285 1.38c51.41-18.247 108.766 19.6 108.766 75.415 0 43.364-37.552 80-82 80h-109c-5.522 0-10 4.477-10 10s4.478 10 10 10h109c55.493 0 102-44.918 102-100 0-64.843-61.459-110.496-122.276-97.943-4.507-68.334-64.904-122.057-133.724-122.057-68.259 0-129.116 53.912-133.712 122.06-60.778-12.552-122.288 33.061-122.288 97.94 0 55.048 46.477 100 102 100z"/>
+  -->
+</svg>

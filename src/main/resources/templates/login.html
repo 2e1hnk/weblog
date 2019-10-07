@@ -8,39 +8,45 @@
 	<link rel="stylesheet" th:href="@{/css/scout.theme.css}">
 </head>
 <body>
-	<div style="left: 50%; width: 400px; margin:0 auto; top: 50%; position: absolute; transform: translate(-50%, -50%);" class="w3-border">
-	<form name="f" th:action="@{/login}" method="POST" class="log-in-form">
-		<div class="w3-container w3-theme">
-			<h1><img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 40px; max-width: 40px" /> <span th:text="${@environment.getProperty('INSTANCE_NAME')}">Login</span></h1>
-		</div>
-		
-		<!-- alerts container -->
-		<div class="w3-container" style="padding-top: 25px; padding-bottom: 50px;">
-			<div class="w3-cell-row" th:if="${param.error}">
-				<div class="w3-panel w3-pale-red w3-leftbar w3-border-red" th:text="#{message.badCredentials}"></div>
-			</div>
-			
-			<div class="w3-cell-row" th:if="${param.logout}">
-				<div class="w3-panel w3-pale-green w3-leftbar w3-border-green" th:text="#{message.logoutSucc}"></div>
-			</div>
-		
-			<div class="w3-cell-row">
-				<div class="w3-container w3-cell">
-					<label th:text="#{lang.username}">[username]</label>
-					<input class="w3-input" type='text' name='username' value='' />
+	<div class="w3-row">
+		<div class="w3-col m3 l4">&nbsp;</div>
+		<div class="w3-col s12 m6 l4">
+			<form name="f" th:action="@{/login}" method="POST" class="log-in-form w3-border">
+				<div class="w3-container w3-theme">
+					<h1><img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 40px; max-width: 40px" /> <span th:text="${@environment.getProperty('INSTANCE_NAME')} ?: 'Login'"></span></h1>
 				</div>
-			</div>
-			<div class="w3-cell-row">
-				<div class="w3-container w3-cell">
-					<label th:text="#{lang.password}">[password]</label>
-					<input class="w3-input" type='password' name='password' />
+				
+				<!-- alerts container -->
+				<div class="w3-container" th:if="${param.error}">
+					<div class="w3-cell-row" >
+						<div class="w3-panel w3-pale-red w3-leftbar w3-border-red" th:text="#{message.badCredentials}"></div>
+					</div>
 				</div>
-			</div>
+				<div class="w3-container" th:if="${param.logout}">
+					<div class="w3-cell-row" th:if="${param.logout}">
+						<div class="w3-panel w3-pale-green w3-leftbar w3-border-green" th:text="#{message.logoutSucc}"></div>
+					</div>
+				</div>
+				<div class="w3-container">
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell" style="padding-top: 20px; padding-bottom: 10px;">
+							<label th:text="#{lang.username}">[username]</label>
+							<input class="w3-input" type='text' name='username' value='' />
+						</div>
+					</div>
+					
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell" style="padding-top: 10px; padding-bottom: 20px;">
+							<label th:text="#{lang.password}">[password]</label>
+							<input class="w3-input" type='password' name='password' />
+						</div>
+					</div>
+				</div>
+				<div class="w3-container w3-theme">
+					<input type="submit" class="w3-button w3-theme-d3 w3-right" value="Log in" onclick="validate()"></input>
+				</div>
+			</form>
 		</div>
-		<div class="w3-container w3-theme">
-			<input type="submit" class="w3-button" value="Log in" onclick="validate()"></input>
-		</div>
-	</form>
 	</div>
 	<script type="text/javascript">
 		function validate() {
