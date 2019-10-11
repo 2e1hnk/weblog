@@ -213,7 +213,7 @@
 							<input class="w3-input w3-border monospace" type="datetime"
 								th:field="*{timestamp}" id="timestamp" th:placeholder="#{lang.date_time}"
 								ondblclick="javascript: document.getElementById('timestamp').value=new Date()" />
-							<div class="callout alert small"
+							<div class="w3-panel w3-pale-red w3-leftbar w3-border-red w3-border"
 								th:if="${#fields.hasErrors('timestamp')}"
 								th:errors="*{timestamp}"></div>
 						</div>
@@ -224,7 +224,7 @@
 							<label for="callsign"><span th:text="#{lang.callsign}"></span></label>
 							<input type="text" class="w3-input w3-border monospace uppercase"
 								th:field="*{callsign}" id="callsign" th:placeholder="#{lang.callsign}" />
-							<div class="callout alert small"
+							<div class="w3-panel w3-pale-red w3-leftbar w3-border-red w3-border"
 								th:if="${#fields.hasErrors('callsign')}" th:errors="*{callsign}"></div>
 						</div>
 					</div>
@@ -281,13 +281,24 @@
 						</div>
 					</div>
 					
-					<button
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell autocomplete">
+							<label for="mode"><span th:text="#{lang.jid_code}"></span></label> <input
+								type="text" class="w3-input w3-border monospace uppercase"
+								th:field="*{jid_code}" data-item-id="jid_code" />
+							<div class="w3-panel w3-pale-red w3-leftbar w3-border-red w3-border"
+								th:if="${#fields.hasErrors('jid_code')}"
+								th:errors="*{jid_code}"></div>
+						</div>
+					</div>
+					
+					<input type="button"
 						onclick="toggleElement('extended-info'); return false;"
 						id="log-input-extended"
 						class="w3-button w3-block w3-left-align">
 							<i class="fas fa-chevron-down"></i>
 							<span th:text="#{lang.showExtendedInfo}"></span>
-					</button>
+					</input>
 					
 					<div id="extended-info" class="w3-hide">
 						<div class="w3-cell-row">
@@ -408,8 +419,9 @@
 									<th><span th:text="#{lang.report_received}"></span></th>
 									<th><span th:text="#{lang.band}"></span></th>
 									<th><span th:text="#{lang.mode}"></span></th>
-									<th><span th:text="#{lang.location}"></span></th>
+									<!-- <th><span th:text="#{lang.location}"></span></th> -->
 									<th><span th:text="#{lang.name}"></span></th>
+									<th><span th:text="#{lang.jid_code}"></span></th>
 									<th colspan="2"><span th:text="#{lang.actions}"></span></th>
 								</tr>
 							</thead>
@@ -421,8 +433,9 @@
 									<td th:text="${contact.rstr}"></td>
 									<td th:text="${contact.band}"></td>
 									<td th:text="${contact.mode}"></td>
-									<td th:text="${contact.location}"></td>
+									<!-- <td th:text="${contact.location}"></td> -->
 									<td th:text="${contact.name}"></td>
+									<td th:text="${contact.jid_code}"></td>
 									<td><a th:href="@{/log/edit/{id}(id=${contact.id})}"><i
 											class="fas fa-edit w3-text-theme"></i></a></td>
 									<td><a th:href="@{/log/delete/{id}(id=${contact.id})}"><i

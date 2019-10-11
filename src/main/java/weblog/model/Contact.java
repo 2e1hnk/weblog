@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
@@ -51,7 +52,7 @@ public class Contact {
 	private boolean qsl_sent;
 	private boolean qsl_rcvd;
 	
-	// Extended Fields
+	// Extended Fields (mostly from ADIF)
 	private int antennaAz;		// Azimuth (0-359)
 	private int antennaEl;		// Elevation (0-90)
 	private String antennaPath;	// Propagation Path (L [long], S [short], O [other], G [greyline])
@@ -59,8 +60,27 @@ public class Contact {
 	private int power;
 	private String rig;			// Rig name/description
 	
-    
-    public long getId() {
+	// Custom fields - these are for event-specific data
+	// Note that a pipe ('|') at the beginning of a regex allows both a blank input
+	// and something matching the regex
+	
+	// Jamboree on the Air JamPuz ID Code
+	@Pattern(regexp="|^[1-7]{1}[A-Z]{2}[0-9]{2}[A-Z]{1}$", message="Must be in JID format (#AA##A) or empty")  
+	private String jid_code;
+	
+	// SOTA Summit Code
+	@Pattern(regexp="|^[A-Z0-9]{1,2}/[A-Z]{2}-[0-9]{3}$", message="Must be in SOTA summit format (AA/AA-000) or empty")  
+	private String sota_code;
+	
+	// WAB Square
+	@Pattern(regexp="|^[A-Z]{2}[0-9]{2}$", message="Must be in WAB format (AA00) or empty")
+	private String wab_square;
+	
+	// NPOTA Code
+	@Pattern(regexp="|^[A-Z]{2}[0-9]{2}$", message="Must be in NPOTA format (AA00) or empty")
+	private String npota_code;
+		
+	public long getId() {
 		return id;
 	}
 
@@ -237,6 +257,14 @@ public class Contact {
 
 	public void setRig(String rig) {
 		this.rig = rig;
+	}
+
+	public String getJid_code() {
+		return jid_code;
+	}
+
+	public void setJid_code(String jid_code) {
+		this.jid_code = jid_code;
 	}
 
 	public String toString() {
