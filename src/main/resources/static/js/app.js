@@ -63,6 +63,8 @@ var layerControl = new L.Control.Layers(null, {
 map.addControl(new autoUpdateControl());
 
 // Add cluster/uncluster control
+// REMOVED - using separate layers instead
+/*
 var clusterControl = L.Control.extend({
 	options : {
 		position : 'topleft'
@@ -103,6 +105,7 @@ var clusterControl = L.Control.extend({
 
 });
 map.addControl(new clusterControl());
+*/
 
 // Disable auto update when user pans/zooms the map (but not on a programatic pan/zoom)
 	map.on('zoomstart', function() {
