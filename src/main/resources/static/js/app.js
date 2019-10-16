@@ -8,25 +8,22 @@ var config = {
 	defaultHeatmapIntensity: 100,
 }
 
+// Create map layers
+var markerLayer = L.featureGroup();
+var markerClusterLayer = L.markerClusterGroup();
+
+var gridLayer = L.maidenhead({ worked: [], confirmed: [] });
+gridLayer._map = map;
+
 // Set up map
 var map = L.map('map', {fullscreenControl: true, layers: markerLayer}).setView([51.505, -0.09], 13);
 
 var maxZoom = 8;
 
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    attribution: 'Location data from <a href="http://qrz.com">QRZ.com</a>, stations that have not shared their location will not show<br />Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 14
 }).addTo(map);
-
-// Marker Layer
-
-var markerLayer = L.featureGroup().addTo(map);
-var markerClusterLayer = L.markerClusterGroup().addTo(map);
-
-// Maidenhead Grid Layer
-
-var gridLayer = L.maidenhead({ worked: [], confirmed: [] });
-gridLayer._map = map;
 
 // Add layers
 
@@ -171,7 +168,7 @@ var heatmapLayer;
 function mapPostLoad() {
 	// Heatmap Layer
 	if ( features.heatmap && !map.hasLayer(heatmapLayer) ) {
-		heatmapLayer = L.heatLayer([], {radius: 25}).addTo(map);
+		heatmapLayer = L.heatLayer([], {radius: 25});
 		layerControl.addOverlay(heatmapLayer, "Heatmap");
 		markerLayer.eachLayer(function (marker){
 			heatmapLayer.addLatLng([marker.getLatLng().lat, marker.getLatLng().lng, config.defaultHeatmapIntensity]);
