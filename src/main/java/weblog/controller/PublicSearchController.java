@@ -11,17 +11,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import weblog.ContactRepository;
 import weblog.model.Contact;
+import weblog.service.ContactService;
 
 @Controller
 @RequestMapping(path="/search")
 public class PublicSearchController {
 	
 	@Autowired
-	ContactRepository contactRepository;
+	ContactService contactService;
 	
     // Get list of contacts by callsign (used for ajax requests from log page)
 	@GetMapping(path="/{callsign}")
 	public @ResponseBody Collection<Contact> getContactsByCallsign(@PathVariable String callsign) {
-		return contactRepository.findByCallsign(callsign);
+		return contactService.getByCallsign(callsign);
 	}
 }

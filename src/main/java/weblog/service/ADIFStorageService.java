@@ -51,7 +51,7 @@ public class ADIFStorageService implements StorageService {
 	
 	SimpleDateFormat adifDateFormatter = new SimpleDateFormat("yyyyMMddHHmm");
 	
-	@Autowired ContactRepository contactRepository;
+	@Autowired ContactService contactService;
 	
 	@Autowired CallbookEntryRepository callbookEntryRepository;
 	
@@ -121,7 +121,7 @@ public class ADIFStorageService implements StorageService {
             	    	
 						// TODO: Others here
 						
-						contactRepository.save(contact);
+						contactService.save(contact);
 						linesImported++;
 						
 						// Populate Callbook entry
@@ -165,7 +165,7 @@ public class ADIFStorageService implements StorageService {
     	try {
 			tmpFile = File.createTempFile("log", ".adi");
 			FileWriter writer = new FileWriter(tmpFile);
-			for ( Contact contact : contactRepository.findAll() ) {
+			for ( Contact contact : contactService.findAll() ) {
 				writer.write(contact.toString());
 			}
 		    writer.close();
@@ -188,7 +188,7 @@ public class ADIFStorageService implements StorageService {
 				writer.write("Exported from weblog online logging software\n");
 				writer.write(tmpFile.getName() + "\n");
 				writer.write("\n<EOH>\n");
-				for ( Contact contact : contactRepository.findAll() ) {
+				for ( Contact contact : contactService.findAll() ) {
 					writer.write(contact.toString());
 				}
 			    writer.close();

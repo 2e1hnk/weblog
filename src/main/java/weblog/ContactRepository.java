@@ -14,10 +14,11 @@ import weblog.model.Contact;
 
 @Repository
 public interface ContactRepository extends CrudRepository<Contact, Long> {
-	@Query(value="SELECT * FROM contact c where c.callsign = :callsign", nativeQuery = true) 
-    Collection<Contact> findByCallsign(@Param("callsign") String callsign);
+	@Query(value="SELECT * FROM contact c where c.callsign = :callsign AND c.logbook = :logbook", nativeQuery = true) 
+    Collection<Contact> findByLogbookInAndCallsignIn(@Param("logbook") String logbook, @Param("callsign") String callsign);
 	
-	Page<Contact> findAllByOrderByTimestampDesc(Pageable pageable);
+	Page<Contact> findByLogbookOrderByTimestampDesc(String logbook, Pageable pageable);
+	Collection<Contact> findByLogbook(String logbook);
 	Page<Contact> findAll(Pageable pageable);
 	Contact findTopByOrderByIdDesc();
 	Contact findTopByOrderByIdAsc();

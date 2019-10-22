@@ -36,8 +36,6 @@ public class ContactController {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	private final ContactRepository contactRepository;
-	
 	@Autowired
 	private ContactService contactService;
 	
@@ -48,8 +46,7 @@ public class ContactController {
 	private EventStreamController eventStream;
 
     @Autowired
-    public ContactController(ContactRepository contactRepository) {
-        this.contactRepository = contactRepository;
+    public ContactController() {
     }
     
     @GetMapping("")
@@ -60,7 +57,7 @@ public class ContactController {
         int pageSize = size.orElse(20);
         
         PageRequest pageable = PageRequest.of(currentPage - 1, pageSize);
-        Page<Contact> contactPage = contactService.getPaginatedArticles(pageable);
+        Page<Contact> contactPage = contactService.getPaginatedLogbookEntries(pageable);
         
         int totalPages = contactPage.getTotalPages();
         if(totalPages > 0) {
@@ -73,7 +70,7 @@ public class ContactController {
         model.addAttribute("contactList", contactPage.getContent());
         
         if ( editId.isPresent() ) {
-        	contact = contactRepository.findById(editId.get())
+        	contact = contactService.getById(editId.get())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + editId.get()));
         }
         
@@ -99,7 +96,7 @@ public class ContactController {
         
         contact.setCallsign(contact.getCallsign().toUpperCase());
         
-        contactRepository.save(contact);
+        contactService.save(contact);
         
         EventStreamMessage event = new EventStreamMessage("contact", "new", contact.toString());
         try {
@@ -133,7 +130,7 @@ public class ContactController {
     
     @GetMapping("/edit/{id}")
     public String showUpdateContactForm(@PathVariable("id") long id, Model model) {
-        Contact contact = contactRepository.findById(id)
+        Contact contact = contactService.getById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + id));
          
         model.addAttribute("contact", contact);
@@ -149,16 +146,16 @@ public class ContactController {
             return "index";
         }
              
-        contactRepository.save(contact);
+        contactService.save(contact);
         //model.addAttribute("contacts", contactRepository.findAll());
         return "redirect:/log";
     }
          
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") long id, Model model) {
-        Contact contact = contactRepository.findById(id)
+        Contact contact = contactService.getById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + id));
-        contactRepository.delete(contact);
+        contactService.delete(contact);
         //model.addAttribute("contacts", contactRepository.findAll());
         return "redirect:/log";
     }
@@ -168,7 +165,7 @@ public class ContactController {
     // Get list of contacts by callsign (used for ajax requests from log page)
 	@GetMapping(path="/search/{callsign}")
 	public @ResponseBody Collection<Contact> getContactsByCallsign(@PathVariable String callsign) {
-		return contactRepository.findByCallsign(callsign);
+		return contactService.getByCallsign(callsign);
 	}
 	
 	// Run full-text search

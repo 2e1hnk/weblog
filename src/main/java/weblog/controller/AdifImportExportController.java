@@ -34,7 +34,6 @@ public class AdifImportExportController {
 
     private final StorageService storageService;
 
-
     @Autowired
     public AdifImportExportController(@Qualifier("ADIFStorageService") StorageService storageService) {
         this.storageService = storageService;

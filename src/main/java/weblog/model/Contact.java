@@ -22,6 +22,8 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     
+    private String logbook;								// Typically, the user's callsign, could be a secondary logbook (e.g. SES, DXpedition etc. - not supported yet)
+    
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date timestamp;
      
@@ -86,6 +88,14 @@ public class Contact {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getLogbook() {
+		return logbook;
+	}
+
+	public void setLogbook(String logbook) {
+		this.logbook = logbook;
 	}
 
 	public Date getTimestamp() {
