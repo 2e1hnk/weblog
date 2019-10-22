@@ -164,6 +164,7 @@
 					<th>ID</th>
 					<th>Username</th>
 					<th>Enabled</th>
+					<th>Logbook Name</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -174,6 +175,11 @@
 					<td>
 						<i th:if="${user.enabled == true}" class="fas fa-check"></i>
 						<i th:if="${user.enabled == false}" class="fas fa-times"></i>
+					</td>
+					<td>
+						<div th:each="logbook : ${user.logbooks}">
+							<span th:text="${logbook.name}">[logbook name]</span>
+						</div>
 					</td>
 					<td>
 						<a th:href="@{/admin/users/edit/{id}(id=${user.id})}"><i class="fas fa-user-edit"></i></a>

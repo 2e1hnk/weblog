@@ -15,20 +15,22 @@ import org.springframework.stereotype.Service;
 
 import weblog.ContactRepository;
 import weblog.model.Contact;
+import weblog.model.Logbook;
+import weblog.model.User;
 
 @Service
 public class ContactService {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
+	@Autowired
+	private UserService userService;
 	
     @Autowired
     private ContactRepository contactRepository;
     
-    public Page<Contact> getPaginatedLogbookEntries(Pageable pageable) {
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	logger.info("Username: " + authentication.getName());
-    	return contactRepository.findByLogbookOrderByTimestampDesc(authentication.getName(), pageable);
+    public Page<Contact> getPaginatedLogbookEntries(Pageable pageable, Logbook logbook) {
+    	return contactRepository.findByLogbookOrderByTimestampDesc(logbook, pageable);
     }
     
     public Collection<Contact> findAll() {
@@ -46,8 +48,9 @@ public class ContactService {
     }
     
     public void save(Contact contact) {
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	contact.setLogbook(authentication.getName());
+    	//Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	//User user = userService.getUser(authentication.getName());
+    	//contact.setLogbook(user.getAnyLogbook());
     	contactRepository.save(contact);
     }
     

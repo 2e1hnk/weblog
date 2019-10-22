@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import weblog.UserRepository;
+import weblog.exception.UsernameAlreadyExistsException;
 import weblog.model.User;
 import weblog.service.UserService;
 
@@ -31,15 +32,8 @@ public class UserController {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	private final UserRepository userRepository;
-	
 	@Autowired private UserService userService;
 	
-    @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-    
     @GetMapping("")
     public String home(Model model, User user, @RequestParam("page") Optional<Integer> page, 
     	      @RequestParam("size") Optional<Integer> size, @RequestParam("edit") Optional<Long> editId) {
@@ -59,7 +53,7 @@ public class UserController {
         model.addAttribute("totalPages", totalPages);
         
         if ( editId.isPresent() ) {
-        	user = userRepository.findById(editId.get())
+        	user = userService.getById(editId.get())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + editId.get()));
         	model.addAttribute("user", user);
         }
@@ -72,7 +66,11 @@ public class UserController {
     @PostMapping("/adduser")
     public String addUser(@Valid User user, BindingResult result, Model model) {
     	
-    	if ( userRepository.findByUsername(user.getUsername()) != null ) {
+    	String generatedPassword = null;
+    	
+    	try {
+    		generatedPassword = userService.addUser(user);
+    	} catch (UsernameAlreadyExistsException e) {
     		result.reject("Username " + user.getUsername() + " already exists");
     	}
     	
@@ -80,25 +78,14 @@ public class UserController {
         	return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
         }
         
-        String generatedPassword = userService.generatePassword(5);
-        
-        user.setPassword(userService.encodePassword(generatedPassword));
-        
         model.addAttribute("generatedPassword", generatedPassword);
         
-        userRepository.save(user);
-        
-        
         return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
-        
-        //return "redirect:/log";
-        // model.addAttribute("contacts", contactRepository.findAll());
-        // return "index";
     }
     
     @GetMapping("/edit/{id}")
     public String showUpdateUserForm(@PathVariable("id") long id, Model model) {
-        User user = userRepository.findById(id)
+        User user = userService.getById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid User Id:" + id));
          
         model.addAttribute("user", user);
@@ -114,49 +101,46 @@ public class UserController {
             return "index";
         }
              
-        userRepository.save(user);
+        userService.save(user);
         //model.addAttribute("contacts", contactRepository.findAll());
         return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
     }
          
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") long id, Model model) {
-        User user = userRepository.findById(id)
+        User user = userService.getById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid User Id:" + id));
-        userRepository.delete(user);
+        userService.delete(user);
         //model.addAttribute("contacts", contactRepository.findAll());
         return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
     }
 
     @GetMapping("/disable/{id}")
     public String disableUser(@PathVariable("id") long id, Model model) {
-        User user = userRepository.findById(id)
+        User user = userService.getById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid User Id:" + id));
-        user.setEnabled(false);
-        userRepository.save(user);
+        userService.disable(user);
         //model.addAttribute("contacts", contactRepository.findAll());
         return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
     }
 
     @GetMapping("/enable/{id}")
     public String enableUser(@PathVariable("id") long id, Model model) {
-        User user = userRepository.findById(id)
+        User user = userService.getById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid User Id:" + id));
-        user.setEnabled(true);
-        userRepository.save(user);
+        userService.enable(user);
         //model.addAttribute("contacts", contactRepository.findAll());
         return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
     }
 
     @GetMapping("/resetpassword/{id}")
     public String resetPasswordForUser(@PathVariable("id") long id, Model model) {
-        User user = userRepository.findById(id)
+        User user = userService.getById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid User Id:" + id));
         
-        String generatedPassword = userService.generatePassword(5);
-        user.setPassword(userService.encodePassword(generatedPassword));
-        model.addAttribute("generatedPassword", generatedPassword);
-        userRepository.save(user);
+        String newPassword = userService.resetPassword(user);
+        
+        model.addAttribute("generatedPassword", newPassword);
 
         return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
     }

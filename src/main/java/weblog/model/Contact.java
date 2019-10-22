@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -22,7 +24,9 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     
-    private String logbook;								// Typically, the user's callsign, could be a secondary logbook (e.g. SES, DXpedition etc. - not supported yet)
+    @ManyToOne
+    @JoinColumn(name="logbook_id", nullable=false)
+    private Logbook logbook;
     
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date timestamp;
@@ -90,11 +94,11 @@ public class Contact {
 		this.id = id;
 	}
 
-	public String getLogbook() {
+	public Logbook getLogbook() {
 		return logbook;
 	}
 
-	public void setLogbook(String logbook) {
+	public void setLogbook(Logbook logbook) {
 		this.logbook = logbook;
 	}
 

@@ -14,24 +14,33 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import weblog.ContactRepository;
 import weblog.EventStreamMessage;
 import weblog.model.Contact;
+import weblog.model.Logbook;
+import weblog.model.User;
 import weblog.service.ContactService;
+import weblog.service.LogbookService;
 import weblog.service.SearchService;
+import weblog.service.UserService;
 
 @Controller
 @RequestMapping(path="/log")
+@SessionAttributes("activelogbook")
 public class ContactController {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -44,20 +53,46 @@ public class ContactController {
 	
 	@Autowired
 	private EventStreamController eventStream;
-
-    @Autowired
+	
+	@Autowired UserService userService;
+	
+	@Autowired LogbookService logbookService;
+	
+	@Autowired
     public ContactController() {
+    	
     }
     
     @GetMapping("")
     public String home(Model model, Contact contact, @RequestParam("page") Optional<Integer> page, 
-    	      @RequestParam("size") Optional<Integer> size, @RequestParam("edit") Optional<Long> editId) {
+    	      @RequestParam("size") Optional<Integer> size, @RequestParam("edit") Optional<Long> editId,
+    	      @ModelAttribute("activelogbook") Logbook activeLogbook,
+    	      @RequestParam("activelogbook") Optional<Long> activeLogbookId,
+    	      @RequestParam("addNewLogbook") Optional<String> newLogbookName) {
     	
     	int currentPage = page.orElse(1);
         int pageSize = size.orElse(20);
         
+        User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        model.addAttribute("user", user);
+        logger.info("Set user to " + user.getUsername());
+        
+        if ( newLogbookName.isPresent() ) {
+        	activeLogbook = logbookService.createLogbook(newLogbookName.get(), user);
+        }
+        
+        if ( activeLogbookId.isPresent() ) {
+        	activeLogbook = logbookService.getLogbookById(activeLogbookId.get());
+        }
+        
+        if ( activeLogbook.getName() == null ) {
+        	activeLogbook = user.getAnyLogbook();
+        }
+
+        model.addAttribute("activelogbook", activeLogbook);
+        
         PageRequest pageable = PageRequest.of(currentPage - 1, pageSize);
-        Page<Contact> contactPage = contactService.getPaginatedLogbookEntries(pageable);
+        Page<Contact> contactPage = contactService.getPaginatedLogbookEntries(pageable, activeLogbook);
         
         int totalPages = contactPage.getTotalPages();
         if(totalPages > 0) {
@@ -75,6 +110,8 @@ public class ContactController {
         }
         
         model.addAttribute("contact", contact);
+        
+        logger.info("Active Logbook: " + activeLogbook.getName());
               
         return "index";
     }
@@ -85,8 +122,17 @@ public class ContactController {
     }
     
     @PostMapping("/addcontact")
-    public String addContact(@Valid Contact contact, BindingResult result, Model model) {
-        if (result.hasErrors()) {
+    public String addContact(@Valid Contact contact, BindingResult result, Model model, @ModelAttribute("activelogbook") Logbook activeLogbook, RedirectAttributes attributes) {
+    	
+    	logger.info("Contact logbook: " + contact.getLogbook().getName());
+    	
+    	activeLogbook = contact.getLogbook();
+    	attributes.addFlashAttribute("activelogbook", activeLogbook);
+    	
+    	User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        model.addAttribute("user", user);
+    	
+    	if (result.hasErrors()) {
             return "index";
         }
         
@@ -121,7 +167,7 @@ public class ContactController {
         	nextContact.setRsts("59");
         }
         
-        return this.home(model, nextContact, Optional.empty(), Optional.empty(), Optional.empty());
+        return this.home(model, nextContact, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
         
         //return "redirect:/log";
         // model.addAttribute("contacts", contactRepository.findAll());
@@ -129,13 +175,13 @@ public class ContactController {
     }
     
     @GetMapping("/edit/{id}")
-    public String showUpdateContactForm(@PathVariable("id") long id, Model model) {
+    public String showUpdateContactForm(@PathVariable("id") long id, Model model, @ModelAttribute("activelogbook") Logbook activeLogbook) {
         Contact contact = contactService.getById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + id));
          
         model.addAttribute("contact", contact);
         model.addAttribute("submitUrl", "/log/update/" + id);
-        return this.home(model, contact, Optional.empty(), Optional.empty(), Optional.empty());
+        return this.home(model, contact, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
     }
     
     @PostMapping("/update/{id}")
@@ -179,6 +225,11 @@ public class ContactController {
         model.addAttribute("activeContactList", true);
         model.addAttribute("contact", contact);
 		return "index";
+	}
+	
+	@ModelAttribute("activelogbook")
+	public Logbook activeLogbook() {
+	    return new Logbook();
 	}
 
 }

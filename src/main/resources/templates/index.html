@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -85,9 +85,15 @@
 		<button class="w3-button w3-right navbar-button" id="right-menu-button" onclick="toggleRightMenu()"><i class="fa fa-globe w3-large"></i></button>
 
 		<div class="w3-dropdown-hover w3-right">
-		    <button class="w3-button navbar-button"><i class="far fa-user-circle w3-large"></i></button>
+		    <button class="w3-button navbar-button"><i class="far fa-user-circle w3-large"></i> </button>
 		    <div class="w3-dropdown-content w3-card-4" style="right:0">
-		    	<div class="w3-bar w3-center">
+		    	<div class="w3-bar">
+		    		Username: <span sec:authentication="name">[USER]</span>
+		    	</div>
+		    	<div class="w3-bar">
+		    		Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
+		    	</div>
+			    <div class="w3-bar w3-center">
 			    	<a href="?lang=en" class="w3-bar-item w3-button">
 			    		<span class="flag-icon flag-icon-gb"></span>
 			    	</a>
@@ -123,6 +129,18 @@
 		    </div>
 		</div>
 
+		<!-- Logbook selection -->
+		<div class="w3-dropdown-hover w3-right">
+		    <button class="w3-button"><span th:text="#{lang.logbook}"></span>: <b><span th:text="${activelogbook.getName()}"></span></b> <i class="fa fa-caret-down"></i></button>
+		    <div class="w3-dropdown-content w3-card-4">
+		    	<div class="w3-bar-block">
+		    		<a th:each="logbook : ${user.logbooks}" th:href="@{/log(activelogbook=${logbook.id})}" class="w3-bar-item w3-button"><span th:text="${logbook.name}"></span> <span class="w3-badge w3-right w3-theme" th:text="${#lists.size(logbook.contacts)}"></span></a>
+		    		<hr />
+		    		<button onclick="document.getElementById('modal-add-logbook').style.display='block'" class="w3-bar-item w3-button">Create New Logbook</button>
+		    	</div>
+		    </div>
+		</div>
+
 		<form style="margin-bottom: 0px;" action="/log/find" method="get">
 			<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small w3-theme-light w3-text-theme navbar-button" type="submit">
 				<i class="fas fa-search"></i>
@@ -149,6 +167,7 @@
 			</div>
 		  </form>
 		</div>
+	  
 	  
 	  <div class="w3-bar-block">
 		  <h3 class="w3-bar-item"><i class="fas fa-digital-tachograph"></i> <span th:text="#{lang.rigCtl}"></span></h3>
@@ -206,6 +225,15 @@
 				<form id="log-input-form" class="grid-container w3-hide-small" style="margin-top: 10px;" action="#" autocomplete="off"
 					th:action="${submitUrl} ? ${submitUrl} : @{/log/addcontact}"
 					th:object="${contact}" method="post">
+
+					<div class="w3-cell-row">
+						<div class="w3-container w3-cell">
+							<label for="logbook"><span th:text="#{lang.logbook}"></span></label>
+							<select class="w3-select w3-border" id="logbook" name="logbook">
+								<option th:each="logbook : ${user.logbooks}" th:value="${logbook.id}" th:text="${logbook.name}" th:selected="${logbook.id==activelogbook.id}"></option>
+							</select>
+						</div>
+					</div>
 
 					<div class="w3-cell-row">
 						<div class="w3-container w3-cell">
@@ -281,17 +309,6 @@
 						</div>
 					</div>
 					
-					<div class="w3-cell-row">
-						<div class="w3-container w3-cell autocomplete">
-							<label for="mode"><span th:text="#{lang.jid_code}"></span></label> <input
-								type="text" class="w3-input w3-border monospace uppercase"
-								th:field="*{jid_code}" data-item-id="jid_code" />
-							<div class="w3-panel w3-pale-red w3-leftbar w3-border-red w3-border"
-								th:if="${#fields.hasErrors('jid_code')}"
-								th:errors="*{jid_code}"></div>
-						</div>
-					</div>
-					
 					<input type="button"
 						onclick="toggleElement('extended-info'); return false;"
 						id="log-input-extended"
@@ -301,6 +318,16 @@
 					</input>
 					
 					<div id="extended-info" class="w3-hide">
+						<div class="w3-cell-row">
+							<div class="w3-container w3-cell autocomplete">
+								<label for="mode"><span th:text="#{lang.jid_code}"></span></label> <input
+									type="text" class="w3-input w3-border monospace uppercase"
+									th:field="*{jid_code}" data-item-id="jid_code" />
+								<div class="w3-panel w3-pale-red w3-leftbar w3-border-red w3-border"
+									th:if="${#fields.hasErrors('jid_code')}"
+									th:errors="*{jid_code}"></div>
+							</div>
+						</div>
 						<div class="w3-cell-row">
 							<div class="w3-container w3-cell">
 								<label for="power"><span th:text="#{lang.power}"></span></label> <input
@@ -421,7 +448,7 @@
 									<th><span th:text="#{lang.mode}"></span></th>
 									<!-- <th><span th:text="#{lang.location}"></span></th> -->
 									<th><span th:text="#{lang.name}"></span></th>
-									<th><span th:text="#{lang.jid_code}"></span></th>
+									<th><span th:text="#{lang.logbook}"></span></th>
 									<th colspan="2"><span th:text="#{lang.actions}"></span></th>
 								</tr>
 							</thead>
@@ -435,7 +462,7 @@
 									<td th:text="${contact.mode}"></td>
 									<!-- <td th:text="${contact.location}"></td> -->
 									<td th:text="${contact.name}"></td>
-									<td th:text="${contact.jid_code}"></td>
+									<td th:text="${contact.logbook.name}"></td>
 									<td><a th:href="@{/log/edit/{id}(id=${contact.id})}"><i
 											class="fas fa-edit w3-text-theme"></i></a></td>
 									<td><a th:href="@{/log/delete/{id}(id=${contact.id})}"><i
@@ -472,6 +499,29 @@
 		</div>
 	</div>
 	<!-- end content pane -->
+	
+	<!-- Modal windows -->
+	<div id="modal-add-logbook" class="w3-modal">
+	  <div class="w3-modal-content">
+	    <header class="w3-container w3-teal">
+	      <span onclick="document.getElementById('modal-add-logbook').style.display='none'"
+	      class="w3-button w3-display-topright">&times;</span>
+	      <h2>Add Logbook</h2>
+	    </header>
+	
+	    <form class="w3-container">
+	      <label for="add-logbook-name">Logbook name</label>
+	      <input class="w3-input" type="text" id="add-logbook-name" name="addNewLogbook" />
+	      <input type="submit" value="Create Logbook" />
+	    </form>
+	
+	    <footer class="w3-container w3-teal">
+	      <p>Modal Footer</p>
+	    </footer>
+	
+	  </div>
+	</div>
+	<!-- End Modals -->
 
 	<!-- Compiled and minified JavaScript -->
 	<!-- <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script> -->

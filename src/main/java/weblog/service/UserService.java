@@ -1,6 +1,7 @@
 package weblog.service;
 
 import java.security.SecureRandom;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import weblog.UserRepository;
+import weblog.exception.UsernameAlreadyExistsException;
+import weblog.model.Logbook;
 import weblog.model.User;
 
 @Service
@@ -17,8 +20,70 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     
+    @Autowired
+    private LogbookService logbookService;
+    
     public Page<User> getPaginatedArticles(Pageable pageable) {
         return userRepository.findAllByOrderByUsernameAsc(pageable);
+    }
+    
+    public User getUser(String username) {
+    	return userRepository.findByUsername(username);
+    }
+    
+    public Optional<User> getById(long id) {
+    	return userRepository.findById(id);
+    }
+    
+    public void enable(User user) {
+    	user.setEnabled(true);
+    	save(user);
+    }
+    
+    public void disable(User user) {
+    	user.setEnabled(false);
+    	save(user);
+    }
+    
+    public String resetPassword(User user) {
+    	String password = this.generatePassword(5);
+    	user.setPassword(this.encodePassword(password));
+    	save(user);
+    	return password;
+    }
+    
+    public void save(User user) {
+    	userRepository.save(user);
+    }
+    
+    public void delete(User user) {
+    	userRepository.delete(user);
+    }
+    
+    public void associateUserWithLogbook(User user, Logbook logbook) {
+    	user.associateWithLogbook(logbook);
+    	save(user);
+    }
+    
+    public String addUser(User user) throws UsernameAlreadyExistsException {
+    	
+    	// Check if the username already exists
+    	if ( getUser(user.getUsername()) != null ) {
+    		throw new UsernameAlreadyExistsException();
+    	}
+    	
+    	// Generate a password and save the user using this password
+    	String generatedPassword = this.generatePassword(5);
+    	user.setPassword(this.encodePassword(generatedPassword));
+    	this.save(user);
+    	
+    	// Create a default logbook for the user
+    	Logbook logbook = logbookService.createLogbook(user.getUsername());
+    	logbookService.associateLogbookWithUser(logbook, user);
+    	this.associateUserWithLogbook(user, logbook);
+    	
+    	// Return the generated (not-encoded) password for info
+    	return generatedPassword;
     }
     
     public String generatePassword(int length) {

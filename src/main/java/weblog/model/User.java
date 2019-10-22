@@ -1,10 +1,16 @@
 package weblog.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -22,7 +28,40 @@ public class User {
     
     private Boolean enabled = true;
     
-    public Long getId() {
+    @ManyToMany
+    @JoinTable(
+        name = "user_logbooks", 
+        joinColumns = @JoinColumn(
+          name = "user_id", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(
+          name = "logbook_id", referencedColumnName = "id"))
+    private Collection<Logbook> logbooks = new ArrayList<Logbook>();
+    
+    public Collection<Logbook> getLogbooks() {
+		return logbooks;
+	}
+
+	public void setLogbooks(Collection<Logbook> logbooks) {
+		this.logbooks = logbooks;
+	}
+
+	public void associateWithLogbook(Logbook logbook) {
+		if ( !this.logbooks.contains(logbook) ) {
+			this.logbooks.add(logbook);
+		}
+	}
+	
+	public void dissociateFromLogbook(Logbook logbook) {
+		if ( this.logbooks.contains(logbook) ) {
+			this.logbooks.remove(logbook);
+		}
+	}
+	
+	public Logbook getAnyLogbook() {
+		return (Logbook) logbooks.toArray()[0];
+	}
+	
+	public Long getId() {
 		return id;
 	}
 
@@ -53,4 +92,5 @@ public class User {
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
+
 }
