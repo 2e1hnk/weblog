@@ -18,7 +18,7 @@
 	<div class="w3-row" style="margin-top: 10px;">
 		<div class="w3-container w3-col s12 m5 l3">
 			<div class="w3-card-2">
-				<header class="w3-container w3-theme">
+				<header class="w3-container w3-theme-highlight">
 				  <h1 th:text="${user.username}">[USERNAME]</h1>
 				</header>
 				<div class="w3-container">
@@ -39,7 +39,7 @@
 				    <span th:text="${logbook.size()}" /> Contacts logged<br />
 				    <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
 				    <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
-  						<button class="box__button" type="submit">Upload</button>
+  						<button class="box__button w3-theme-button" type="submit">Upload</button>
 					<div class="w3-dropdown-hover w3-right">
 					  <button class="w3-button w3-white"><i class="fas fa-ellipsis-v"></i></button>
 					  <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
@@ -56,7 +56,7 @@
 						    <span class="w3-large">New Logbook</span><br>
 						    <input class="w3-input box__file" type="file" name="file" />
 						    <label for="file"><strong>Choose an ADIF file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
-    						<button class="w3-button w3-theme box__button" type="submit">Upload</button>
+    						<button class="w3-button w3-theme-button box__button" type="submit">Upload</button>
 						</div>
 						<div class="w3-dropdown-hover w3-right">
 						  <button class="w3-button w3-white"><i class="fas fa-ellipsis-v"></i></button>

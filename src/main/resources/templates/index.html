@@ -188,7 +188,7 @@
 
 					<div class="w3-cell-row">
 						<div class="w3-container w3-cell">
-							<input type="submit" class="w3-button w3-theme w3-block"
+							<input type="submit" class="w3-button w3-theme-highlight w3-block w3-theme-button"
 								th:value="#{lang.log}">
 						</div>
 					</div>
@@ -201,7 +201,7 @@
 			<div class="w3-row">
 				<div class="w3-half w3-container">
 					<div>
-						<span id="callbook-tag-qslmgr" class="w3-tag w3-theme"
+						<span id="callbook-tag-qslmgr" class="w3-tag w3-theme-highlight"
 							style="visibility: hidden"></span> <span id="callbook-tag-lotw"
 							class="w3-tag w3-theme-light" style="visibility: hidden">LoTW</span> <span
 							id="callbook-tag-eqsl" class="w3-tag w3-theme-light"
@@ -279,7 +279,7 @@
 							th:classappend="${currentPage eq 1} ? 'disabled'">&laquo;</a> <a
 							class="w3-button disabled" th:if="${currentPage - 5 > 0}"
 							aria-hidden="true">...</a> <a class="w3-button"
-							th:classappend="${i eq currentPage} ? 'w3-theme'"
+							th:classappend="${i eq currentPage} ? 'w3-theme-highlight'"
 							th:each="i : ${#numbers.sequence( currentPage-5, totalPages > 10 + currentPage ? currentPage + 5 : totalPages, 1)}"
 							th:if="${i>0 and i < totalPages}" th:href="@{|?page=${i}|}"
 							th:text=${i}>1</a> <a class="w3-button disabled"

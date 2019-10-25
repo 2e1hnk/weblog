@@ -9,9 +9,8 @@
 			  <form style="margin-bottom: 0px; margin-top:10px; margin-left: 16px; margin-right: 16px" action="/log/find" method="get">
 			  	<div class="w3-bar">
 					<input type="text" style="width:268px; margin-right: 0px; height: 38px;"
-						class="w3-bar-item w3-input w3-theme-light"
-						th:placeholder="#{lang.search}" name="q">
-					<button class="w3-bar-item w3-button w3-theme" type="submit" style="margin-left: 0px; height: 38px;">
+						class="w3-bar-item w3-input" th:placeholder="#{lang.search}" name="q">
+					<button class="w3-bar-item w3-button w3-theme-button" type="submit" style="margin-left: 0px; height: 38px;">
 						<i class="fas fa-search"></i>
 					</button>
 				</div>
@@ -23,8 +22,8 @@
 			  <h3 class="w3-bar-item"><i class="fas fa-digital-tachograph"></i> <span th:text="#{lang.rigCtl}"></span></h3>
 			  	<div class="w3-show-inline-block">
 				  	<div class="w3-bar" style="margin-left: 16px; margin-right: 16px">
-					  	<button type="button" id="rigctl-connect" class="w3-btn w3-theme websocket-connect" data-broker-url="/topic/rigctl/3693">Connect</button>
-						<button type="button" id="rigctl-disconnect" class="w3-btn w3-theme" disabled="disabled" th:text="#{lang.disconnect}"></button>
+					  	<button type="button" id="rigctl-connect" class="w3-btn w3-theme-button websocket-connect" data-broker-url="/topic/rigctl/3693">Connect</button>
+						<button type="button" id="rigctl-disconnect" class="w3-btn w3-theme-button" disabled="disabled" th:text="#{lang.disconnect}"></button>
 					</div>
 				</div>
 			  

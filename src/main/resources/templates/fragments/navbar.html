@@ -70,7 +70,7 @@ input.monospace {
 </head>
 <body>
 	<!-- navbar -->
-	<div class="w3-bar w3-theme" th:fragment="navbar">
+	<div class="w3-bar w3-theme-highlight" th:fragment="navbar">
 		<button class="w3-bar-item w3-button navbar-button" id="left-menu-button" style="z-index:10002;" onclick="toggleLeftMenu()"><i class="fas fa-bars w3-large"></i></button>
 		
 		<a href="#" class="w3-bar-item w3-button">
@@ -132,7 +132,7 @@ input.monospace {
 		    <button class="w3-button"><span th:text="#{lang.logbook}"></span>: <b><span th:text="${activelogbook.getName()}"></span></b> <i class="fa fa-caret-down"></i></button>
 		    <div class="w3-dropdown-content w3-card-4">
 		    	<div class="w3-bar-block">
-		    		<a th:each="logbook : ${user.logbooks}" th:href="@{/log(activelogbook=${logbook.id})}" class="w3-bar-item w3-button"><span th:text="${logbook.name}"></span> <span class="w3-badge w3-right w3-theme" th:text="${#lists.size(logbook.contacts)}"></span></a>
+		    		<a th:each="logbook : ${user.logbooks}" th:href="@{/log(activelogbook=${logbook.id})}" class="w3-bar-item w3-button"><span th:text="${logbook.name}"></span> <span class="w3-badge w3-right w3-theme-info" th:text="${#lists.size(logbook.contacts)}"></span></a>
 		    		<hr />
 		    		<button onclick="document.getElementById('modal-add-logbook').style.display='block'" class="w3-bar-item w3-button"><i class="fas fa-plus"></i> Create New Logbook</button>
 		    	</div>
@@ -140,11 +140,11 @@ input.monospace {
 		</div>
 
 		<form style="margin-bottom: 0px;" action="/log/find" method="get">
-			<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small w3-theme-light w3-text-theme navbar-button" type="submit">
+			<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small navbar-button" type="submit">
 				<i class="fas fa-search"></i>
 			</button>
 			<input type="text"
-				class="w3-bar-item w3-input w3-right w3-theme-light w3-hide-small"
+				class="w3-bar-item w3-input w3-right w3-hide-small"
 				th:placeholder="#{lang.search}" name="q">
 		</form>
 	</div>

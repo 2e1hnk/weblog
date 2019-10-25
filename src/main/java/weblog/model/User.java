@@ -48,6 +48,11 @@ public class User {
     private Collection<Role> roles;
     
     /*
+     * Settings fields
+     */
+    private String theme = "scout";
+    
+    /*
      * Logbook-specific fields
      */
     @ManyToMany
@@ -133,6 +138,14 @@ public class User {
 
 	public void setRoles(Collection<Role> roles) {
 		this.roles = roles;
+	}
+
+	public String getTheme() {
+		return theme;
+	}
+
+	public void setTheme(String theme) {
+		this.theme = theme;
 	}
 
 }
