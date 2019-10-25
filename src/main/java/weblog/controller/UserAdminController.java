@@ -16,27 +16,31 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import weblog.UserRepository;
 import weblog.exception.UsernameAlreadyExistsException;
+import weblog.model.Logbook;
 import weblog.model.User;
+import weblog.service.RoleService;
 import weblog.service.UserService;
 
 @Controller
 @RequestMapping(path="/admin/users")
-public class UserController {
+public class UserAdminController {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired private UserService userService;
+	@Autowired private RoleService roleService;
 	
     @GetMapping("")
     public String home(Model model, User user, @RequestParam("page") Optional<Integer> page, 
-    	      @RequestParam("size") Optional<Integer> size, @RequestParam("edit") Optional<Long> editId) {
+    		@ModelAttribute("activelogbook") Logbook activeLogbook,
+    	    @RequestParam("size") Optional<Integer> size, @RequestParam("edit") Optional<Long> editId) {
     	
     	int currentPage = page.orElse(1);
         int pageSize = size.orElse(20);
@@ -75,12 +79,12 @@ public class UserController {
     	}
     	
         if (result.hasErrors()) {
-        	return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
+        	return "redirect:/admin/users";
         }
         
         model.addAttribute("generatedPassword", generatedPassword);
         
-        return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
+        return "redirect:/admin/users";
     }
     
     @GetMapping("/edit/{id}")
@@ -90,7 +94,7 @@ public class UserController {
          
         model.addAttribute("user", user);
         model.addAttribute("submitUrl", "/admin/user/update/" + id);
-        return this.home(model, user, Optional.empty(), Optional.empty(), Optional.empty());
+        return "redirect:/admin/users";
     }
     
     @PostMapping("/update/{id}")
@@ -103,7 +107,7 @@ public class UserController {
              
         userService.save(user);
         //model.addAttribute("contacts", contactRepository.findAll());
-        return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
+        return "redirect:/admin/users";
     }
          
     @GetMapping("/delete/{id}")
@@ -112,7 +116,7 @@ public class UserController {
           .orElseThrow(() -> new IllegalArgumentException("Invalid User Id:" + id));
         userService.delete(user);
         //model.addAttribute("contacts", contactRepository.findAll());
-        return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
+        return "redirect:/admin/users";
     }
 
     @GetMapping("/disable/{id}")
@@ -121,7 +125,7 @@ public class UserController {
           .orElseThrow(() -> new IllegalArgumentException("Invalid User Id:" + id));
         userService.disable(user);
         //model.addAttribute("contacts", contactRepository.findAll());
-        return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
+        return "redirect:/admin/users";
     }
 
     @GetMapping("/enable/{id}")
@@ -130,7 +134,25 @@ public class UserController {
           .orElseThrow(() -> new IllegalArgumentException("Invalid User Id:" + id));
         userService.enable(user);
         //model.addAttribute("contacts", contactRepository.findAll());
-        return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/make-admin/{id}")
+    public String adminifyUser(@PathVariable("id") long id, Model model) {
+        User user = userService.getById(id)
+          .orElseThrow(() -> new IllegalArgumentException("Invalid User Id:" + id));
+        userService.makeAdmin(user);
+        //model.addAttribute("contacts", contactRepository.findAll());
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("/make-non-admin/{id}")
+    public String deAdminifyUser(@PathVariable("id") long id, Model model) {
+        User user = userService.getById(id)
+          .orElseThrow(() -> new IllegalArgumentException("Invalid User Id:" + id));
+        userService.makeNonAdmin(user);
+        //model.addAttribute("contacts", contactRepository.findAll());
+        return "redirect:/admin/users";
     }
 
     @GetMapping("/resetpassword/{id}")
@@ -142,6 +164,6 @@ public class UserController {
         
         model.addAttribute("generatedPassword", newPassword);
 
-        return this.home(model, new User(), Optional.empty(), Optional.empty(), Optional.empty());
+        return "redirect:/admin/users";
     }
 }

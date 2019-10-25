@@ -11,8 +11,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -28,12 +30,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import QRZClient2.QRZClient2;
+import weblog.AuthenticationFacade;
 import weblog.CallbookEntryRepository;
 import weblog.ContactRepository;
 import weblog.StorageException;
 import weblog.StorageFileNotFoundException;
 import weblog.model.CallbookEntry;
 import weblog.model.Contact;
+import weblog.model.Logbook;
 
 @Service
 public class ADIFStorageService implements StorageService {
@@ -55,6 +59,10 @@ public class ADIFStorageService implements StorageService {
 	
 	@Autowired CallbookEntryRepository callbookEntryRepository;
 	
+	@Autowired LogbookService logbookService;
+	
+	@Autowired AuthenticationFacade authentication;
+	
 	private QRZClient2 qrzClient = new QRZClient2();
 
     @Autowired
@@ -64,20 +72,31 @@ public class ADIFStorageService implements StorageService {
     @Override
     public void store(MultipartFile file) {
     	
-    	logger.info("Importing " + file.getOriginalFilename());
+    	String newLogName = StringUtils.cleanPath(file.getOriginalFilename());
+    	
+    	if ( newLogName.equals("") ) {
+    		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
+    		Date date = new Date();
+    		newLogName = authentication.getUser().getUsername() + "-" + dateFormat.format(date);
+    	}
+    	
+    	logger.info("Importing " + newLogName + " with size " + file.getSize());
+    	    	
+    	Logbook logbook = logbookService.createLogbook(newLogName, authentication.getUser());
         
-    	String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        int linesImported = 0, linesSkipped = 0;
+    	int linesImported = 0, linesSkipped = 0;
     	
         try {
+        	/*
             if (file.isEmpty()) {
-                throw new StorageException("Failed to store empty file " + filename);
+                throw new StorageException("Failed to store empty file " + newLogName);
             }
-            if (filename.contains("..")) {
+            */
+            if (newLogName.contains("..")) {
                 // This is a security check
                 throw new StorageException(
                         "Cannot store file with relative path outside current directory "
-                                + filename);
+                                + newLogName);
             }
             try (InputStream inputStream = file.getInputStream()) {
             	BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -99,6 +118,8 @@ public class ADIFStorageService implements StorageService {
             	    	timeMatcher.find();
             	    	contact.setTimestamp(adifDateFormatter.parse("" + dateMatcher.group(1) + timeMatcher.group(1)));
 						
+            	    	contact.setLogbook(logbook);
+            	    	
             	    	callsignMatcher.find();
             	    	contact.setCallsign(callsignMatcher.group(1));
 						
@@ -148,7 +169,7 @@ public class ADIFStorageService implements StorageService {
             }
         }
         catch (IOException e) {
-            throw new StorageException("Failed to store file " + filename, e);
+            throw new StorageException("Failed to store file " + newLogName, e);
         }
     }
 
@@ -158,6 +179,7 @@ public class ADIFStorageService implements StorageService {
         
     }
 
+    // TODO: Make this logbook-aware
     @Override
     public Path load(String filename) {
     	// Create a temporary file
@@ -178,7 +200,7 @@ public class ADIFStorageService implements StorageService {
     }
 
     @Override
-    public Resource loadAsResource(String filename) {
+    public Resource loadAsResource(Long logbookId, String filename) {
     	try { 
 	    	// Create a temporary file
 	    	File tmpFile = null;

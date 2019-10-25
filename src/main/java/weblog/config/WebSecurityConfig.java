@@ -36,6 +36,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         userDetailsService = applicationContext.getBean(WeblogUserDetailsService.class);
     }
     
+    @Override
+    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
+    
    @Override
    protected void configure(HttpSecurity http) throws Exception {
 /*      http
@@ -55,7 +60,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	      	 .csrf().disable()
 	         .authorizeRequests()
 	            .antMatchers("/", "/webjars/**", "/css/**", "/js/**", "/images/**", "/location/**", "/map", "/search/**").permitAll()
-	         .and()
+	        	.antMatchers("/log").hasAuthority("USER")
+	        	.antMatchers("/admin/users").hasAuthority("ADMIN")
+		     .and()
 	            .httpBasic()
 	            .realmName("Weblog API")
 	         .and().authorizeRequests()

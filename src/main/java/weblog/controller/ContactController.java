@@ -1,5 +1,6 @@
 package weblog.controller;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -30,6 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import weblog.ContactRepository;
 import weblog.EventStreamMessage;
+import weblog.exception.PermissionsException;
 import weblog.model.Contact;
 import weblog.model.Logbook;
 import weblog.model.User;
@@ -64,11 +67,13 @@ public class ContactController {
     }
     
     @GetMapping("")
-    public String home(Model model, Contact contact, @RequestParam("page") Optional<Integer> page, 
+    public String home(Model model, Contact contact, HttpServletResponse response, @RequestParam("page") Optional<Integer> page, 
     	      @RequestParam("size") Optional<Integer> size, @RequestParam("edit") Optional<Long> editId,
     	      @ModelAttribute("activelogbook") Logbook activeLogbook,
     	      @RequestParam("activelogbook") Optional<Long> activeLogbookId,
-    	      @RequestParam("addNewLogbook") Optional<String> newLogbookName) {
+    	      @RequestParam("addNewLogbook") Optional<String> newLogbookName) throws IOException {
+    	
+    	
     	
     	int currentPage = page.orElse(1);
         int pageSize = size.orElse(20);
@@ -87,6 +92,11 @@ public class ContactController {
         
         if ( activeLogbook.getName() == null ) {
         	activeLogbook = user.getAnyLogbook();
+        }
+        
+        // Check that the currently logged in user has access to the requested logbook
+        if ( !user.getLogbooks().contains(activeLogbook) ) {
+        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have access to this logbook");
         }
 
         model.addAttribute("activelogbook", activeLogbook);
@@ -122,7 +132,7 @@ public class ContactController {
     }
     
     @PostMapping("/addcontact")
-    public String addContact(@Valid Contact contact, BindingResult result, Model model, @ModelAttribute("activelogbook") Logbook activeLogbook, RedirectAttributes attributes) {
+    public String addContact(@Valid Contact contact, BindingResult result, Model model, HttpServletResponse response, @ModelAttribute("activelogbook") Logbook activeLogbook, RedirectAttributes attributes) throws IOException {
     	
     	logger.info("Contact logbook: " + contact.getLogbook().getName());
     	
@@ -167,7 +177,7 @@ public class ContactController {
         	nextContact.setRsts("59");
         }
         
-        return this.home(model, nextContact, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
+        return this.home(model, nextContact, response, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
         
         //return "redirect:/log";
         // model.addAttribute("contacts", contactRepository.findAll());
@@ -175,13 +185,13 @@ public class ContactController {
     }
     
     @GetMapping("/edit/{id}")
-    public String showUpdateContactForm(@PathVariable("id") long id, Model model, @ModelAttribute("activelogbook") Logbook activeLogbook) {
+    public String showUpdateContactForm(@PathVariable("id") long id, Model model, HttpServletResponse response, @ModelAttribute("activelogbook") Logbook activeLogbook) throws IOException {
         Contact contact = contactService.getById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + id));
          
         model.addAttribute("contact", contact);
         model.addAttribute("submitUrl", "/log/update/" + id);
-        return this.home(model, contact, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
+        return this.home(model, contact, response, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
     }
     
     @PostMapping("/update/{id}")

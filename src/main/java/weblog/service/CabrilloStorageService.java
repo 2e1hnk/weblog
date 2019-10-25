@@ -53,7 +53,7 @@ public class CabrilloStorageService implements StorageService {
 	}
 
 	@Override
-	public Resource loadAsResource(String filename) {
+	public Resource loadAsResource(Long id, String filename) {
     	try { 
 	    	// Create a temporary file
 	    	File tmpFile = null;

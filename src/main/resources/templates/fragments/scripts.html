@@ -1,0 +1,21 @@
+<html>
+<head>
+</head>
+<body>
+</body>
+</html>
+	<th:block th:fragment="base_script(scripts)">
+		<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+		<script th:src="@{/webjars/foundation/dist/js/foundation.min.js}"></script>
+		<script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+		<script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+		<script th:src="@{/webjars/momentjs/min/moment.min.js}"></script>
+		<script th:src="@{/js/autocomplete.js}"></script>
+		<th:block th:if="${scripts != null}">
+            <th:block th:replace="${scripts}" />
+        </th:block>
+        <script th:src="@{/js/app.js}"></script>
+	</th:block>
+</body>
+</html>
+	

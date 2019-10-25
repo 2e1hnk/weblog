@@ -1,0 +1,25 @@
+<html>
+<head>
+</head>
+<body>
+	<!-- Right sidebar menu (DX Cluster etc.) -->
+	<div class="w3-sidebar w3-bar w3-card w3-animate-right" style="display:none;right:0;z-index: 9997;" id="rightMenu" th:fragment="dx-cluster">
+		<button class="w3-bar-item w3-button"><i class="fa fa-globe w3-xlarge"></i> <span th:text="#{lang.dxCluster}"></span> (<span class="w3-small" th:text="${@environment.getProperty('DXCLUSTER_HOST')}">[DX Cluster Hostname]</span>)</button>
+  	  <table id="dx-cluster-table" class="w3-table w3-stripped w3-bordered">
+	  	<thead>
+	  		<tr>
+	  			<th th:text="#{lang.time}"></th>
+	  			<th th:text="#{lang.spotter}"></th>
+	  			<th th:text="#{lang.dx}"></th>
+	  			<th th:text="#{lang.freq}"></th>
+	  		</tr>
+	  	</thead>
+	  	<tbody id="dx-spots">
+	  		<tr>
+	  		</tr>
+	  	</tbody>
+	  </table>
+	</div>
+
+</body>
+</html>

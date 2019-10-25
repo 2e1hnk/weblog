@@ -51,14 +51,15 @@ public class AdifImportExportController {
         return "importexport";
     }
     
-    @GetMapping("/download")
+    @GetMapping("/download/{id}")
     @ResponseBody
-    public ResponseEntity<Resource> serveFile() {
-        Resource file = storageService.loadAsResource("dummy");
+    public ResponseEntity<Resource> serveFile(@PathVariable Long id) {
+        Resource file = storageService.loadAsResource(id, "dummy");
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
     
+    /*
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
@@ -67,10 +68,14 @@ public class AdifImportExportController {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
+    */
     
+    /*
+     * Accept an uploaded file, create a new log for it and store the file's entries
+     * as contacts in the log.
+     */
     @PostMapping("")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file,
-            RedirectAttributes redirectAttributes) {
+    public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
     	logger.info("File uploaded " + file.getOriginalFilename());
     	
@@ -80,6 +85,25 @@ public class AdifImportExportController {
 
         return "redirect:/adif/";
     }
+    
+    /*
+     * Accept multiple uploaded files, create a new logs for them and store the file's entries
+     * as contacts in the log.
+     */
+    @PostMapping("/multi")
+    public String handleMultipleFileUpload(@RequestParam("file") MultipartFile[] files, RedirectAttributes redirectAttributes) {
+
+    	for(MultipartFile file : files) {
+	    	logger.info("File uploaded " + file.getOriginalFilename());
+	    	
+	        storageService.store(file);
+	        redirectAttributes.addFlashAttribute("message",
+	                "You successfully uploaded " + file.getOriginalFilename() + "!");
+    	}
+        return "redirect:/adif/";
+    }
+    
+    
 
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {

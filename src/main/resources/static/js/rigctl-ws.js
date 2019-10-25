@@ -5,16 +5,16 @@ var RigCtl = function() {
 		currentRigId: null			
 	};
 	
-	this.connect = function(rigId) {
-		this.config.currentRigId = rigId;
+	this.connect = function(brokerUrl) {
+		this.config.currentRigId = 0;
 	    var socket = new SockJS('/rigctl-update');
 	    this.config.stompClient = Stomp.over(socket);
-	    console.log("rigctl: connecting to rig " + rigId);
+	    console.log("rigctl: connecting...");
 	    this.config.stompClient.connect({}, function (frame) {
 	        setConnected(true);
 	        console.log('rigctl: connected: ' + frame);
 	        $("#rigctl-indicator").html("<i class='fas fa-link'></i>");
-	        rigCtl.config.stompClient.subscribe('/topic/rigctl/' + rigId, function (rigctlMessage) {
+	        rigCtl.config.stompClient.subscribe(brokerUrl, function (rigctlMessage) {
 	        	console.log("RigctlMessage", rigctlMessage);
 	        	message = JSON.parse(rigctlMessage.body);
 	        	console.log("RigctlMessage parsed", message);
@@ -51,11 +51,11 @@ var RigCtl = function() {
 $(function () {
     $( ".websocket-connect" ).each(function(){
     	$(this).click(function() {
-    		rigCtl.connect($(this).attr('id'));
+    		rigCtl.connect($(this).attr('data-broker-url'));
     	});
     });
     //$( ".websocket-connect" ).click(function() { rigCtl.connect(2); });
-    $( "#disconnect" ).click(function() { rigCtl.disconnect(); });
+    $( "#rigctl-disconnect" ).click(function() { rigCtl.disconnect(); });
     $( "#send" ).click(function() { rigCtl.sendUpdate(); });
     // Use this to auto-connect
     //$( document ).ready(function() { rigCtl.connect(1); });
@@ -65,7 +65,7 @@ var rigCtl = new RigCtl();
 
 function setConnected(connected) {
 	$(".websocket-connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
+    $("#rigctl-disconnect").prop("disabled", !connected);
     if (connected) {
     	$("#conversation").show();
     }

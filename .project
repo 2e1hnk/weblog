@@ -20,4 +20,11 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>app.jar</name>
+			<type>1</type>
+			<location>C:/Users/macarus/git/weblog/build/libs/web-log-0.1.0.jar</location>
+		</link>
+	</linkedResources>
 </projectDescription>

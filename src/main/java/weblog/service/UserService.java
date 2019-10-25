@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,11 @@ public class UserService {
     
     public User getUser(String username) {
     	return userRepository.findByUsername(username);
+    }
+    
+    public User getThisUser() {
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	return this.getUser(authentication.getName());
     }
     
     public Optional<User> getById(long id) {
@@ -84,6 +91,16 @@ public class UserService {
     	
     	// Return the generated (not-encoded) password for info
     	return generatedPassword;
+    }
+    
+    public void makeAdmin(User user) {
+    	user.setAdmin(true);
+    	save(user);
+    }
+    
+    public void makeNonAdmin(User user) {
+    	user.setAdmin(false);
+    	save(user);
     }
     
     public String generatePassword(int length) {

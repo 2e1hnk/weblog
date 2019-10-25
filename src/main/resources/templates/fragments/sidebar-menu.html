@@ -1,0 +1,50 @@
+<html>
+<head>
+</head>
+<body>
+	<!-- Left sidebar menu (File import/export, settings etc.) -->
+	<div th:fragment="sidebar-menu">
+		<div class="w3-sidebar w3-card w3-animate-left" style="display:none;z-index:10001;" id="leftMenu">
+			<div class="w3-bar">
+			  <form style="margin-bottom: 0px; margin-top:10px; margin-left: 16px; margin-right: 16px" action="/log/find" method="get">
+			  	<div class="w3-bar">
+					<input type="text" style="width:268px; margin-right: 0px; height: 38px;"
+						class="w3-bar-item w3-input w3-theme-light"
+						th:placeholder="#{lang.search}" name="q">
+					<button class="w3-bar-item w3-button w3-theme" type="submit" style="margin-left: 0px; height: 38px;">
+						<i class="fas fa-search"></i>
+					</button>
+				</div>
+			  </form>
+			</div>
+		  
+		  
+		  <div class="w3-bar-block">
+			  <h3 class="w3-bar-item"><i class="fas fa-digital-tachograph"></i> <span th:text="#{lang.rigCtl}"></span></h3>
+			  	<div class="w3-show-inline-block">
+				  	<div class="w3-bar" style="margin-left: 16px; margin-right: 16px">
+					  	<button type="button" id="rigctl-connect" class="w3-btn w3-theme websocket-connect" data-broker-url="/topic/rigctl/3693">Connect</button>
+						<button type="button" id="rigctl-disconnect" class="w3-btn w3-theme" disabled="disabled" th:text="#{lang.disconnect}"></button>
+					</div>
+				</div>
+			  
+			  <h3 class="w3-bar-item"><i class="fas fa-cogs"></i> <span th:text="#{lang.settings}"></span></h3>
+			  	<span class="w3-bar-item">
+				  	<input class="w3-check" type="checkbox" checked="checked" id="liveSwitch">
+					<label th:text="#{lang.liveLogging}"></label>
+				</span>
+				
+			  <h3 class="w3-bar-item"><i class="fas fa-tools"></i> <span th:text="#{lang.admin}"></span></h3>
+			  	<a href="/adif" class="w3-bar-item w3-button"><i class="fas fa-file-import"></i> <span th:text="#{lang.import}"></span> ADIF</a>
+				<a href="/adif/download" class="w3-bar-item w3-button"><i class="fas fa-file-export"></i> <span th:text="#{lang.export}"></span> ADIF</a>
+			  	<a sec:authorize="hasAuthority('ADMIN')" href="/admin/users" class="w3-bar-item w3-button"><i class="fas fa-users"></i> <span th:text="#{lang.users}"></span></a>
+			</div>
+		</div>
+	
+		<!-- Overlay -->
+		<div class="w3-overlay" id="page-overlay" onclick="closeLeftMenu()" style="cursor:pointer; z-index:10000; margin-top: 38px;"></div>
+	</div>
+	<!-- end sidebar menu -->
+
+</body>
+</html>

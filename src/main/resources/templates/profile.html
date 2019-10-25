@@ -1,0 +1,200 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/header :: header(~{::meta})">
+	<meta name="description" value="test" />
+</head>
+<body>
+	<!-- navbar -->
+		<div th:replace="fragments/navbar :: navbar" />
+	<!-- end navbar -->	
+	
+	<!-- Left sidebar menu (File import/export, settings etc.) -->
+		<div th:replace="fragments/sidebar-menu :: sidebar-menu" />
+	<!-- end sidebar menu -->
+	
+	<!-- Right sidebar menu (DX Cluster etc.) -->
+	<div th:replace="fragments/dx-cluster :: dx-cluster" />
+	
+	<!-- Content Pane -->
+	<div class="w3-row" style="margin-top: 10px;">
+		<div class="w3-container w3-col s12 m5 l3">
+			<div class="w3-card-2">
+				<header class="w3-container w3-theme">
+				  <h1 th:text="${user.username}">[USERNAME]</h1>
+				</header>
+				<div class="w3-container">
+					User ID: <span th:text="${user.id}"></span>
+				</div>
+				<div class="w3-container">
+					<h2>Roles</h2>
+					<div sec:authentication="principal.authorities"></div>
+				</div>
+			</div>
+		</div>
+		<div class="w3-container w3-col s12 m7 l9">
+			<h1>Logbooks</h1>
+			<ul class="w3-ul w3-border">
+				<li class="w3-bar" th:each="logbook : ${user.logbooks}">
+					  <!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
+		  		    <span class="w3-large" th:text="${logbook.name}">[NAME]</span><br>
+				    <span th:text="${logbook.size()}" /> Contacts logged<br />
+				    <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
+				    <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
+  						<button class="box__button" type="submit">Upload</button>
+					<div class="w3-dropdown-hover w3-right">
+					  <button class="w3-button w3-white"><i class="fas fa-ellipsis-v"></i></button>
+					  <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
+						<a class="w3-bar-item w3-button" th:href="@{/logbook/{id}/rename/(id=${logbook.id})}"><i class="fas fa-file-export"></i> <span th:text="#{lang.renameLogbook}" /></a>
+						<a class="w3-bar-item w3-button" th:href="@{/adif/download/{id}(id=${logbook.id})}"><i class="fas fa-file-export"></i> <span th:text="#{lang.export}" /></a>
+					  </div>
+					</div>
+		
+				</li>
+				<li>
+					<!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
+				  	<form class="w3-bar-item file-upload-box box" action="/adif/multi" method="POST" enctype="multipart/form-data">
+				  		<div class="box__input">
+						    <span class="w3-large">New Logbook</span><br>
+						    <input class="w3-input box__file" type="file" name="file" />
+						    <label for="file"><strong>Choose an ADIF file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
+    						<button class="w3-button w3-theme box__button" type="submit">Upload</button>
+						</div>
+						<div class="w3-dropdown-hover w3-right">
+						  <button class="w3-button w3-white"><i class="fas fa-ellipsis-v"></i></button>
+						  <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
+							<a class="w3-bar-item w3-button" href="#"><i class="fas fa-file-export"></i> <span th:text="#{lang.export}" /></a>
+						  </div>
+						</div>
+						<div class="box__uploading">Uploading&hellip;</div>
+						<div class="box__success">Done!</div>
+						<div class="box__error">Error! <span></span>.</div>
+					</form>
+				</li>				
+			</ul>
+			</p>
+		</div>
+	</div>
+	
+		<!-- Compiled and minified JavaScript -->
+	<!-- <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script> -->
+	<th:block th:replace="fragments/scripts :: base_script(~{::script})">
+		<script th:src="@{/webjars/leaflet/leaflet.js}"></script>
+		<script th:src="@{/js/rigctl-ws.js}"></script>
+		<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
+		<script th:src="@{/js/L.Heatmap.min.js}"></script>
+		<script th:src="@{/js/L.fullscreen.js}"></script>
+		<script th:src="@{/js/L.icons.js}"></script>
+		<script th:src="@{/js/leaflet.markercluster.js}"></script>
+		<script th:src="@{/js/dx-cluster.js}"></script>
+		<script>
+		// Autocomplete functionality
+			var bands = ["160M", "80M", "60M", "40M", "30M", "20M", "17M", "15M", "12M", "10M", "6M", "4M", "2M", "70CM"];
+			autocomplete(document.getElementById("band"), bands);
+			
+			var modes = ["USB", "LSB", "SSB", "CW", "FM", "AM", "PSK31", "PSK63", "RTTY", "FT8", "FT4", "JS8CALL", "JT9", "FSK441", "JT65", "JT4", "QRA64"];
+			autocomplete(document.getElementById("mode"), modes);
+		</script>
+		<script>
+		var $form = $('.box');
+
+		var isAdvancedUpload = function() {
+			  var div = document.createElement('div');
+			  var advanced = (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+			  console.log("advanced", advanced);
+			  return advanced;
+		}();
+
+		if (isAdvancedUpload) {
+		  $form.addClass('has-advanced-upload');
+		}
+
+		if (isAdvancedUpload) {
+
+		  var droppedFiles = false;
+
+		  $form.on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+		    e.preventDefault();
+		    e.stopPropagation();
+		  })
+		  .on('dragover dragenter', function() {
+		    $form.addClass('is-dragover');
+		  })
+		  .on('dragleave dragend drop', function() {
+		    $form.removeClass('is-dragover');
+		  })
+		  .on('drop', function(e) {
+		    droppedFiles = e.originalEvent.dataTransfer.files;
+		  });
+
+		}
+		
+		var $input = $form.find('input[type="file"]');
+		
+		$form.on('submit', function(e) {
+		  if ($form.hasClass('is-uploading')) return false;
+
+		  $form.addClass('is-uploading').removeClass('is-error');
+
+		  if (isAdvancedUpload) {
+			  e.preventDefault();
+
+			  var ajaxData = new FormData($form.get(0));
+			  
+			  console.log("ajaxData", ajaxData);
+
+			  if (droppedFiles) {
+			    $.each( droppedFiles, function(i, file) {
+			    	console.log("Adding " + $input.attr('name'))
+			    	console.log("File", file);
+			      ajaxData.append( $input.attr('name'), file );
+			    });
+			  }
+			  
+			  console.log("ajaxData", ajaxData);
+
+			  $.ajax({
+			    url: $form.attr('action'),
+			    type: $form.attr('method'),
+			    data: ajaxData,
+			    dataType: 'json',
+			    cache: false,
+			    contentType: false,
+			    processData: false,
+			    complete: function() {
+			      $form.removeClass('is-uploading');
+			    },
+			    success: function(data) {
+			      $form.addClass( data.success == true ? 'is-success' : 'is-error' );
+			      if (!data.success) $errorMsg.text(data.error);
+			    },
+			    error: function() {
+			      // Log the error, show an alert, whatever works for you
+			    }
+			  });
+		  } else {
+			  var iframeName  = 'uploadiframe' + new Date().getTime();
+			    $iframe   = $('<iframe name="' + iframeName + '" style="display: none;"></iframe>');
+
+			  $('body').append($iframe);
+			  $form.attr('target', iframeName);
+
+			  $iframe.one('load', function() {
+			    var data = JSON.parse($iframe.contents().find('body' ).text());
+			    $form
+			      .removeClass('is-uploading')
+			      .addClass(data.success == true ? 'is-success' : 'is-error')
+			      .removeAttr('target');
+			    if (!data.success) $errorMsg.text(data.error);
+			    $form.removeAttr('target');
+			    $iframe.remove();
+			  });
+		  }
+		});
+		
+		$form.on('drop', function(e) { // when drag & drop is supported
+		  droppedFiles = e.originalEvent.dataTransfer.files;
+		  $form.trigger('submit');
+		});
+		</script>
+	</th:block>
+</body>
+</html>

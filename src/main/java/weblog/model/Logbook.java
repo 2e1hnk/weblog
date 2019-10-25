@@ -69,5 +69,7 @@ public class Logbook {
 		}
 	}
 	
-	
+	public int size() {
+		return this.getContacts().size();
+	}
 }

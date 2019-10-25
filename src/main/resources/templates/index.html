@@ -1,218 +1,17 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<title th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</title>
-
-<!-- Compiled and minified CSS -->
-<link rel="stylesheet" th:href="@{/webjars/w3-css/w3.css}">
-<link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
-<link rel="stylesheet" th:href="@{/css/scout.theme.css}">
-<link rel="stylesheet" th:href="@{/css/app.css}">
-<link rel="stylesheet" th:href="@{/webjars/leaflet/leaflet.css}" />
-<link rel="stylesheet" th:href="@{/css/L.fullscreen.css}" />
-<link rel="stylesheet" th:href="@{/css/L.cluster.css}" />
-<link rel="stylesheet" th:href="@{/css/flag-icon.min.css}" />
-<link rel="stylesheet" th:href="@{/css/MarkerCluster.css}" />
-<link rel="stylesheet" th:href="@{/css/MarkerCluster.Default.css}" />
-
-<!-- favicon -->
-<link rel="apple-touch-icon" sizes="57x57"
-	th:href="@{/apple-icon-57x57.png}">
-<link rel="apple-touch-icon" sizes="60x60"
-	th:href="@{/apple-icon-60x60.png}">
-<link rel="apple-touch-icon" sizes="72x72"
-	th:href="@{/apple-icon-72x72.png}">
-<link rel="apple-touch-icon" sizes="76x76"
-	th:href="@{/apple-icon-76x76.png}">
-<link rel="apple-touch-icon" sizes="114x114"
-	th:href="@{/apple-icon-114x114.png}">
-<link rel="apple-touch-icon" sizes="120x120"
-	th:href="@{/apple-icon-120x120.png}">
-<link rel="apple-touch-icon" sizes="144x144"
-	th:href="@{/apple-icon-144x144.png}">
-<link rel="apple-touch-icon" sizes="152x152"
-	th:href="@{/apple-icon-152x152.png}">
-<link rel="apple-touch-icon" sizes="180x180"
-	th:href="@{/apple-icon-180x180.png}">
-<link rel="icon" type="image/png" sizes="192x192"
-	th:href="@{/android-icon-192x192.png}">
-<link rel="icon" type="image/png" sizes="32x32"
-	th:href="@{/favicon-32x32.png}">
-<link rel="icon" type="image/png" sizes="96x96"
-	th:href="@{/favicon-96x96.png}">
-<link rel="icon" type="image/png" sizes="16x16"
-	th:href="@{/favicon-16x16.png}">
-<link rel="manifest" th:href="@{/manifest.json}">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage"
-	th:content="@{/ms-icon-144x144.png}">
-<meta name="theme-color" content="#ffffff">
-
-<!-- fonts -->
-<link
-	href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap"
-	rel="stylesheet">
-
-	<style>
-	input.monospace {
-		font-family: 'Roboto Mono', monospace;
-	}
-	
-	.monospace {
-		font-family: 'Roboto Mono', monospace;
-	}
-	
-	#map {
-		height: 600px;
-	}
-	</style>
-</head>
+<head th:replace="fragments/header :: header(~{::meta})" />
 <body>
 
 	<!-- navbar -->
-	<div class="w3-bar w3-theme">
-		<button class="w3-bar-item w3-button navbar-button" id="left-menu-button" style="z-index:10002;" onclick="toggleLeftMenu()"><i class="fas fa-bars w3-large"></i></button>
-		
-		<a href="#" class="w3-bar-item w3-button">
-			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" />
-			<b th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</b>
-		</a>
-		
-		<button class="w3-bar-item w3-button w3-hide-small"><span class="w3-large" id="rigctl-indicator"></span></button>
-		
-		<button class="w3-button w3-right navbar-button" id="right-menu-button" onclick="toggleRightMenu()"><i class="fa fa-globe w3-large"></i></button>
-
-		<div class="w3-dropdown-hover w3-right">
-		    <button class="w3-button navbar-button"><i class="far fa-user-circle w3-large"></i> </button>
-		    <div class="w3-dropdown-content w3-card-4" style="right:0">
-		    	<div class="w3-bar">
-		    		Username: <span sec:authentication="name">[USER]</span>
-		    	</div>
-		    	<div class="w3-bar">
-		    		Roles: <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
-		    	</div>
-			    <div class="w3-bar w3-center">
-			    	<a href="?lang=en" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-gb"></span>
-			    	</a>
-				    <a href="?lang=fr" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-fr"></span>
-			    	</a>
-				    <a href="?lang=es" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-es"></span>
-			    	</a>
-			        <a href="?lang=ru" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-ru"></span>
-			    	</a>
-			    </div>
-			    <div class="w3-bar w3-center">
-			        <a href="?lang=de" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-de"></span>
-			    	</a>
-			        <a href="?lang=it" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-it"></span>
-			    	</a>
-			        <a href="?lang=cy" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-gb-wls"></span>
-			    	</a>
-			        <a href="?lang=ie" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-ie"></span>
-			    	</a>
-			    </div>
-			    <div class="w3-bar-block">
-				    <a href="#" class="w3-bar-item w3-button"><i class="fas fa-user-circle"></i> <span th:text="#{lang.updateProfile}"></span></a>
-				    <hr />
-				    <a href="/login?logout" class="w3-bar-item w3-button"><i class="fas fa-sign-out-alt"></i> <span th:text="#{lang.logout}"></span></a>
-				</div>
-		    </div>
-		</div>
-
-		<!-- Logbook selection -->
-		<div class="w3-dropdown-hover w3-right">
-		    <button class="w3-button"><span th:text="#{lang.logbook}"></span>: <b><span th:text="${activelogbook.getName()}"></span></b> <i class="fa fa-caret-down"></i></button>
-		    <div class="w3-dropdown-content w3-card-4">
-		    	<div class="w3-bar-block">
-		    		<a th:each="logbook : ${user.logbooks}" th:href="@{/log(activelogbook=${logbook.id})}" class="w3-bar-item w3-button"><span th:text="${logbook.name}"></span> <span class="w3-badge w3-right w3-theme" th:text="${#lists.size(logbook.contacts)}"></span></a>
-		    		<hr />
-		    		<button onclick="document.getElementById('modal-add-logbook').style.display='block'" class="w3-bar-item w3-button">Create New Logbook</button>
-		    	</div>
-		    </div>
-		</div>
-
-		<form style="margin-bottom: 0px;" action="/log/find" method="get">
-			<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small w3-theme-light w3-text-theme navbar-button" type="submit">
-				<i class="fas fa-search"></i>
-			</button>
-			<input type="text"
-				class="w3-bar-item w3-input w3-right w3-theme-light w3-hide-small"
-				th:placeholder="#{lang.search}" name="q">
-		</form>
-
-	</div>
-	<!-- end navbar -->
+		<div th:replace="fragments/navbar :: navbar" />
+	<!-- end navbar -->	
 	
 	<!-- Left sidebar menu (File import/export, settings etc.) -->
-	<div class="w3-sidebar w3-card w3-animate-left" style="display:none;z-index:10001;" id="leftMenu">
-		<div class="w3-bar">
-		  <form style="margin-bottom: 0px; margin-top:10px; margin-left: 16px; margin-right: 16px" action="/log/find" method="get">
-		  	<div class="w3-bar">
-				<input type="text" style="width:268px; margin-right: 0px; height: 38px;"
-					class="w3-bar-item w3-input w3-theme-light"
-					th:placeholder="#{lang.search}" name="q">
-				<button class="w3-bar-item w3-button w3-theme" type="submit" style="margin-left: 0px; height: 38px;">
-					<i class="fas fa-search"></i>
-				</button>
-			</div>
-		  </form>
-		</div>
-	  
-	  
-	  <div class="w3-bar-block">
-		  <h3 class="w3-bar-item"><i class="fas fa-digital-tachograph"></i> <span th:text="#{lang.rigCtl}"></span></h3>
-		  	<div class="w3-show-inline-block">
-			  	<div class="w3-bar" style="margin-left: 16px; margin-right: 16px">
-				  	<button type="button" id="1" class="w3-btn w3-theme websocket-connect">Rig 1</button>
-					<button type="button" id="2" class="w3-btn w3-theme websocket-connect">Rig 2</button>
-					<button type="button" id="disconnect" class="w3-btn w3-theme" disabled="disabled" th:text="#{lang.disconnect}"></button>
-				</div>
-			</div>
-		  
-		  <h3 class="w3-bar-item"><i class="fas fa-cogs"></i> <span th:text="#{lang.settings}"></span></h3>
-		  	<span class="w3-bar-item">
-			  	<input class="w3-check" type="checkbox" checked="checked" id="liveSwitch">
-				<label th:text="#{lang.liveLogging}"></label>
-			</span>
-			
-		  <h3 class="w3-bar-item"><i class="fas fa-tools"></i> <span th:text="#{lang.admin}"></span></h3>
-		  	<a href="/adif" class="w3-bar-item w3-button"><i class="fas fa-file-import"></i> <span th:text="#{lang.import}"></span> ADIF</a>
-			<a href="/adif/download" class="w3-bar-item w3-button"><i class="fas fa-file-export"></i> <span th:text="#{lang.export}"></span> ADIF</a>
-		  	<a href="/admin/users" class="w3-bar-item w3-button"><i class="fas fa-users"></i> <span th:text="#{lang.users}"></span></a>
-		</div>
-	</div>
-	
-	<!-- Overlay -->
-	<div class="w3-overlay" id="page-overlay" onclick="closeLeftMenu()" style="cursor:pointer; z-index:10000; margin-top: 38px;"></div>
+		<div th:replace="fragments/sidebar-menu :: sidebar-menu" />
+	<!-- end sidebar menu -->
 	
 	<!-- Right sidebar menu (DX Cluster etc.) -->
-	<div class="w3-sidebar w3-bar w3-card w3-animate-right" style="display:none;right:0;z-index: 9997;" id="rightMenu">
-		<button class="w3-bar-item w3-button"><i class="fa fa-globe w3-xlarge"></i> <span th:text="#{lang.dxCluster}"></span> (<span class="w3-small" th:text="${@environment.getProperty('DXCLUSTER_HOST')}">[DX Cluster Hostname]</span>)</button>
-  	  <table id="dx-cluster-table" class="w3-table w3-stripped w3-bordered">
-	  	<thead>
-	  		<tr>
-	  			<th th:text="#{lang.time}"></th>
-	  			<th th:text="#{lang.spotter}"></th>
-	  			<th th:text="#{lang.dx}"></th>
-	  			<th th:text="#{lang.freq}"></th>
-	  		</tr>
-	  	</thead>
-	  	<tbody id="dx-spots">
-	  		<tr>
-	  		</tr>
-	  	</tbody>
-	  </table>
-	</div>
+	<div th:replace="fragments/dx-cluster :: dx-cluster" />
 
 	<!-- content pane -->
 	<div class="w3-row">
@@ -525,29 +324,24 @@
 
 	<!-- Compiled and minified JavaScript -->
 	<!-- <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script> -->
-	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-	<script th:src="@{/webjars/foundation/dist/js/foundation.min.js}"></script>
-	<script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
-	<script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
-	<script th:src="@{/webjars/momentjs/min/moment.min.js}"></script>
-	<script th:src="@{/webjars/leaflet/leaflet.js}"></script>
-	<script th:src="@{/js/rigctl-ws.js}"></script>
-	<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
-	<script th:src="@{/js/L.Heatmap.min.js}"></script>
-	<script th:src="@{/js/L.fullscreen.js}"></script>
-	<script th:src="@{/js/L.icons.js}"></script>
-	<script th:src="@{/js/leaflet.markercluster.js}"></script>
-	<script th:src="@{/js/app.js}"></script>
-	<script th:src="@{/js/autocomplete.js}"></script>
-	<script th:src="@{/js/dx-cluster.js}"></script>
-	<script>
-	// Autocomplete functionality
-		var bands = ["160M", "80M", "60M", "40M", "30M", "20M", "17M", "15M", "12M", "10M", "6M", "4M", "2M", "70CM"];
-		autocomplete(document.getElementById("band"), bands);
-		
-		var modes = ["USB", "LSB", "SSB", "CW", "FM", "AM", "PSK31", "PSK63", "RTTY", "FT8", "FT4", "JS8CALL", "JT9", "FSK441", "JT65", "JT4", "QRA64"];
-		autocomplete(document.getElementById("mode"), modes);
-	</script>
+	<th:block th:replace="fragments/scripts :: base_script(~{::script})">
+		<script th:src="@{/webjars/leaflet/leaflet.js}"></script>
+		<script th:src="@{/js/rigctl-ws.js}"></script>
+		<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
+		<script th:src="@{/js/L.Heatmap.min.js}"></script>
+		<script th:src="@{/js/L.fullscreen.js}"></script>
+		<script th:src="@{/js/L.icons.js}"></script>
+		<script th:src="@{/js/leaflet.markercluster.js}"></script>
+		<script th:src="@{/js/dx-cluster.js}"></script>
+		<script>
+		// Autocomplete functionality
+			var bands = ["160M", "80M", "60M", "40M", "30M", "20M", "17M", "15M", "12M", "10M", "6M", "4M", "2M", "70CM"];
+			autocomplete(document.getElementById("band"), bands);
+			
+			var modes = ["USB", "LSB", "SSB", "CW", "FM", "AM", "PSK31", "PSK63", "RTTY", "FT8", "FT4", "JS8CALL", "JT9", "FSK441", "JT65", "JT4", "QRA64"];
+			autocomplete(document.getElementById("mode"), modes);
+		</script>
+	</th:block>
 </body>
 
 </html>

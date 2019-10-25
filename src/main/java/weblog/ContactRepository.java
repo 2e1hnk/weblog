@@ -20,6 +20,7 @@ public interface ContactRepository extends CrudRepository<Contact, Long> {
 	
 	Page<Contact> findByLogbookOrderByTimestampDesc(Logbook logbook, Pageable pageable);
 	Collection<Contact> findByLogbook(String logbook);
+	Collection<Contact> findByLogbookId(Long logbookId);
 	Page<Contact> findAll(Pageable pageable);
 	Contact findTopByOrderByIdDesc();
 	Contact findTopByOrderByIdAsc();

@@ -38,6 +38,11 @@ public class ContactService {
     	return contactRepository.findByLogbook(authentication.getName());
     }
     
+    public Collection<Contact> findByLogbookId(Long logbookId) {
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	return contactRepository.findByLogbookId(logbookId);
+    }
+    
     public Optional<Contact> getById(Long id) {
     	return contactRepository.findById(id);
     }

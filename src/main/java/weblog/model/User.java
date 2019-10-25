@@ -13,10 +13,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.springframework.security.core.GrantedAuthority;
+
 @Entity
 @Table(name = "users")
 public class User {
  
+	/*
+	 * Standard User Fields
+	 */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -28,6 +33,23 @@ public class User {
     
     private Boolean enabled = true;
     
+    private boolean admin = false;
+    
+    /*
+     * User permissions fields
+     */
+    @ManyToMany
+    @JoinTable( 
+        name = "users_roles", 
+        joinColumns = @JoinColumn(
+          name = "user_id", referencedColumnName = "id"), 
+        inverseJoinColumns = @JoinColumn(
+          name = "role_id", referencedColumnName = "id")) 
+    private Collection<Role> roles;
+    
+    /*
+     * Logbook-specific fields
+     */
     @ManyToMany
     @JoinTable(
         name = "user_logbooks", 
@@ -37,7 +59,19 @@ public class User {
           name = "logbook_id", referencedColumnName = "id"))
     private Collection<Logbook> logbooks = new ArrayList<Logbook>();
     
-    public Collection<Logbook> getLogbooks() {
+    public User() {
+    	
+    }
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+
+	public Collection<Logbook> getLogbooks() {
 		return logbooks;
 	}
 
@@ -91,6 +125,14 @@ public class User {
 
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public Collection<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Collection<Role> roles) {
+		this.roles = roles;
 	}
 
 }

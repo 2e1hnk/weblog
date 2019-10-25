@@ -164,3 +164,33 @@ button.navbar-button {
 .map-icon-16 {
 	background-color: #f8f;
 }
+
+/* Drag/drop stuff */
+.box__dragndrop,
+.box__uploading,
+.box__success,
+.box__error {
+  display: none;
+}
+
+.box.has-advanced-upload {
+  padding: 10px;
+  background-color: white;
+  outline: 5px dashed #ccc;
+  outline-offset: 0px;
+}
+.box.has-advanced-upload .box__dragndrop {
+  display: inline;
+}
+
+.box.is-dragover {
+  background-color: grey;
+}
+
+.box.is-uploading .box__input {
+  visibility: none;
+}
+
+.box.is-uploading .box__uploading {
+  display: block;
+}

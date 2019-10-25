@@ -1,14 +1,17 @@
 package weblog;
 
+import weblog.model.Logbook;
+
 public class RigctlMessage {
-	private int rigId;
+	private Long logbookId;
 	private float frequency;
 	private String mode;
-	public int getRigId() {
-		return rigId;
+	
+	public Long getLogbookId() {
+		return logbookId;
 	}
-	public void setRigId(int rigId) {
-		this.rigId = rigId;
+	public void setLogbookId(Long logbookId) {
+		this.logbookId = logbookId;
 	}
 	public float getFrequency() {
 		return frequency;
@@ -36,7 +39,7 @@ public class RigctlMessage {
 	}
 	@Override
 	public String toString() {
-		return "RigctlMessage [rigId=" + rigId + ", frequency=" + frequency + ", mode=" + mode + "]";
+		return "RigctlMessage [logbookId=" + logbookId + ", frequency=" + frequency + ", mode=" + mode + "]";
 	}
 	
 }

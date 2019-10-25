@@ -625,3 +625,4 @@ function checkLog(callsign) {
     	}
     });	
 }
+

@@ -1,153 +1,18 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<title th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</title>
-
-<!-- Compiled and minified CSS -->
-<link rel="stylesheet" th:href="@{/webjars/w3-css/w3.css}">
-<link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
-<link rel="stylesheet" th:href="@{/css/scout.css}">
-<link rel="stylesheet" th:href="@{/css/app.css}">
-<link rel="stylesheet" th:href="@{/webjars/leaflet/leaflet.css}" />
-<link rel="stylesheet" th:href="@{/css/L.fullscreen.css}" />
-
-<!-- favicon -->
-<link rel="apple-touch-icon" sizes="57x57"
-	th:href="@{/apple-icon-57x57.png}">
-<link rel="apple-touch-icon" sizes="60x60"
-	th:href="@{/apple-icon-60x60.png}">
-<link rel="apple-touch-icon" sizes="72x72"
-	th:href="@{/apple-icon-72x72.png}">
-<link rel="apple-touch-icon" sizes="76x76"
-	th:href="@{/apple-icon-76x76.png}">
-<link rel="apple-touch-icon" sizes="114x114"
-	th:href="@{/apple-icon-114x114.png}">
-<link rel="apple-touch-icon" sizes="120x120"
-	th:href="@{/apple-icon-120x120.png}">
-<link rel="apple-touch-icon" sizes="144x144"
-	th:href="@{/apple-icon-144x144.png}">
-<link rel="apple-touch-icon" sizes="152x152"
-	th:href="@{/apple-icon-152x152.png}">
-<link rel="apple-touch-icon" sizes="180x180"
-	th:href="@{/apple-icon-180x180.png}">
-<link rel="icon" type="image/png" sizes="192x192"
-	th:href="@{/android-icon-192x192.png}">
-<link rel="icon" type="image/png" sizes="32x32"
-	th:href="@{/favicon-32x32.png}">
-<link rel="icon" type="image/png" sizes="96x96"
-	th:href="@{/favicon-96x96.png}">
-<link rel="icon" type="image/png" sizes="16x16"
-	th:href="@{/favicon-16x16.png}">
-<link rel="manifest" th:href="@{/manifest.json}">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage"
-	th:content="@{/ms-icon-144x144.png}">
-<meta name="theme-color" content="#ffffff">
-
-<!-- fonts -->
-<link
-	href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap"
-	rel="stylesheet">
-
-	<style>
-	input.monospace {
-		font-family: 'Roboto Mono', monospace;
-	}
-	
-	.monospace {
-		font-family: 'Roboto Mono', monospace;
-	}
-	
-	#map {
-		height: 600px;
-	}
-	</style>
-</head>
+<head th:replace="fragments/header :: header(~{::meta})" />
 <body>
 
 	<!-- navbar -->
-	<div class="w3-bar w3-scout">
-		<button class="w3-bar-item w3-button" id="left-menu-button" style="margin-top: 2px; z-index:10002;" onclick="toggleLeftMenu()"><i class="fas fa-bars w3-large"></i></button>
-		
-		<a href="#" class="w3-bar-item w3-button">
-			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" />
-			<b th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</b>
-		</a>
-		
-		<button class="w3-bar-item w3-button"><span class="w3-large" id="rigctl-indicator"></span></button>
-		
-		<button class="w3-button w3-right" style="margin-top: 2px;" id="right-menu-button" onclick="toggleRightMenu()"><i class="fa fa-globe w3-large"></i></button>
-
-		<form style="margin-bottom: 0px;" action="/log/find" method="get">
-			<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small" style="margin-top: 2px;" type="submit">
-				<i class="fas fa-search"></i>
-			</button>
-			<input type="text"
-				class="w3-bar-item w3-input w3-right w3-scout-light w3-hide-small"
-				placeholder="Search..." name="q">
-		</form>
-
-	</div>
-	<!-- end navbar -->
+		<div th:replace="fragments/navbar :: navbar" />
+	<!-- end navbar -->	
 	
 	<!-- Left sidebar menu (File import/export, settings etc.) -->
-	<div class="w3-sidebar w3-card w3-animate-left" style="display:none;z-index:10001;" id="leftMenu">
-		<div class="w3-bar">
-		  <form style="margin-bottom: 0px; margin-top:10px; margin-left: 10px; margin-right: 10px" action="/log/find" method="get">
-		  	<div class="w3-bar">
-				<input type="text" style="width:280px; margin-right: 0px; height: 38px;"
-					class="w3-bar-item w3-input w3-scout-light"
-					placeholder="Search..." name="q">
-				<button class="w3-bar-item w3-button w3-scout" type="submit" style="margin-left: 0px; height: 38px;">
-					<i class="fas fa-search"></i>
-				</button>
-			</div>
-		  </form>
-		</div>
-	  
-	  <div class=" w3-bar-block ">
-		  <h3 class="w3-bar-item"><i class="fas fa-digital-tachograph"></i> Rig Control</h3>
-		  	<button type="button" id="connect-1" class="w3-bar-item w3-button w3-scout">Connect to Rig 1</button>
-			<button type="button" id="connect-2" class="w3-bar-item w3-button w3-scout">Connect to Rig 2</button>
-			<button type="button" id="disconnect" class="w3-bar-item w3-button w3-scout" disabled="disabled">Disconnect</button>
-		  
-		  <h3 class="w3-bar-item"><i class="fas fa-cogs"></i> Settings</h3>
-		  	<span class="w3-bar-item">
-			  	<input class="w3-check" type="checkbox" checked="checked" id="liveSwitch">
-				<label>Live Logging</label>
-			</span>
-			
-		  <h3 class="w3-bar-item"><i class="fas fa-tools"></i> Admin</h3>
-		  	<a href="/adif" class="w3-bar-item w3-button"><i class="fas fa-file-import"></i> Import ADIF</a>
-			<a href="/adif/download" class="w3-bar-item w3-button"><i class="fas fa-file-export"></i> Export as ADIF</a>
-		  	<a href="/admin/users" class="w3-bar-item w3-button"><i class="fas fa-users"></i> Users</a>
-		</div>
-	</div>
-	
-	<!-- Overlay -->
-	<div class="w3-overlay" id="page-overlay" onclick="closeLeftMenu()" style="cursor:pointer; z-index:10000; margin-top: 38px;"></div>
+		<div th:replace="fragments/sidebar-menu :: sidebar-menu" />
+	<!-- end sidebar menu -->
 	
 	<!-- Right sidebar menu (DX Cluster etc.) -->
-	<div class="w3-sidebar w3-bar w3-card w3-animate-right" style="display:none;right:0;z-index: 9997;" id="rightMenu">
-		<button class="w3-bar-item w3-button"><i class="fa fa-globe w3-xlarge"></i> DX Cluster (<span class="w3-small" th:text="${@environment.getProperty('DXCLUSTER_HOST')}">[DX Cluster Hostname]</span>)</button>
-  	  <table id="dx-cluster-table" class="w3-table-all">
-	  	<thead>
-	  		<tr>
-	  			<th>Time</th>
-	  			<th>Spotter</th>
-	  			<th>DX</th>
-	  			<th>Freq</th>
-	  		</tr>
-	  	</thead>
-	  	<tbody id="dx-spots">
-	  		<tr>
-	  		</tr>
-	  	</tbody>
-	  </table>
-	</div>
-
+	<div th:replace="fragments/dx-cluster :: dx-cluster" />
+	
 	<!-- content pane -->
 	<div class="w3-row">
 
@@ -161,11 +26,12 @@
 		<table class="w3-table-all">
 			<thead>
 				<tr>
-					<th>ID</th>
-					<th>Username</th>
-					<th>Enabled</th>
-					<th>Logbook Name</th>
-					<th>Actions</th>
+					<th th:text="#{lang.id}">ID</th>
+					<th th:text="#{lang.username}">Username</th>
+					<th th:text="#{lang.enabled}">Enabled</th>
+					<th th:text="#{lang.roles}">Roles</th>
+					<th th:text="#{lang.logbooks}">Logbook Name</th>
+					<th th:text="#{lang.actions}">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -177,25 +43,39 @@
 						<i th:if="${user.enabled == false}" class="fas fa-times"></i>
 					</td>
 					<td>
+						<div th:each="role : ${user.roles}">
+							<span th:text="${role.name}">[role name]</span>
+						</div>
+					</td>
+					<td>
 						<div th:each="logbook : ${user.logbooks}">
 							<span th:text="${logbook.name}">[logbook name]</span>
 						</div>
 					</td>
 					<td>
-						<a th:href="@{/admin/users/edit/{id}(id=${user.id})}"><i class="fas fa-user-edit"></i></a>
-						<a th:href="@{/admin/users/delete/{id}(id=${user.id})}"><i class="fas fa-user-times"></i></a>
-						<a th:if="${user.enabled == true}" th:href="@{/admin/users/disable/{id}(id=${user.id})}"><i class="fas fa-user-slash"></i></a>
-						<a th:if="${user.enabled == false}" th:href="@{/admin/users/enable/{id}(id=${user.id})}"><i class="fas fa-user"></i></a>
-						<a th:href="@{/admin/users/resetpassword/{id}(id=${user.id})}"><i class="fas fa-key"></i></a>
+						<div class="w3-dropdown-hover">
+						  <button class="w3-button w3-white"><i class="fas fa-ellipsis-v"></i></button>
+						  <div class="w3-dropdown-content w3-bar-block w3-border">
+							<a class="w3-bar-item w3-button" th:href="@{/admin/users/edit/{id}(id=${user.id})}"><i class="fas fa-user-edit"></i> <span th:text="#{lang.edit}" /></a>
+							<a class="w3-bar-item w3-button" th:href="@{/admin/users/delete/{id}(id=${user.id})}"><i class="fas fa-user-times"></i> <span th:text="#{lang.delete}" /></a>
+							<a class="w3-bar-item w3-button" th:if="${user.enabled == true}" th:href="@{/admin/users/disable/{id}(id=${user.id})}"><i class="fas fa-user-slash"></i> <span th:text="#{lang.disable}" /></a>
+							<a class="w3-bar-item w3-button" th:if="${user.enabled == false}" th:href="@{/admin/users/enable/{id}(id=${user.id})}"><i class="fas fa-user"></i> <span th:text="#{lang.enable}" /></a>
+							<a class="w3-bar-item w3-button" th:if="${user.admin == true}" th:href="@{/admin/users/make-non-admin/{id}(id=${user.id})}"><i class="fas fa-user"></i> <span th:text="#{lang.makeNonAdmin}" /></a>
+							<a class="w3-bar-item w3-button" th:if="${user.admin == false}" th:href="@{/admin/users/make-admin/{id}(id=${user.id})}"><i class="fas fa-crown"></i> <span th:text="#{lang.makeAdmin}" /></a>
+							<a class="w3-bar-item w3-button" th:href="@{/admin/users/resetpassword/{id}(id=${user.id})}"><i class="fas fa-key"></i> <span th:text="#{lang.resetPassword}" /></a>
+						  </div>
+						</div>
 					</td>
 				</tr>
 			</tbody>
 			<tfoot>
 				<tr>
 					<td></td>
-					<td><input type="text" name="username" placeholder="username" /></td>
-					<td><label for="enabled">Enabled: </label><input type="checkbox" name="enabled" /></td>
-					<td><input type="submit" /></td>
+					<td><input class="w3-input w3-border" type="text" name="username" placeholder="username" /></td>
+					<td><input class="w3-check" type="checkbox" name="enabled" /></td>
+					<td><input class="w3-check" type="checkbox" name="admin" /></td>
+					<td></td>
+					<td><input class="w3-button w3-theme" type="submit" value="Create User" /></td>
 				</tr>
 			</tfoot>
 		</table>
