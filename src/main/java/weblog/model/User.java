@@ -139,6 +139,19 @@ public class User {
 	public void setRoles(Collection<Role> roles) {
 		this.roles = roles;
 	}
+	
+	public void addRole(Role role) {
+		if ( this.getRoles() == null ) {
+			this.setRoles(new ArrayList<Role>());
+		}
+		if ( !this.getRoles().contains(role) ) {
+			this.roles.add(role);
+		}
+	}
+	
+	public void removeRole(Role role) {
+		this.roles.remove(role);
+	}
 
 	public String getTheme() {
 		return theme;

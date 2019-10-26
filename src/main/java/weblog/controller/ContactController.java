@@ -80,7 +80,6 @@ public class ContactController {
         
         User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
         model.addAttribute("user", user);
-        logger.info("Set user to " + user.getUsername());
         
         if ( newLogbookName.isPresent() ) {
         	activeLogbook = logbookService.createLogbook(newLogbookName.get(), user);
@@ -227,6 +226,10 @@ public class ContactController {
 	// Run full-text search
 	@GetMapping(path="/find")
 	public String searchContacts(Model model, Contact contact, @RequestParam String q) {
+        
+		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        model.addAttribute("user", user);
+        
 		List<Contact> result = service.fuzzySearch(q);
 		logger.info("Found " + result.size() + " contacts");
 		model.addAttribute("contactList", result);
@@ -234,6 +237,7 @@ public class ContactController {
         model.addAttribute("totalPages", 1);
         model.addAttribute("activeContactList", true);
         model.addAttribute("contact", contact);
+        
 		return "index";
 	}
 	

@@ -25,6 +25,9 @@ public class UserService {
     @Autowired
     private LogbookService logbookService;
     
+    @Autowired
+    private RoleService roleService;
+    
     public Page<User> getPaginatedArticles(Pageable pageable) {
         return userRepository.findAllByOrderByUsernameAsc(pageable);
     }
@@ -83,6 +86,10 @@ public class UserService {
     	String generatedPassword = this.generatePassword(5);
     	user.setPassword(this.encodePassword(generatedPassword));
     	this.save(user);
+    	
+    	// Grant default user role to the user
+    	user.addRole(roleService.getByName("ROLE_USER"));
+    	save(user);
     	
     	// Create a default logbook for the user
     	Logbook logbook = logbookService.createLogbook(user.getUsername());
