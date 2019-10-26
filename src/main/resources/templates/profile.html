@@ -2,7 +2,7 @@
 <head th:replace="fragments/header :: header(~{::meta})">
 	<meta name="description" value="test" />
 </head>
-<body>
+<body class="w3-theme-background">
 	<!-- navbar -->
 		<div th:replace="fragments/navbar :: navbar" />
 	<!-- end navbar -->	
@@ -27,6 +27,10 @@
 				<div class="w3-container">
 					<h2>Roles</h2>
 					<div sec:authentication="principal.authorities"></div>
+				</div>
+				<div class="w3-container">
+					<h2>Theme</h2>
+					<div th:text="${user.theme}"></div>
 				</div>
 			</div>
 		</div>
