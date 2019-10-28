@@ -1,0 +1,15 @@
+.w3-theme-text {color:#000 !important}
+.w3-theme-border {border-color:#7413dc !important}
+.w3-theme-background {color:#090 !important;background-color:#111 !important}
+.w3-theme-highlight {color:#0C0 !important;background-color:#373538 !important}
+.w3-theme-button {color: #0C0 !important; background-color: #7111 !important; border: 3px #0F0 solid !important}
+.w3-theme-info {color: #000 !important; background-color: #0F0 !important}
+.w3-input {color: #0F0 !important; background-color: #111 !important}
+.w3-table-all tr:nth-child(odd) {
+	color: #0f0 !important;
+    background-color: #111 !important;
+}
+.w3-table-all tr:nth-child(even) {
+    color: #0f0 !important;
+    background-color: #222 !important;
+}

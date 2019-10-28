@@ -4,3 +4,12 @@
 .w3-theme-highlight {color:#fff !important;background-color:#2A293E !important}
 .w3-theme-button {color: #fff !important; background-color: #797B3A !important}
 .w3-theme-info {color: #fff !important; background-color: #F96714 !important}
+.w3-input {color: #000 !important; background-color: #f7ebd5!important}
+.w3-table-all tr:nth-child(odd) {
+	color: #000 !important;
+    background-color: #f7ebd5 !important;
+}
+.w3-table-all tr:nth-child(even) {
+    color: #000 !important;
+    background-color: #F3E0BE !important;
+}
