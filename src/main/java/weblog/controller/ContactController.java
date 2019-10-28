@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,7 @@ public class ContactController {
         }
         
         if ( activeLogbookId.isPresent() ) {
-        	activeLogbook = logbookService.getLogbookById(activeLogbookId.get());
+        	activeLogbook = logbookService.getLogbookById(activeLogbookId.get()).get();
         }
         
         if ( activeLogbook.getName() == null ) {
@@ -95,7 +96,7 @@ public class ContactController {
         
         // Check that the currently logged in user has access to the requested logbook
         if ( !user.getLogbooks().contains(activeLogbook) ) {
-        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have access to this logbook");
+        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have access to the logbook " + activeLogbook.getName());
         }
 
         model.addAttribute("activelogbook", activeLogbook);
@@ -184,7 +185,11 @@ public class ContactController {
     }
     
     @GetMapping("/edit/{id}")
-    public String showUpdateContactForm(@PathVariable("id") long id, Model model, HttpServletResponse response, @ModelAttribute("activelogbook") Logbook activeLogbook) throws IOException {
+    public String showUpdateContactForm(@PathVariable("id") long id, Model model, HttpServletResponse response,
+    		@ModelAttribute("activelogbook") Logbook activeLogbook) throws IOException {
+    	
+    	model.addAttribute("activelogbook", activeLogbook);
+    	
         Contact contact = contactService.getById(id)
           .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + id));
          
@@ -230,7 +235,13 @@ public class ContactController {
 		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
         model.addAttribute("user", user);
         
-		List<Contact> result = service.fuzzySearch(q);
+		//List<Contact> result = service.fuzzySearch(q);
+        List<Contact> result = null;
+		try {
+			result = service.perUserSearch(q);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		logger.info("Found " + result.size() + " contacts");
 		model.addAttribute("contactList", result);
         model.addAttribute("currentPage", 1);

@@ -253,7 +253,7 @@ $(document).ready(function () {
 	  $(this).data('timer', wait);
     });
     
-    $("#liveSwitch").change(updateLiveEditMode);
+    $("#liveSwitch").on("click", updateLiveEditMode());
     
     $("#frequency").change(function() {
     	var freq = $("#frequency").val();
@@ -481,7 +481,7 @@ function callsign_lookup(callsign) {
 	        cache: false,
 	        timeout: 600000,
 	        success: function (data) {
-	        	var previous_contact_list = "<b>Previous Contacts </b><span class='w3-badge w3-scout'>" + data.length + "</span><br />";
+	        	var previous_contact_list = "<b>Previous Contacts </b><span class='w3-badge w3-scout w3-theme-info'>" + data.length + "</span><br />";
 	        	$.each(data, function(index, value) {
 	        		previous_contact_list = previous_contact_list + value.timestamp + '<br />';
 	        	});
@@ -511,15 +511,19 @@ function hide_info_box() {
 	});
 }
 
+var contactInputTimer;
+
 function updateLiveEditMode() {
 	if ( document.getElementById("liveSwitch").checked ) {
 		// Live mode
-		setInterval(function() {
+		console.log("Started Live Logging");
+		contactInputTimer = setInterval(function() {
 			document.getElementById("timestamp").value = moment().utc().format('YYYY-MM-DD HH:mm:ss');
 		}, 1000);
 	} else {
 		// Edit mode
-		clearInterval();
+		console.log("Stopping live logging")
+		clearInterval(contactInputTimer);
 	}
 }
 

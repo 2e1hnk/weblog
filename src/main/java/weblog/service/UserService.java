@@ -1,6 +1,8 @@
 package weblog.service;
 
 import java.security.SecureRandom;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,11 @@ public class UserService {
     public User getThisUser() {
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	return this.getUser(authentication.getName());
+    }
+    
+    public Collection<Logbook> getThisUserLogbookList() {
+    	User user = this.getThisUser();
+    	return user.getLogbooks();
     }
     
     public Optional<User> getById(long id) {

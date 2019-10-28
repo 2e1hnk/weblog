@@ -28,7 +28,7 @@
 					<div class="w3-cell-row">
 						<div class="w3-container w3-cell">
 							<label for="logbook"><span th:text="#{lang.logbook}"></span></label>
-							<select class="w3-select w3-border" id="logbook" name="logbook">
+							<select class="w3-select w3-border w3-input" id="logbook" name="logbook">
 								<option th:each="logbook : ${user.logbooks}" th:value="${logbook.id}" th:text="${logbook.name}" th:selected="${logbook.id==activelogbook.id}"></option>
 							</select>
 						</div>
@@ -197,7 +197,7 @@
 
 
 		<!-- Info Div -->
-		<div class="info-box w3-hide-small">
+		<div class="info-box w3-hide-small w3-theme-background">
 			<div class="w3-row">
 				<div class="w3-half w3-container">
 					<div>

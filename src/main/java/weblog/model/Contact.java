@@ -15,6 +15,7 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -26,6 +27,7 @@ public class Contact {
     
     @ManyToOne
     @JoinColumn(name="logbook_id", nullable=false)
+    @IndexedEmbedded
     private Logbook logbook;
     
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

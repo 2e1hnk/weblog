@@ -52,7 +52,7 @@ public class RigctlController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<?> httpUpdate(@PathVariable Long logbookId, @PathVariable String attribute, @PathVariable String value) {
 		
-		Logbook logbook = logbookService.getLogbookById(logbookId);
+		Logbook logbook = logbookService.getLogbookById(logbookId).get();
 		
 		// Check user has access to the logbook
 		User user = authenticationFacade.getUser();
@@ -81,7 +81,7 @@ public class RigctlController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<?> httpUpdateWithParams(@PathVariable Long logbookId, @RequestParam(required = false) String frequency, @RequestParam(required = false) String mode) {
 		
-		Logbook logbook = logbookService.getLogbookById(logbookId);
+		Logbook logbook = logbookService.getLogbookById(logbookId).get();
 		
 		// Check user has access to the logbook
 		User user = authenticationFacade.getUser();
