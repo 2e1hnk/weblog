@@ -11,15 +11,20 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+
 @Entity
 public class Logbook {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 	
+	@Field
 	private String name;
 	
     @ManyToMany(mappedBy = "logbooks")
+    @ContainedIn
     private Collection<User> users = new ArrayList<User>();
     
     @OneToMany(mappedBy="logbook")
