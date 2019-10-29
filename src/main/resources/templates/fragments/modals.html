@@ -2,11 +2,10 @@
 <head>
 </head>
 <body>
-
 	<th:block th:fragment="modals()">
-	
+
 		<!-- Change Password Modal -->
-		<div id="modal-change-password" class="w3-modal">
+		<form id="modal-change-password" class="w3-modal" action="/profile/update-password" method="POST">
 		  <div class="w3-modal-content w3-theme-background">
 		    <header class="w3-container w3-theme-highlight">
 		      <span onclick="document.getElementById('modal-change-password').style.display='none'"
@@ -18,22 +17,22 @@
 		    	<li class="w3-panel w3-theme-error" id="error-message" />
 		    </ul>
 		
-		    <form class="w3-container" action="/profile/update-password" method="POST">
+			<div class="w3-container">
 		      <label for="password1">New password</label>
 		      <input class="w3-input" type="password" id="password1" name="password1" />
+		      
 		      <label for="password2">Verify password</label>
 		      <input class="w3-input" type="password" id="password2" name="password2" />
-		      <input type="submit" class="w3-button w3-theme-button" onClick="return changePassword()" value="Change Password" />
-		    </form>
+			</div>
 		
 		    <footer class="w3-container w3-theme-highlight">
-		      <p>Modal Footer</p>
+		      <input type="submit" class="w3-button w3-theme-button" onClick="return changePassword()" value="Change Password" />
 		    </footer>
 		  </div>
-		</div>
+		</form>
 		
 		<!-- Add Logbook -->
-		<div id="modal-add-logbook" class="w3-modal">
+		<form id="modal-add-logbook" class="w3-modal">
 		  <div class="w3-modal-content w3-theme-background">
 		    <header class="w3-container w3-theme-highlight">
 		      <span onclick="document.getElementById('modal-add-logbook').style.display='none'"
@@ -41,16 +40,16 @@
 		      <h2>Add Logbook</h2>
 		    </header>
 		
-		    <form class="w3-container">
+		    <div class="w3-container">
 		      <label for="add-logbook-name">Logbook name</label>
 		      <input class="w3-input" type="text" id="add-logbook-name" name="addNewLogbook" />
-		      <input type="submit" class="w3-button w3-theme-button" th:value="#{lang.createLogbook}" />
-		    </form>
+		      
+		    </div>
 		
 		    <footer class="w3-container w3-theme-highlight">
-		      <p>Modal Footer</p>
+		      <input type="submit" class="w3-button w3-theme-button" th:value="#{lang.createLogbook}" />
 		    </footer>
-		  </div>
+		  </form>
 		</div>
 	
 		<!-- Delete Logbook -->
@@ -62,21 +61,19 @@
 		      <h2>Delete Logbook</h2>
 		    </header>
 		
-		    <form class="w3-container">
+		    <div class="w3-container">
 		    	<p>Are you sure you want to delete the logbook? This will also delete any contacts contained in the logbook.</p>
-		      	<a href="#" class="w3-theme-success w3-button modal-url">Yes</a>
-		      	<a href="#" class="w3-theme-error w3-button">Cancel</a>
-		      	
-		    </form>
+		    </div>
 		
 		    <footer class="w3-container w3-theme-highlight">
-		      <p>Modal Footer</p>
+		      	<a href="#" class="w3-theme-success w3-button modal-url">Yes</a>
+		      	<a href="#" class="w3-theme-error w3-button">Cancel</a>
 		    </footer>
 		  </div>
 		</div>
 	
 		<!-- Move Logbook Contacts -->
-		<div id="modal-move-contacts" class="w3-modal">
+		<form id="modal-move-contacts" class="w3-modal modal-url">
 		  <div class="w3-modal-content w3-theme-background">
 		    <header class="w3-container w3-theme-highlight">
 		      <span onclick="document.getElementById('modal-move-contacts').style.display='none'"
@@ -84,7 +81,7 @@
 		      <h2 th:text="#{lang.moveContactsToOtherLog}">Move Contacts</h2>
 		    </header>
 		
-		    <form class="w3-container modal-url">
+		    <div class="w3-container">
 		    	<div class="w3-container">
 		    		Select which logbook you'd like to move the contacts to:
 		    	</div>
@@ -96,16 +93,34 @@
 				<div class="w3-container">
 					<input class="w3-check" type="checkbox" name="deleteAfterMove"><label th:text="#{lang.deleteAfterMove}" />
 				</div>
-				<div class="w3-container">
-					<input type="submit" class="w3-button w3-theme-button" th:value="#{lang.moveContacts}" />
-				</div>
-		    </form>
+		    </div>
 		
 		    <footer class="w3-container w3-theme-highlight">
-		      <p>Modal Footer</p>
+		      <input type="submit" class="w3-button w3-theme-button" th:value="#{lang.moveContacts}" />
 		    </footer>
 		  </div>
-		</div>
+		</form>
+
+		<!-- Move Logbook Contacts -->
+		<form id="modal-rename-logbook" class="w3-modal modal-url">
+		  <div class="w3-modal-content w3-theme-background">
+		    <header class="w3-container w3-theme-highlight">
+		      <span onclick="document.getElementById('modal-rename-logbook').style.display='none'"
+		      class="w3-button w3-display-topright">&times;</span>
+		      <h2 th:text="#{lang.renameLogbook}">Rename Logbook</h2>
+		    </header>
+		
+		    <div class="w3-container">
+		    	<div class="w3-container">
+					<input class="w3-input" type="text" name="name" />
+				</div>
+		    </div>
+		
+		    <footer class="w3-container w3-theme-highlight">
+		      <input type="submit" class="w3-button w3-theme-button" th:value="#{lang.rename}" />
+		    </footer>
+		  </div>
+		</form>
 	
 	</th:block>
 </body>
