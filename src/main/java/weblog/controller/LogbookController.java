@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import weblog.model.Logbook;
 import weblog.service.LogbookService;
 
+/*
+ * TODO: Add user/permissions check
+ */
+
 @Controller
 @RequestMapping(path="/logbook")
 public class LogbookController {
@@ -41,5 +45,16 @@ public class LogbookController {
     	
         return "redirect:/profile";
     }
+    
+    @GetMapping("/rename/{logbook}")
+    public String delete(@PathVariable Logbook logbook, @RequestParam String name, Model model, HttpServletResponse response) throws IOException {
+        
+    	logbook.setName(name);
+        logbookService.save(logbook);
+        
+        return "redirect:/profile";
+    }
+	
+    
 	
 }
