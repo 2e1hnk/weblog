@@ -86,7 +86,7 @@ input.monospace {
 		<!-- user dropdown -->
 		<div class="w3-dropdown-hover w3-right">
 		    <button class="w3-button navbar-button"><i class="far fa-user-circle w3-large"></i> </button>
-		    <div class="w3-dropdown-content w3-card-4" style="right:0">
+		    <div class="w3-dropdown-content w3-card-4 w3-theme-highlight" style="right:0">
 		    	<div class="w3-bar w3-center">
 			    	<a href="?lang=en" class="w3-bar-item w3-button">
 			    		<span class="flag-icon flag-icon-gb"></span>
@@ -118,10 +118,10 @@ input.monospace {
 			    <div class="w3-bar">
 		    		<span class="w3-bar-item w3-large" sec:authentication="name" />
 		    	</div>
-		    	<div class="w3-bar">
+		    	<div class="w3-bar-block">
 		    	    <a href="/profile" class="w3-bar-item w3-button"><i class="fas fa-user-circle"></i> <span th:text="#{lang.updateProfile}"></span></a>
 				</div>
-		    	<div class="w3-bar">
+		    	<div class="w3-bar-block">
 		    	    <a href="/logout" class="w3-bar-item w3-button"><i class="fas fa-sign-out-alt"></i> <span th:text="#{lang.logout}"></span></a>
 				</div>
 		    </div>
@@ -130,7 +130,7 @@ input.monospace {
 		<!-- Logbook selection -->
 		<div class="w3-dropdown-hover w3-right">
 		    <button class="w3-button"><span th:text="#{lang.logbook}"></span>: <b><span th:text="${activelogbook.getName()}"></span></b> <i class="fa fa-caret-down"></i></button>
-		    <div class="w3-dropdown-content w3-card-4">
+		    <div class="w3-dropdown-content w3-card-4 w3-theme-highlight">
 		    	<div class="w3-bar-block">
 		    		<a th:each="logbook : ${user.logbooks}" th:href="@{/log(activelogbook=${logbook.id})}" class="w3-bar-item w3-button"><span th:text="${logbook.name}"></span> <span class="w3-badge w3-right w3-theme-info" th:text="${#lists.size(logbook.contacts)}"></span></a>
 		    		<hr />

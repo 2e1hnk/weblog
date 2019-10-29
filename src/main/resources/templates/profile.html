@@ -18,20 +18,30 @@
 	<div class="w3-row" style="margin-top: 10px;">
 		<div class="w3-container w3-col s12 m5 l3">
 			<div class="w3-card-2">
-				<header class="w3-container w3-theme-highlight">
-				  <h1 th:text="${user.username}">[USERNAME]</h1>
-				</header>
-				<div class="w3-container">
-					User ID: <span th:text="${user.id}"></span>
-				</div>
-				<div class="w3-container">
-					<h2>Roles</h2>
-					<div sec:authentication="principal.authorities"></div>
-				</div>
-				<div class="w3-container">
-					<h2>Theme</h2>
-					<div th:text="${user.theme}"></div>
-				</div>
+				<form action="#" method="post">
+					<header class="w3-container w3-theme-highlight">
+					  <h1 th:text="${user.username}">[USERNAME]</h1>
+					</header>
+					<div class="w3-container">
+						User ID: <span th:text="${user.id}"></span>
+					</div>
+					<div class="w3-container">
+						<h2>Roles</h2>
+						<div sec:authentication="principal.authorities"></div>
+					</div>
+					<div class="w3-container">
+						<h2>Theme</h2>
+						
+							<label for="theme"><span th:text="#{lang.theme}"></span></label>
+							<select class="w3-select w3-border w3-input" id="theme" name="theme">
+								<option th:each="theme : ${themes}" th:value="${theme}" th:text="${theme}" th:selected="${theme==user.theme}"></option>
+							</select>
+							
+							<input type="submit" class="w3-button w3-theme-highlight w3-block w3-theme-button"
+								th:value="#{lang.save}">
+						
+					</div>
+				</form>
 			</div>
 		</div>
 		<div class="w3-container w3-col s12 m7 l9">
