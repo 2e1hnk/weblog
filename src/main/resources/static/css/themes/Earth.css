@@ -5,6 +5,18 @@
 .w3-theme-button {color: #fbeec1 !important; background-color: #bc986a !important}
 .w3-theme-info {color: #fbeec1 !important; background-color: #bc986a !important}
 .w3-input {color: #8d8741 !important; background-color: #fbeec1 !important}
+.w3-theme-success { 
+	color: #fff;
+	background-color: #65bd7e !important; 
+	border-left: 3px solid #36ba5c !important;
+	border-right: 3px solid #36ba5c !important;
+}
+.w3-theme-error { 
+	color: #fff;
+	background-color: #bd6565 !important; 
+	border-left: 3px solid #ba3636 !important;
+	border-right: 3px solid #ba3636 !important;
+}
 .w3-table-all tr {
 	color: #8d8741 !important;
     background-color: #fbeec1 !important;

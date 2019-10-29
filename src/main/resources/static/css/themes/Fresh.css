@@ -5,6 +5,18 @@
 .w3-theme-button {color: #edf5e1 !important; background-color: #05386b !important}
 .w3-theme-info {color: #edf5e1 !important; background-color: #05386b !important}
 .w3-input {color: #05386b !important; background-color: #edf5e1 !important}
+.w3-theme-success { 
+	color: #05386b;
+	background-color: #edf5e1 !important; 
+	border-left: 3px solid #edf5e1 !important;
+	border-right: 3px solid #edf5e1 !important;
+}
+.w3-theme-error { 
+	color: #05386b;
+	background-color: #db5c5c !important; 
+	border-left: 3px solid #db5c5c !important;
+	border-right: 3px solid #db5c5c !important;
+}
 .w3-table-all tr:nth-child(odd) {
 	color: #05386b !important;
     background-color: #5cdb95 !important;

@@ -4,3 +4,11 @@
 .w3-theme-highlight {color:#fff; background-color:#00477e}
 .w3-theme-button {color:#fff;background-color:#e06000}
 .w3-theme-info {color:#fff;background-color:#ffab00}
+.w3-theme-success { 
+	color: #fff;
+	background-color: #004d33 !important;
+}
+.w3-theme-error { 
+	color: #fff;
+	background-color: #a6001a !important;
+}
