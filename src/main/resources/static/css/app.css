@@ -194,3 +194,16 @@ button.navbar-button {
 .box.is-uploading .box__uploading {
   display: block;
 }
+
+.w3-modal-content footer {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.w3-ul .w3-bar {
+	margin-bottom: 5px;
+}
+
+.w3-modal-content {
+	margin-top: 10px;
+	margin-bottom: 15px;
+}

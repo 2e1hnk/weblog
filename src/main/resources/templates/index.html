@@ -232,6 +232,8 @@
 					onclick="openTab('display-tabs-panel', 'display-tab-list')"><i class="fas fa-list"></i> <span th:text="#{lang.list}"></span></a>
 				<a href="#" id="tab-map" class="w3-bar-item w3-button w3-right"
 					onclick="openTab('display-tabs-panel', 'display-tab-map'); map.invalidateSize(); map.fitBounds(markerLayer.getBounds()); mapPostLoad();"><i class="fas fa-map"></i> <span th:text="#{lang.map}"></span></a>
+				<a href="#" id="tab-analytics" class="w3-bar-item w3-button w3-right"
+					onclick="openTab('display-tabs-analytics', 'display-tab-analytics');"><i class="fas fa-chart-line"></i> <span th:text="#{lang.analytics}"></span></a>
 			</div>
 			<div class="display-tabs-panel" id="display-tab-list">
 				<div th:switch="${contacts}">
@@ -289,11 +291,14 @@
 							th:classappend="${currentPage eq totalPages} ? 'disabled'">&raquo;</a>
 					</div>
 				</div>
-
 			</div>
 			<div class="display-tabs-panel" id="display-tab-map"
 				style="display: none;">
 				<div id="map"></div>
+			</div>
+			<div class="display-tabs-analytics" id="display-tab-analytics"
+				style="display: none;">
+				<div id="analytics"></div>
 			</div>
 		</div>
 	</div>
