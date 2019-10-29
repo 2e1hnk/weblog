@@ -184,17 +184,14 @@ public class ContactController {
         // return "index";
     }
     
-    @GetMapping("/edit/{id}")
-    public String showUpdateContactForm(@PathVariable("id") long id, Model model, HttpServletResponse response,
+    @GetMapping("/edit/{contact}")
+    public String showUpdateContactForm(@PathVariable Contact contact, Model model, HttpServletResponse response,
     		@ModelAttribute("activelogbook") Logbook activeLogbook) throws IOException {
     	
     	model.addAttribute("activelogbook", activeLogbook);
     	
-        Contact contact = contactService.getById(id)
-          .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + id));
-         
         model.addAttribute("contact", contact);
-        model.addAttribute("submitUrl", "/log/update/" + id);
+        model.addAttribute("submitUrl", "/log/update/" + contact.getId());
         return this.home(model, contact, response, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
     }
     

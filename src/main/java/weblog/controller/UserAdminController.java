@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -63,6 +64,9 @@ public class UserAdminController {
         }
         
         model.addAttribute("userList", userPage.getContent());
+        
+        User myUser = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        model.addAttribute("user", myUser);
               
         return "user";
     }

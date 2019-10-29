@@ -54,7 +54,7 @@
 					</td>
 					<td>
 						<div class="w3-dropdown-hover">
-						  <button class="w3-button w3-white"><i class="fas fa-ellipsis-v"></i></button>
+						  <button class="w3-button w3-theme-button"><i class="fas fa-ellipsis-v"></i></button>
 						  <div class="w3-dropdown-content w3-bar-block w3-border">
 							<a class="w3-bar-item w3-button" th:href="@{/admin/users/edit/{id}(id=${user.id})}"><i class="fas fa-user-edit"></i> <span th:text="#{lang.edit}" /></a>
 							<a class="w3-bar-item w3-button" th:href="@{/admin/users/delete/{id}(id=${user.id})}"><i class="fas fa-user-times"></i> <span th:text="#{lang.delete}" /></a>
@@ -75,7 +75,7 @@
 					<td><input class="w3-check" type="checkbox" name="enabled" /></td>
 					<td><input class="w3-check" type="checkbox" name="admin" /></td>
 					<td></td>
-					<td><input class="w3-button w3-theme" type="submit" value="Create User" /></td>
+					<td><input class="w3-button w3-theme-button" type="submit" value="Create User" /></td>
 				</tr>
 			</tfoot>
 		</table>

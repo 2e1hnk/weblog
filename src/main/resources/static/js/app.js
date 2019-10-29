@@ -643,3 +643,17 @@ function changePassword() {
 	
 	return true;
 }
+
+function showModal(id, url) {
+	document.getElementById(id).style.display='block';
+	var submitElements = document.getElementsByClassName("modal-url");
+	for(var i = 0; i < submitElements.length; i++)
+	{
+	   submitElements.item(i).href=url;
+	   submitElements.item(i).action=url;
+	}
+}
+
+function hideModal(id) {
+	document.getElementById(id).style.display='none';
+}

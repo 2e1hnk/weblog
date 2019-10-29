@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import weblog.model.Logbook;
 import weblog.service.LogbookService;
@@ -25,11 +26,19 @@ public class LogbookController {
 	@Autowired
 	private LogbookService logbookService;
 	
-    @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id, Model model, HttpServletResponse response) throws IOException {
-        Logbook logbook = logbookService.getLogbookById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid logbook id:" + id));
+    @GetMapping("/delete/{logbook}")
+    public String delete(@PathVariable Logbook logbook, Model model, HttpServletResponse response) throws IOException {
+        
         logbookService.delete(logbook);
+        
+        return "redirect:/profile";
+    }
+	
+    @GetMapping("/move/{fromLogbook}")
+    public String move(@PathVariable Logbook fromLogbook, @RequestParam Logbook toLogbook, @RequestParam Boolean deleteAfterMove, Model model, HttpServletResponse response) throws IOException {
+    	
+    	logbookService.moveContacts(fromLogbook, toLogbook, deleteAfterMove);
+    	
         return "redirect:/profile";
     }
 	

@@ -300,26 +300,7 @@
 	<!-- end content pane -->
 	
 	<!-- Modal windows -->
-	<div id="modal-add-logbook" class="w3-modal">
-	  <div class="w3-modal-content">
-	    <header class="w3-container w3-teal">
-	      <span onclick="document.getElementById('modal-add-logbook').style.display='none'"
-	      class="w3-button w3-display-topright">&times;</span>
-	      <h2>Add Logbook</h2>
-	    </header>
-	
-	    <form class="w3-container">
-	      <label for="add-logbook-name">Logbook name</label>
-	      <input class="w3-input" type="text" id="add-logbook-name" name="addNewLogbook" />
-	      <input type="submit" value="Create Logbook" />
-	    </form>
-	
-	    <footer class="w3-container w3-teal">
-	      <p>Modal Footer</p>
-	    </footer>
-	
-	  </div>
-	</div>
+	<div th:replace="fragments/modals :: modals"></div>
 	<!-- End Modals -->
 
 	<!-- Compiled and minified JavaScript -->

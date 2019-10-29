@@ -37,7 +37,7 @@
 							th:value="#{lang.save}">
 					</form>
 					<button class="w3-button w3-theme-highlight w3-block w3-theme-button"
-						onClick="document.getElementById('modal-change-password').style.display='block'; return false;">
+						onClick="showModal('modal-change-password'); return false;">
 						<span th:text="#{lang.changePassword}"></span>
 					</button>
 				</div>
@@ -57,7 +57,8 @@
 					  <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
 						<a class="w3-bar-item w3-button" th:href="@{/logbook/{id}/rename/(id=${logbook.id})}"><i class="fas fa-edit"></i> <span th:text="#{lang.renameLogbook}" /></a>
 						<a class="w3-bar-item w3-button" th:href="@{/adif/download/{id}(id=${logbook.id})}"><i class="fas fa-file-export"></i> <span th:text="#{lang.export}" /></a>
-						<a class="w3-bar-item w3-button" th:href="@{/logbook/{id}/delete/(id=${logbook.id})}"><i class="fas fa-trash"></i> <span th:text="#{lang.delete}" /></a>
+						<a class="w3-bar-item w3-button" th:onclick="|showModal('modal-delete-logbook', '@{/logbook/delete/{id}(id=${logbook.id})}'); return false;|"><i class="fas fa-trash"></i> <span th:text="#{lang.delete}" /></a>
+						<a class="w3-bar-item w3-button" th:onclick="|showModal('modal-move-contacts', '@{/logbook/move/{id}(id=${logbook.id})}'); return false;|"><i class="fas fa-arrows-alt-h"></i>  <span th:text="#{lang.moveContactsToOtherLog}" /></a>
 					  </div>
 					</div>
 		  		    <br>
@@ -87,32 +88,8 @@
 	</div>
 	
 	<!-- Modal windows -->
-	<div id="modal-change-password" class="w3-modal">
-	  <div class="w3-modal-content w3-theme-background">
-	    <header class="w3-container w3-theme-highlight">
-	      <span onclick="document.getElementById('modal-change-password').style.display='none'"
-	      class="w3-button w3-display-topright">&times;</span>
-	      <h2 th:text="#{lang.changePassword}"></h2>
-	    </header>
-	    
-	    <ul class="w3-ul" id="modal-messages" style="display: none;">
-	    	<li class="w3-panel w3-theme-error" id="error-message" />
-	    </ul>
+	<div th:replace="fragments/modals :: modals"></div>
 	
-	    <form class="w3-container" action="/profile/update-password" method="POST">
-	      <label for="password1">New password</label>
-	      <input class="w3-input" type="password" id="password1" name="password1" />
-	      <label for="password2">Verify password</label>
-	      <input class="w3-input" type="password" id="password2" name="password2" />
-	      <input type="submit" class="w3-button w3-theme-button" onClick="return changePassword()" value="Change Password" />
-	    </form>
-	
-	    <footer class="w3-container w3-theme-highlight">
-	      <p>Modal Footer</p>
-	    </footer>
-	
-	  </div>
-	</div>
 	<!-- End Modals -->
 	
 		<!-- Compiled and minified JavaScript -->

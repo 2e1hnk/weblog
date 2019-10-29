@@ -68,10 +68,13 @@ public class LogbookService {
 	/*
 	 * Move all contacts from one logbook to another
 	 */
-	public void moveContacts(Logbook fromLogbook, Logbook toLogbook) {
+	public void moveContacts(Logbook fromLogbook, Logbook toLogbook, Boolean deleteAfterMove) {
 		for ( Contact contact : fromLogbook.getContacts() ) {
 			contact.setLogbook(toLogbook);
 			contactService.save(contact);
+		}
+		if ( deleteAfterMove ) {
+			this.delete(fromLogbook);
 		}
 	}
 	
@@ -84,10 +87,5 @@ public class LogbookService {
 			user.dissociateFromLogbook(logbook);
 		}
 		logbookRepository.delete(logbook);
-	}
-	
-	public void moveContactsAndDelete(Logbook fromLogbook, Logbook toLogbook) {
-		this.moveContacts(fromLogbook, toLogbook);
-		this.delete(fromLogbook);
 	}
 }
