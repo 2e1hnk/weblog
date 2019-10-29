@@ -17,51 +17,54 @@
 	<!-- Content Pane -->
 	<div class="w3-row" style="margin-top: 10px;">
 		<div class="w3-container w3-col s12 m5 l3">
-			<div class="w3-card-2">
-				<form action="#" method="post">
-					<header class="w3-container w3-theme-highlight">
-					  <h1 th:text="${user.username}">[USERNAME]</h1>
-					</header>
-					<div class="w3-container">
-						User ID: <span th:text="${user.id}"></span>
-					</div>
-					<div class="w3-container">
-						<h2>Roles</h2>
-						<div sec:authentication="principal.authorities"></div>
-					</div>
-					<div class="w3-container">
-						<h2>Theme</h2>
-						
-							<label for="theme"><span th:text="#{lang.theme}"></span></label>
-							<select class="w3-select w3-border w3-input" id="theme" name="theme">
-								<option th:each="theme : ${themes}" th:value="${theme}" th:text="${theme}" th:selected="${theme==user.theme}"></option>
-							</select>
-							
-							<input type="submit" class="w3-button w3-theme-highlight w3-block w3-theme-button"
-								th:value="#{lang.save}">
-						
-					</div>
-				</form>
+			<div class="w3-card">
+				<header class="w3-container w3-theme-highlight">
+				  <h1><i class="far fa-user-circle"></i> <span th:text="${user.username}">[USERNAME]</span></h1>
+				  User ID: <span th:text="${user.id}"></span>
+				</header>
+				<div class="w3-container">
+					<h2 th:text="#{lang.roles}">Roles</h2>
+					<div sec:authentication="principal.authorities"></div>
+				</div>
+				<div class="w3-container">
+					<h2 th:text="#{lang.settings}"></h2>
+					<form action="#" method="post">
+						<label for="theme"><span th:text="#{lang.theme}"></span></label>
+						<select class="w3-select w3-border w3-input" id="theme" name="theme">
+							<option th:each="theme : ${themes}" th:value="${theme}" th:text="${theme}" th:selected="${theme==user.theme}"></option>
+						</select>
+						<input type="submit" class="w3-button w3-theme-highlight w3-block w3-theme-button"
+							th:value="#{lang.save}">
+					</form>
+					<button class="w3-button w3-theme-highlight w3-block w3-theme-button"
+						onClick="document.getElementById('modal-change-password').style.display='block'; return false;">
+						<span th:text="#{lang.changePassword}"></span>
+					</button>
+				</div>
 			</div>
 		</div>
 		<div class="w3-container w3-col s12 m7 l9">
+			<ul class="w3-ul" th:each="message : ${messages}">
+		        <li th:text="${message}" class="w3-panel w3-theme-success" />
+		    </ul>
 			<h1>Logbooks</h1>
 			<ul class="w3-ul w3-border">
 				<li class="w3-bar w3-input" th:each="logbook : ${user.logbooks}">
 					  <!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
-		  		    <span class="w3-large" th:text="${logbook.name}">[NAME]</span><br>
-				    <span th:text="${logbook.size()}" /> Contacts logged<br />
-				    <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
-				    <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
-  						<button class="box__button w3-theme-button" type="submit">Upload</button>
-					<div class="w3-dropdown-hover w3-right">
-					  <button class="w3-button w3-white"><i class="fas fa-ellipsis-v"></i></button>
+		  		    <span class="w3-large" th:text="${logbook.name}">[NAME]</span>
+		  		    <div class="w3-dropdown-hover w3-right">
+					  <button class="w3-button w3-theme-button"><i class="fas fa-ellipsis-v"></i></button>
 					  <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
-						<a class="w3-bar-item w3-button" th:href="@{/logbook/{id}/rename/(id=${logbook.id})}"><i class="fas fa-file-export"></i> <span th:text="#{lang.renameLogbook}" /></a>
+						<a class="w3-bar-item w3-button" th:href="@{/logbook/{id}/rename/(id=${logbook.id})}"><i class="fas fa-edit"></i> <span th:text="#{lang.renameLogbook}" /></a>
 						<a class="w3-bar-item w3-button" th:href="@{/adif/download/{id}(id=${logbook.id})}"><i class="fas fa-file-export"></i> <span th:text="#{lang.export}" /></a>
 						<a class="w3-bar-item w3-button" th:href="@{/logbook/{id}/delete/(id=${logbook.id})}"><i class="fas fa-trash"></i> <span th:text="#{lang.delete}" /></a>
 					  </div>
 					</div>
+		  		    <br>
+				    <span th:text="${logbook.size()}" /> Contacts logged<br />
+				    <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
+				    <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
+  						<button class="box__button w3-theme-button" type="submit">Upload</button>
 		
 				</li>
 				<li class="w3-input">
@@ -82,6 +85,35 @@
 			</p>
 		</div>
 	</div>
+	
+	<!-- Modal windows -->
+	<div id="modal-change-password" class="w3-modal">
+	  <div class="w3-modal-content w3-theme-background">
+	    <header class="w3-container w3-theme-highlight">
+	      <span onclick="document.getElementById('modal-change-password').style.display='none'"
+	      class="w3-button w3-display-topright">&times;</span>
+	      <h2 th:text="#{lang.changePassword}"></h2>
+	    </header>
+	    
+	    <ul class="w3-ul" id="modal-messages" style="display: none;">
+	    	<li class="w3-panel w3-theme-error" id="error-message" />
+	    </ul>
+	
+	    <form class="w3-container" action="/profile/update-password" method="POST">
+	      <label for="password1">New password</label>
+	      <input class="w3-input" type="password" id="password1" name="password1" />
+	      <label for="password2">Verify password</label>
+	      <input class="w3-input" type="password" id="password2" name="password2" />
+	      <input type="submit" class="w3-button w3-theme-button" onClick="return changePassword()" value="Change Password" />
+	    </form>
+	
+	    <footer class="w3-container w3-theme-highlight">
+	      <p>Modal Footer</p>
+	    </footer>
+	
+	  </div>
+	</div>
+	<!-- End Modals -->
 	
 		<!-- Compiled and minified JavaScript -->
 	<!-- <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script> -->

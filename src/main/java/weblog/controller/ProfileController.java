@@ -1,6 +1,8 @@
 package weblog.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import weblog.model.Contact;
@@ -53,5 +56,23 @@ public class ProfileController {
     	userService.save(myUser);
     	
     	return home(model, principal, activeLogbook);
+    }
+    
+    @PostMapping("/update-password")
+    public String updatePassword(@RequestParam String password1, @RequestParam String password2, Model model, Principal principal, HttpServletResponse response, RedirectAttributes attributes, @ModelAttribute("activelogbook") Logbook activeLogbook) {
+    	
+    	User user = userService.getThisUser();
+    	List<String> messages = new ArrayList<String>();
+        
+    	if ( password1.equals(password2) ) {
+    		user.setPassword(userService.encodePassword(password1));
+    		userService.save(user);
+    		
+    		messages.add("Password updated!");
+    	}
+        
+        attributes.addFlashAttribute("messages", messages);
+        
+        return "redirect:/profile";
     }
 }

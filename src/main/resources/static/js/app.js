@@ -630,3 +630,16 @@ function checkLog(callsign) {
     });	
 }
 
+function changePassword() {
+	var password1 = $('#password1').val();
+	var password2 = $('#password2').val();
+	
+	if ( password1 != password2 ) {
+		$('#error-message').html("Error: passwords do not match!");
+		$('#modal-messages').css("display", "block");
+		
+		return false;
+	}
+	
+	return true;
+}
