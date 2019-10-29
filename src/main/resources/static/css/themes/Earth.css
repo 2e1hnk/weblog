@@ -1,0 +1,15 @@
+.w3-theme-text {color:#8d8741 !important}
+.w3-theme-border {border-color:#8d8741 !important}
+.w3-theme-background {color:#8d8741 !important;background-color:#fbeec1 !important}
+.w3-theme-highlight {color:#fff !important;background-color:#659dbd !important}
+.w3-theme-button {color: #fbeec1 !important; background-color: #bc986a !important}
+.w3-theme-info {color: #fbeec1 !important; background-color: #bc986a !important}
+.w3-input {color: #8d8741 !important; background-color: #fbeec1 !important}
+.w3-table-all tr {
+	color: #8d8741 !important;
+    background-color: #fbeec1 !important;
+}
+.w3-table-all th {
+    color: #fbeec1 !important;
+    background-color: #bc986a !important;
+}

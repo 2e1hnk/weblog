@@ -1,9 +1,14 @@
 package weblog.service;
 
+import java.io.File;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -136,5 +141,20 @@ public class UserService {
     public String encodePassword(String password) {
     	PasswordEncoder encoder = new BCryptPasswordEncoder(11);
     	return encoder.encode(password);
+    }
+    
+    public List<String> listThemeNames() {
+    	List<String> themes = new ArrayList<String>();
+    	for ( String filename : this.listFilesUsingJavaIO("src/main/resources/static/css/themes") ) {
+    		themes.add(filename.substring(0, filename.lastIndexOf('.')));
+    	}
+    	return themes;
+    }
+    
+    public List<String> listFilesUsingJavaIO(String dir) {
+        return Stream.of(new File(dir).listFiles())
+          .filter(file -> !file.isDirectory())
+          .map(File::getName)
+          .collect(Collectors.toList());
     }
 }
