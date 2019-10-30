@@ -185,7 +185,7 @@ public class UserService {
     public List<String> listFiles(String dir) throws URISyntaxException, IOException {
     	List<String> fileList = new ArrayList<String>();
     	
-    	final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+    	final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
     	
     	logger.info("JAR File: " + jarFile.getAbsoluteFile().toString());
 
