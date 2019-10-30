@@ -1,12 +1,26 @@
 package weblog.service;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -145,16 +159,54 @@ public class UserService {
     
     public List<String> listThemeNames() {
     	List<String> themes = new ArrayList<String>();
-    	for ( String filename : this.listFilesUsingJavaIO("src/main/resources/static/css/themes") ) {
-    		themes.add(filename.substring(0, filename.lastIndexOf('.')));
-    	}
+    	try {
+			for ( String filename : this.listFiles("static/css/themes") ) {
+				themes.add(filename.substring(0, filename.lastIndexOf('.')));
+			}
+		} catch (URISyntaxException | IOException e) {
+			e.printStackTrace();
+		}
     	return themes;
     }
     
+    /*
     public List<String> listFilesUsingJavaIO(String dir) {
         return Stream.of(new File(dir).listFiles())
           .filter(file -> !file.isDirectory())
           .map(File::getName)
           .collect(Collectors.toList());
+    }
+    */
+    public List<String> listFiles(String dir) throws URISyntaxException, IOException {
+    	List<String> fileList = new ArrayList<String>();
+    	
+    	final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+
+    	if(jarFile.isFile()) {  // Run with JAR file
+    	    final JarFile jar = new JarFile(jarFile);
+    	    final Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+    	    while(entries.hasMoreElements()) {
+    	        final String name = entries.nextElement().getName();
+    	        if (name.startsWith("src/main/resources/" + dir + "/")) { //filter according to the path
+    	            fileList.add(name);
+    	        }
+    	    }
+    	    jar.close();
+    	} else { // Run with IDE
+    	    final URL url = weblog.Application.class.getResource("/" + dir);
+    	    if (url != null) {
+    	        try {
+    	            final File apps = new File(url.toURI());
+    	            for (File app : apps.listFiles()) {
+    	                fileList.add(app.getName());
+    	            }
+    	        } catch (URISyntaxException ex) {
+    	            // never happens
+    	        }
+    	    } else {
+    	    	fileList.add("Error.err");
+    	    }
+    	}
+	    return fileList;
     }
 }
