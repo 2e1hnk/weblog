@@ -27,6 +27,9 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -183,39 +186,18 @@ public class UserService {
     }
     */
     public List<String> listFiles(String dir) throws URISyntaxException, IOException {
+    	
     	List<String> fileList = new ArrayList<String>();
     	
-    	final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+    	ClassLoader cl = this.getClass().getClassLoader(); 
+    	ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(cl);
+    	Resource[] resources = resolver.getResources("classpath*:/" + dir + "/*.css") ;
     	
-    	logger.info("JAR File: " + jarFile.getAbsoluteFile().toString());
-
-    	if(jarFile.getAbsoluteFile().toString().contains(".jar")) {  // Run with JAR file
-    	    final JarFile jar = new JarFile(jarFile);
-    	    final Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
-    	    while(entries.hasMoreElements()) {
-    	        final String name = entries.nextElement().getName();
-    	        logger.debug(name);
-    	        if (name.startsWith("src/main/resources/" + dir + "/")) { //filter according to the path
-    	            fileList.add(name);
-    	        }
-    	    }
-    	    jar.close();
-    	} else { // Run with IDE
-    	    final URL url = weblog.Application.class.getResource("/" + dir);
-    	    if (url != null) {
-    	        try {
-    	            final File apps = new File(url.toURI());
-    	            for (File app : apps.listFiles()) {
-    	                fileList.add(app.getName());
-    	            }
-    	        } catch (URISyntaxException ex) {
-    	            // never happens
-    	        }
-    	    } else {
-    	    	fileList.add("Error.err");
-    	    }
+    	for (Resource resource: resources){
+    	    fileList.add(resource.getFilename());
     	}
-	    return fileList;
+
+    	return fileList;
     }
     
 }

@@ -233,7 +233,7 @@
 				<a href="#" id="tab-map" class="w3-bar-item w3-button w3-right"
 					onclick="openTab('display-tabs-panel', 'display-tab-map'); map.invalidateSize(); map.fitBounds(markerLayer.getBounds()); mapPostLoad();"><i class="fas fa-map"></i> <span th:text="#{lang.map}"></span></a>
 				<a href="#" id="tab-analytics" class="w3-bar-item w3-button w3-right"
-					onclick="openTab('display-tabs-analytics', 'display-tab-analytics');"><i class="fas fa-chart-line"></i> <span th:text="#{lang.analytics}"></span></a>
+					onclick="openTab('display-tabs-panel', 'display-tab-analytics')"><i class="fas fa-chart-line"></i> <span th:text="#{lang.analytics}"></span></a>
 			</div>
 			<div class="display-tabs-panel" id="display-tab-list">
 				<div th:switch="${contacts}">
@@ -292,13 +292,11 @@
 					</div>
 				</div>
 			</div>
-			<div class="display-tabs-panel" id="display-tab-map"
-				style="display: none;">
+			<div class="display-tabs-panel" id="display-tab-map" style="display: none;">
 				<div id="map"></div>
 			</div>
-			<div class="display-tabs-analytics" id="display-tab-analytics"
-				style="display: none;">
-				<div id="analytics"></div>
+			<div class="display-tabs-panel" id="display-tab-analytics" style="display: none;">
+				<div id="calendar"></div>
 			</div>
 		</div>
 	</div>
@@ -313,6 +311,7 @@
 	<th:block th:replace="fragments/scripts :: base_script(~{::script})">
 		<script th:src="@{/webjars/leaflet/leaflet.js}"></script>
 		<script th:src="@{/js/rigctl-ws.js}"></script>
+		<script th:src="@{/js/analytics.js}"></script>
 		<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
 		<script th:src="@{/js/L.Heatmap.min.js}"></script>
 		<script th:src="@{/js/L.fullscreen.js}"></script>
@@ -327,6 +326,58 @@
 			var modes = ["USB", "LSB", "SSB", "CW", "FM", "AM", "PSK31", "PSK63", "RTTY", "FT8", "FT4", "JS8CALL", "JT9", "FSK441", "JT65", "JT4", "QRA64"];
 			autocomplete(document.getElementById("mode"), modes);
 		</script>
+		
+		<script th:inline="javascript">
+		(function () {
+			
+			
+			var logbook_id = /*[[${activelogbook.id}]]*/
+			
+			d3.json("/logbook/" + logbook_id, function(logbook){
+				  var minDate = d3.min(logbook.contacts, function(d) { return new Date(d.timestamp) });
+				  var maxDate = d3.max(logbook.contacts, function(d) { return new Date(d.timestamp) });
+				  let bands = [...new Set(logbook.contacts.map(item => item.band))];
+				  
+				  minDate = moment(minDate).subtract(1, 'day').toDate();
+				  
+				  var datewise_data = d3.time.days(minDate, maxDate).map(function (dateElement) {
+					  
+					  return { 	date: dateElement,
+						  		details: logbook.contacts.filter(function (contact) {
+						  			contact.value=60;
+						  			contact.date = moment(contact.timestamp).toDate();
+						  			if ( contact.band == "" ) {
+						  				contact.band="No Band";
+						  			}
+						  			if (moment(contact.timestamp).format("YYYY-MM-DD") == moment(dateElement).format("YYYY-MM-DD") ) {
+						  				return true
+						  			}
+						  			return false
+						  		}),
+						  		init: function () {
+						          this.total = this.details.reduce(function (prev, e) {
+						            return prev + e.value;
+						          }, 0);
+						          return this;
+						        }
+					  }.init();
+				  });
+				  
+				  console.log("logbook analytics", datewise_data);
+				  // Set custom color for the calendar heatmap
+				  var color = '#cd2327';
+				  // Set overview type (choices are year, month and day)
+				  var overview = 'year';
+				  // Handler function
+				  var print = function (val) {
+				    console.log(val);
+				  };
+				  // Initialize calendar heatmap
+				  calendarHeatmap.init(datewise_data, color, overview, print);
+			})
+		})();
+		</script>
+		
 	</th:block>
 </body>
 

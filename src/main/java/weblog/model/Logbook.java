@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Logbook {
 	@Id
@@ -25,6 +27,7 @@ public class Logbook {
 	
     @ManyToMany(mappedBy = "logbooks")
     @ContainedIn
+    @JsonIgnore
     private Collection<User> users = new ArrayList<User>();
     
     @OneToMany(mappedBy="logbook")

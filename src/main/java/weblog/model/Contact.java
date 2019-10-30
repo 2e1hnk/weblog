@@ -18,6 +18,8 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Indexed
 public class Contact {
@@ -28,6 +30,7 @@ public class Contact {
     @ManyToOne
     @JoinColumn(name="logbook_id", nullable=false)
     @IndexedEmbedded
+    @JsonIgnore
     private Logbook logbook;
     
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

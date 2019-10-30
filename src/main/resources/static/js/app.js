@@ -188,15 +188,15 @@ var bandIcon = {};
 				function(data) {
 					if (data.length > 0) {
 						$.each(data, function(index, value) {
-							console.log("Adding", value);
+							//console.log("Adding", value);
 							
 							if ( !(value.band in bandIcon) ) {
 								var nextIconIndex = Object.keys(bandIcon).length % icons.length;
-								console.log("nextIconIndex", nextIconIndex);
+								
 								bandIcon[value.band] = icons[nextIconIndex];
 							}
 							
-							console.log("bandIcon", bandIcon);
+							
 							
 							var contactDate = moment.utc(value.timestamp).format("YYYY-MM-DD HH:mm");
 							

@@ -11,3 +11,6 @@ build/test-results
 # Ignore lucene search index
 lucene
 /build/
+
+# Ignore local batch files
+run-local.bat
