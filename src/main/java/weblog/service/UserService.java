@@ -194,6 +194,7 @@ public class UserService {
     	    final Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
     	    while(entries.hasMoreElements()) {
     	        final String name = entries.nextElement().getName();
+    	        logger.debug(name);
     	        if (name.startsWith("src/main/resources/" + dir + "/")) { //filter according to the path
     	            fileList.add(name);
     	        }
