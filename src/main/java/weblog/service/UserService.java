@@ -24,6 +24,8 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +42,9 @@ import weblog.model.User;
 
 @Service
 public class UserService {
+	
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
     @Autowired
     private UserRepository userRepository;
     
@@ -181,6 +186,8 @@ public class UserService {
     	List<String> fileList = new ArrayList<String>();
     	
     	final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+    	
+    	logger.info("JAR File: " + jarFile);
 
     	if(jarFile.isFile()) {  // Run with JAR file
     	    final JarFile jar = new JarFile(jarFile);
@@ -209,4 +216,5 @@ public class UserService {
     	}
 	    return fileList;
     }
+    
 }
