@@ -187,7 +187,7 @@ public class UserService {
     	
     	final File jarFile = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
     	
-    	logger.info("JAR File: " + jarFile);
+    	logger.info("JAR File: " + jarFile.getAbsoluteFile().toString());
 
     	if(jarFile.isFile()) {  // Run with JAR file
     	    final JarFile jar = new JarFile(jarFile);
