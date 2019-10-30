@@ -189,7 +189,7 @@ public class UserService {
     	
     	logger.info("JAR File: " + jarFile.getAbsoluteFile().toString());
 
-    	if(jarFile.isFile()) {  // Run with JAR file
+    	if(jarFile.getAbsoluteFile().toString().contains(".jar")) {  // Run with JAR file
     	    final JarFile jar = new JarFile(jarFile);
     	    final Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
     	    while(entries.hasMoreElements()) {
