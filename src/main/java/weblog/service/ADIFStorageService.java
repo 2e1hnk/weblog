@@ -81,8 +81,9 @@ public class ADIFStorageService implements StorageService {
     	}
     	
     	logger.info("Importing " + newLogName + " with size " + file.getSize());
-    	    	
-    	Logbook logbook = logbookService.createLogbook(newLogName, authentication.getUser());
+    	
+    	// TODO: use correct locator here
+    	Logbook logbook = logbookService.createLogbook(newLogName, authentication.getUser().getLocator(), authentication.getUser());
         
     	int linesImported = 0, linesSkipped = 0;
     	

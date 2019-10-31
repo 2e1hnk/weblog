@@ -35,6 +35,8 @@ public class User {
     
     private boolean admin = false;
     
+    private String locator = "XX00xx";
+    
     /*
      * User permissions fields
      */
@@ -130,6 +132,14 @@ public class User {
 
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public String getLocator() {
+		return locator;
+	}
+
+	public void setLocator(String locator) {
+		this.locator = locator;
 	}
 
 	public Collection<Role> getRoles() {

@@ -126,7 +126,8 @@ public class UserService {
     	save(user);
     	
     	// Create a default logbook for the user
-    	Logbook logbook = logbookService.createLogbook(user.getUsername());
+    	// TODO: use correct locator here
+    	Logbook logbook = logbookService.createLogbook(user.getUsername().toUpperCase(), user.getLocator());
     	logbookService.associateLogbookWithUser(logbook, user);
     	this.associateUserWithLogbook(user, logbook);
     	

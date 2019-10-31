@@ -10,15 +10,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import weblog.service.LocationService;
 
 @Entity
 @Indexed
@@ -337,4 +341,20 @@ public class Contact {
 			return "DG";
 		}
 	}
+	
+	/*
+	 * Calculated fields
+	 */
+	@Transient
+	private LocationService locationService = new LocationService();
+	
+	@Transient
+	public int getBearing() {
+		double srcLat = this.getLogbook().getLat();
+		double srcLng = this.getLogbook().getLng();
+		double dstLat = locationService.extractLatitudeFromLocator(this.getLocation());
+		double dstLng = locationService.extractLongitudeFromLocator(this.getLocation());
+		return (int) Math.round(locationService.getBearingDegrees(srcLat, srcLng, dstLat, dstLng));
+	}
+	
 }

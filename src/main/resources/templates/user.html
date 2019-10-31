@@ -31,6 +31,7 @@
 					<th th:text="#{lang.enabled}">Enabled</th>
 					<th th:text="#{lang.roles}">Roles</th>
 					<th th:text="#{lang.logbooks}">Logbook Name</th>
+					<th th:text="#{lang.locator}">Locator</th>
 					<th th:text="#{lang.actions}">Actions</th>
 				</tr>
 			</thead>
@@ -51,6 +52,9 @@
 						<div th:each="logbook : ${user.logbooks}">
 							<span th:text="${logbook.name}">[logbook name]</span>
 						</div>
+					</td>
+					<td>
+						<span th:text="${user.locator}">[locator]</span>
 					</td>
 					<td>
 						<div class="w3-dropdown-hover">

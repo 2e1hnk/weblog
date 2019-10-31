@@ -24,6 +24,9 @@ public class LogbookService {
 	private LogbookRepository logbookRepository;
 	
 	@Autowired
+	private LocationService locationService;
+	
+	@Autowired
 	private UserService userService;
 	
 	@Autowired
@@ -33,15 +36,17 @@ public class LogbookService {
 		return logbookRepository.findById(id);
 	}
 	
-	public Logbook createLogbook(String logbookName, User user) {
-		Logbook logbook = this.createLogbook(logbookName);
+	public Logbook createLogbook(String logbookName, String locator, User user) {
+		Logbook logbook = this.createLogbook(logbookName, locator);
 		this.associateLogbookWithUser(logbook, user);
 		userService.associateUserWithLogbook(user, logbook);
 		return logbook;
 	}
 	
-	public Logbook createLogbook(String logbookName) {
+	public Logbook createLogbook(String logbookName, String locator) {
 		Logbook logbook = new Logbook();
+		logbook.setLat(locationService.extractLatitudeFromLocator(locator));
+		logbook.setLng(locationService.extractLongitudeFromLocator(locator));
 		logbook.setName(logbookName);
 		logbookRepository.save(logbook);
 		return logbook;

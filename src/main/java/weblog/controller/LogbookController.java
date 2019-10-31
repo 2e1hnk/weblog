@@ -33,9 +33,7 @@ public class LogbookController {
 	@Autowired
 	private LogbookService logbookService;
 	
-	@RequestMapping(value = "/{logbook}", method = RequestMethod.GET,
-            
-            produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/{logbook}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Logbook> getLogbook(@PathVariable Logbook logbook) {
 		return ResponseEntity.ok(logbook);
 	}

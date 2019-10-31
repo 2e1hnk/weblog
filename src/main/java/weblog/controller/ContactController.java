@@ -83,7 +83,7 @@ public class ContactController {
         model.addAttribute("user", user);
         
         if ( newLogbookName.isPresent() ) {
-        	activeLogbook = logbookService.createLogbook(newLogbookName.get(), user);
+        	activeLogbook = logbookService.createLogbook(newLogbookName.get(), user.getLocator(), user);
         }
         
         if ( activeLogbookId.isPresent() ) {
