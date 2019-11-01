@@ -22,17 +22,8 @@
 			<!-- input panel tabs content -->
 
 				<form id="log-input-form" class="grid-container w3-hide-small" style="margin-top: 10px;" action="#" autocomplete="off"
-					th:action="${submitUrl} ? ${submitUrl} : @{/log/addcontact}"
+					th:action="${submitUrl} ? ${submitUrl} : @{addcontact}"
 					th:object="${contact}" method="post">
-
-					<div class="w3-cell-row">
-						<div class="w3-container w3-cell">
-							<label for="logbook"><span th:text="#{lang.logbook}"></span></label>
-							<select class="w3-select w3-border w3-input" id="logbook" name="logbook">
-								<option th:each="userLogbook : ${user.logbooks}" th:value="${logbook.id}" th:text="${logbook.name}" th:selected="${logbook.id==userLogbook.id}"></option>
-							</select>
-						</div>
-					</div>
 
 					<div class="w3-cell-row">
 						<div class="w3-container w3-cell">
@@ -108,13 +99,12 @@
 						</div>
 					</div>
 					
-					<button
-						onclick="toggleElement('extended-info'); return false;"
+					<a onclick="toggleElement('extended-info'); return false;"
 						id="log-input-extended"
 						class="w3-button w3-block w3-left-align">
 							<i class="fas fa-chevron-down"></i>
 							<span th:text="#{lang.showExtendedInfo}"></span>
-					</button>
+					</a>
 					
 					<div id="extended-info" class="w3-hide">
 						<div class="w3-cell-row">
@@ -264,7 +254,7 @@
 									<td><span th:text="${contact.location}"></span> (<span th:text="${contact.bearing}"></span>&deg;)</td>
 									<td th:text="${contact.name}"></td>
 									<td th:text="${contact.logbook.name}"></td>
-									<td><a th:href="@{/log/edit/{id}(id=${contact.id})}"><i
+									<td><a th:href="@{/contact/edit/{id}(id=${contact.id})}"><i
 											class="fas fa-edit w3-text-theme"></i></a></td>
 									<td><a th:href="@{/log/delete/{id}(id=${contact.id})}"><i
 											class="fas fa-trash w3-text-theme"></i></a></td>

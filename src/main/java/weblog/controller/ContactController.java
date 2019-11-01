@@ -46,7 +46,7 @@ import weblog.service.SearchService;
 import weblog.service.UserService;
 
 @Controller
-@RequestMapping(path="/log")
+@RequestMapping(path="/contact")
 @SessionAttributes("activelogbook")
 public class ContactController {
 	
@@ -76,58 +76,6 @@ public class ContactController {
         return "add-contact";
     }
     
-    @PostMapping("/addcontact")
-    public String addContact(@Valid Contact contact, BindingResult result, Model model, HttpServletResponse response, @ModelAttribute("activelogbook") Logbook activeLogbook, RedirectAttributes attributes) throws IOException {
-    	
-    	logger.info("Contact logbook: " + contact.getLogbook().getName());
-    	
-    	activeLogbook = contact.getLogbook();
-    	attributes.addFlashAttribute("activelogbook", activeLogbook);
-    	
-    	User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
-        model.addAttribute("user", user);
-    	
-    	if (result.hasErrors()) {
-            return "index";
-        }
-        
-        if ( contact.getTimestamp() == null ) {
-        	contact.setTimestamp(new Date());
-        }
-        
-        contact.setCallsign(contact.getCallsign().toUpperCase());
-        
-        contactService.save(contact);
-        
-        EventStreamMessage event = new EventStreamMessage("contact", "new", contact.toString());
-        try {
-			eventStream.sendMessage(event);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        
-        // Set up the next contact. We can use this to populate default fields or to
-        // copy over details from the last contact to the next one.
-        Contact nextContact = new Contact();
-        nextContact.setBand(contact.getBand());
-        nextContact.setFrequency(contact.getFrequency());
-        nextContact.setMode(contact.getMode());
-        nextContact.setOpName(contact.getOpName());
-        
-        if ( nextContact.getMode().equals("CW") ) {
-        	nextContact.setRstr("599");
-        	nextContact.setRsts("599");
-        } else {
-        	nextContact.setRstr("59");
-        	nextContact.setRsts("59");
-        }
-        
-        // this.home(model, nextContact, response, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
-        
-        return "redirect:/logbook";
-        // model.addAttribute("contacts", contactRepository.findAll());
-        // return "index";
-    }
     
     @GetMapping("/edit/{contact}")
     public String showUpdateContactForm(@PathVariable Contact contact, Model model, HttpServletResponse response,
