@@ -29,7 +29,7 @@
 						<div class="w3-container w3-cell">
 							<label for="logbook"><span th:text="#{lang.logbook}"></span></label>
 							<select class="w3-select w3-border w3-input" id="logbook" name="logbook">
-								<option th:each="logbook : ${user.logbooks}" th:value="${logbook.id}" th:text="${logbook.name}" th:selected="${logbook.id==activelogbook.id}"></option>
+								<option th:each="userLogbook : ${user.logbooks}" th:value="${logbook.id}" th:text="${logbook.name}" th:selected="${logbook.id==userLogbook.id}"></option>
 							</select>
 						</div>
 					</div>
@@ -233,7 +233,7 @@
 				<a href="#" id="tab-map" class="w3-bar-item w3-button w3-right"
 					onclick="openTab('display-tabs-panel', 'display-tab-map'); map.invalidateSize(); map.fitBounds(markerLayer.getBounds()); mapPostLoad();"><i class="fas fa-map"></i> <span th:text="#{lang.map}"></span></a>
 				<a href="#" id="tab-analytics" class="w3-bar-item w3-button w3-right"
-					onclick="openTab('display-tabs-panel', 'display-tab-analytics')"><i class="fas fa-chart-line"></i> <span th:text="#{lang.analytics}"></span></a>
+					onclick="openTab('display-tabs-panel', 'display-tab-analytics'); loadAnalytics();"><i class="fas fa-chart-line"></i> <span th:text="#{lang.analytics}"></span></a>
 			</div>
 			<div class="display-tabs-panel" id="display-tab-list">
 				<div th:switch="${contacts}">
@@ -434,20 +434,123 @@
 			}
 		</script>
 		<script th:inline="javascript">
-		(function () {
+		function loadAnalytics() {
 			
+			// Overlay phrases
+			var phrases = ["Loading...",
+				"Adjusting Bell Curves",
+				"Aligning Covariance Matrices",
+				"Applying Feng Shui Shaders",
+				"Asserting Packed Exemplars",
+				"Attempting to Lock Back-Buffer",
+				"Building Data Trees",
+				"Bureacritizing Bureaucracies",
+				"Calculating Inverse Probability Matrices",
+				"Coalescing Cloud Formations",
+				"Cohorting Exemplars",
+				"Collecting Meteor Particles",
+				"Computing Optimal Bin Packing",
+				"Concatenating Sub-Contractors",
+				"Conducting FT8 QSO",
+				"Containing Existential Buffer",
+				"Debunching Unionized Commercial Services",
+				"Deciding What Constitutes 'Real Radio'",
+				"Deciding What Message to Display Next",
+				"Decomposing Singular Values",
+				"Decrementing AGC Values",
+				"Depositing Slush Funds",
+				"Destabilizing Economic Indicators",
+				"Determining Width of Blast Fronts",
+				"Deunionizing QSL Managers",
+				"Dicing Models",
+				"Downloading Satellite Terrain Data",
+				"Exposing Flash Variables to Streak System",
+				"Extracting Resources",
+				"Factoring DXCC Charging Scale",
+				"Fixing Election Outcome Matrix",
+				"Gathering Particle Sources",
+				"Generating Jobs",
+				"Gesticulating Mimes",
+				"Graphing Whale Migration",
+				"Hiding Willio Webnet Mask",
+				"Implementing Impeachment Routine",
+				"Increasing Accuracy of RCI Simulators",
+				"Initializing Dits and Dahs",
+				"Initializing Robotic Click-Path AI",
+				"Inserting Subliminal Messages",
+				"Integrating Curves",
+				"Integrating Illumination Form Factors",
+				"Integrating Population Graphs",
+				"Iterating Cellular Automata",
+				"Lecturing Errant Subsystems",
+				"Mixing Genetic Pool",
+				"Modeling Object Components",
+				"Mopping Ragchewer Leaks",
+				"Normalizing Power",
+				"Obfuscating Quigley Matrix",
+				"Overconstraining Dirty Industry Calculations",
+				"Perturbing Matrices",
+				"Preparing Sprites for Random Walks",
+				"Prioritizing Landmarks",
+				"Projecting Law Enforcement Pastry Intake",
+				"Realigning Alternate Time Frames",
+				"Reconfiguring User Mental Processes",
+				"Relaxing Splines",
+				"Removing Texture Gradients",
+				"Replacing Coax",
+				"Resolving GUID Conflict",
+				"Reticulating Splines",
+				"Retracting Phong Shader",
+				"Retrieving from Back Store",
+				"Reverse Engineering Image Consultant",
+				"Routing Neural Network Infanstructure",
+				"Seeding Architecture Simulation Parameters",
+				"Sequencing Particles",
+				"Setting Advisor Moods",
+				"Setting Inner Deity Indicators",
+				"Setting Universal Physical Constants",
+				"Splatting Transforms",
+				"Synthesizing Waveguides",
+				"Unable to Reveal Current Activity",
+				"Upgrading PL-259 to N-type"
+				];
 			
-			var logbook_id = /*[[${activelogbook.id}]]*/
+			// Show overlay
+			//document.getElementById("overlay-text").innerHTML = phrases[Math.floor(Math.random() * phrases.length)];
+			document.getElementById("overlay-text-container").innerHTML = "<img src='/images/loading.gif' /><br />Loading analytics. This may take a while for large logbooks...";
+			document.getElementById("page-overlay").style.display = "block";
 			
-			d3.json("/logbook/" + logbook_id, function(logbook){
+			/*
+			var overlay_timer = window.setInterval(function(){
+				$('#overlay-text').fadeOut(500, function() {
+					$('#overlay-text').html(phrases[Math.floor(Math.random() * phrases.length)]);
+					$('#overlay-text').fadeIn();
+				});
+			}, 5000);
+			*/
+			
+			var logbook_id = /*[[${logbook.id}]]*/
+			
+			d3.json("/logbook/" + logbook_id + ".json", function(logbook){
 				  var minDate = d3.min(logbook.contacts, function(d) { return new Date(d.timestamp) });
 				  var maxDate = d3.max(logbook.contacts, function(d) { return new Date(d.timestamp) });
 				  let bands = [...new Set(logbook.contacts.map(item => item.band))];
 				  
 				  minDate = moment(minDate).subtract(1, 'day').toDate();
 				  
+				  console.log("minDate", minDate);
+				  console.log("maxDate", maxDate);
+				  
+				  var daysInLog = moment(maxDate).diff(moment(minDate), 'days') + 1;
+				  
+				  console.log("daysInLog", daysInLog);
+				  
+				  
 				  var datewise_data = d3.time.days(minDate, maxDate).map(function (dateElement) {
-					  
+					  var progress = Math.floor( ( ( moment(dateElement).diff(moment(minDate), "days") / daysInLog ) * 100 ) ) + "%";
+					  console.log("progress", progress );
+					  $('#overlay-progress-bar').width( progress ).html( progress );
+					  $('#overlay-text-container').empty().append( progress );
 					  return { 	date: dateElement,
 						  		details: logbook.contacts.filter(function (contact) {
 						  			contact.value=60;
@@ -456,9 +559,11 @@
 						  				contact.band="No Band";
 						  			}
 						  			if (moment(contact.timestamp).format("YYYY-MM-DD") == moment(dateElement).format("YYYY-MM-DD") ) {
-						  				return true
+						  				//console.log("Adding contact", contact);
+						  				addValueToDataset(contact.band, contact.bearing, 1);
+						  				return true;
 						  			}
-						  			return false
+						  			return false;
 						  		}),
 						  		init: function () {
 						          this.total = this.details.reduce(function (prev, e) {
@@ -483,11 +588,17 @@
 				  
 				  // Add data to direction chart
 				  console.log(logbook);
-				  logbook.contacts.forEach(function (contact) {
-					  addValueToDataset(contact.band, contact.bearing, 1);
-				  });
-			})
-		})();
+				  //logbook.contacts.forEach(function (contact) {
+					//  addValueToDataset(contact.band, contact.bearing, 1);
+					  chart.update();
+				  //});
+
+				  // Hide overlay
+					document.getElementById("page-overlay").style.display = "none";
+					document.getElementById("overlay-text-container").innerHTML = "";
+					//clearInterval(overlay_timer);
+			});
+		}
 		</script>		
 	</th:block>
 </body>

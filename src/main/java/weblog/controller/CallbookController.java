@@ -20,6 +20,7 @@ import QRZClient2.QRZClient2;
 import QRZClient2.QRZLookupResponse;
 import weblog.CallbookEntryRepository;
 import weblog.model.CallbookEntry;
+import weblog.service.CallbookService;
 
 @RestController
 @RequestMapping(path="/callbook")
@@ -31,6 +32,9 @@ public class CallbookController {
 	@Autowired
 	private CallbookEntryRepository callbookEntryRepository;
 	
+	@Autowired
+	private CallbookService callbookService;
+	
 	public void addNewContact (CallbookEntry callbookEntry) {
 		callbookEntryRepository.save(callbookEntry);
 		logger.info("Callbook entry saved");
@@ -39,9 +43,7 @@ public class CallbookController {
 	@GetMapping(path="/")
 	public @ResponseBody Iterable<CallbookEntry> getAllCallbookEntries() {
 		// This returns a JSON or XML with the users
-		Iterable<CallbookEntry> list = callbookEntryRepository.findAll();
-		logger.info("" + ((Collection<?>) list).size() + " entries in callbook");
-		return list;
+		return callbookService.getAllCallbookEntries();
 	}
 	
 	@GetMapping(path="/qrz/{callsign}")
@@ -51,16 +53,6 @@ public class CallbookController {
 	
 	@GetMapping(path="/{callsign}")
 	public @ResponseBody Collection<CallbookEntry> getCallbookEntryByCallsign(@PathVariable String callsign) {
-		if ( callbookEntryRepository.findByCallsign(callsign).isEmpty() ) {
-			try {
-				QRZLookupResponse qrzLookupResponse = qrzClient.lookupCallsign(callsign);
-				CallbookEntry callbookEntry = new CallbookEntry(qrzLookupResponse);
-				callbookEntryRepository.save(callbookEntry);
-			} catch ( QRZCallsignNotFoundException e ) {
-				// Callsign not found, nothing to do
-				logger.error("QRZ Lookup for " + callsign + " returned no results.");
-			}
-		}
-		return callbookEntryRepository.findByCallsign(callsign);
+		return callbookService.getCallbookEntryByCallsign(callsign);
 	}
 }

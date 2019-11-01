@@ -80,7 +80,11 @@
 						    <label for="file"><strong>Choose an ADIF file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
     						<button class="w3-button w3-theme-button box__button" type="submit">Upload</button>
 						</div>
-						<div class="box__uploading">Uploading&hellip;</div>
+						<div class="box__uploading">
+							<div class="w3-light-grey">
+							  <div id="upload-progress-bar" class="w3-blue" style="width:0%"></div>
+							</div>
+						</div>
 						<div class="box__success">Done!</div>
 						<div class="box__error">Error! <span></span>.</div>
 					</form>
@@ -106,6 +110,7 @@
 		<script th:src="@{/js/L.icons.js}"></script>
 		<script th:src="@{/js/leaflet.markercluster.js}"></script>
 		<script th:src="@{/js/dx-cluster.js}"></script>
+		<script th:src="@{/js/ajax-progress.js}"></script>
 		<script>
 		// Autocomplete functionality
 			var bands = ["160M", "80M", "60M", "40M", "30M", "20M", "17M", "15M", "12M", "10M", "6M", "4M", "2M", "70CM"];
@@ -189,7 +194,15 @@
 			    },
 			    error: function() {
 			      // Log the error, show an alert, whatever works for you
-			    }
+			    },
+			    uploadProgress: function(e) {
+			        // track uploading
+			        if (e.lengthComputable) {
+			          var completedPercentage = Math.round((e.loaded * 100) / e.total);
+			          $('#upload-progress-bar').width(completedPercentage + "%");
+			          console.log(completedPercentage);
+			        }
+			      }
 			  });
 		  } else {
 			  var iframeName  = 'uploadiframe' + new Date().getTime();

@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -67,64 +70,6 @@ public class ContactController {
     	
     }
     
-    @GetMapping("")
-    public String home(Model model, Contact contact, HttpServletResponse response, @RequestParam("page") Optional<Integer> page, 
-    	      @RequestParam("size") Optional<Integer> size, @RequestParam("edit") Optional<Long> editId,
-    	      @ModelAttribute("activelogbook") Logbook activeLogbook,
-    	      @RequestParam("activelogbook") Optional<Long> activeLogbookId,
-    	      @RequestParam("addNewLogbook") Optional<String> newLogbookName) throws IOException {
-    	
-    	
-    	
-    	int currentPage = page.orElse(1);
-        int pageSize = size.orElse(20);
-        
-        User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
-        model.addAttribute("user", user);
-        
-        if ( newLogbookName.isPresent() ) {
-        	activeLogbook = logbookService.createLogbook(newLogbookName.get(), user.getLocator(), user);
-        }
-        
-        if ( activeLogbookId.isPresent() ) {
-        	activeLogbook = logbookService.getLogbookById(activeLogbookId.get()).get();
-        }
-        
-        if ( activeLogbook.getName() == null ) {
-        	activeLogbook = user.getAnyLogbook();
-        }
-        
-        // Check that the currently logged in user has access to the requested logbook
-        if ( !user.getLogbooks().contains(activeLogbook) ) {
-        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have access to the logbook " + activeLogbook.getName());
-        }
-
-        model.addAttribute("activelogbook", activeLogbook);
-        
-        PageRequest pageable = PageRequest.of(currentPage - 1, pageSize);
-        Page<Contact> contactPage = contactService.getPaginatedLogbookEntries(pageable, activeLogbook);
-        
-        int totalPages = contactPage.getTotalPages();
-        if(totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1,totalPages).boxed().collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
-        }
-        model.addAttribute("currentPage", currentPage);
-        model.addAttribute("totalPages", totalPages);
-        model.addAttribute("activeContactList", true);
-        model.addAttribute("contactList", contactPage.getContent());
-        
-        if ( editId.isPresent() ) {
-        	contact = contactService.getById(editId.get())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid contact Id:" + editId.get()));
-        }
-        
-        model.addAttribute("contact", contact);
-        
-        logger.info("Active Logbook: " + activeLogbook.getName());
-              
-        return "index";
-    }
     
     @GetMapping("/add-contact")
     public String showAddContactForm(Contact contact) {
@@ -177,9 +122,9 @@ public class ContactController {
         	nextContact.setRsts("59");
         }
         
-        return this.home(model, nextContact, response, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
+        // this.home(model, nextContact, response, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
         
-        //return "redirect:/log";
+        return "redirect:/logbook";
         // model.addAttribute("contacts", contactRepository.findAll());
         // return "index";
     }
@@ -192,8 +137,14 @@ public class ContactController {
     	
         model.addAttribute("contact", contact);
         model.addAttribute("submitUrl", "/log/update/" + contact.getId());
-        return this.home(model, contact, response, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
+        //return this.home(model, contact, response, Optional.empty(), Optional.empty(), Optional.empty(), activeLogbook, Optional.empty(), Optional.empty());
+        return "redirect:/logbook";
     }
+    
+	@RequestMapping(value = "/{contact}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Contact> getContact(@PathVariable Contact contact) {
+		return ResponseEntity.ok(contact);
+	}
     
     @PostMapping("/update/{id}")
     public String updateUser(@PathVariable("id") long id, @Valid Contact contact, 

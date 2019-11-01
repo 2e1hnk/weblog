@@ -22,6 +22,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import weblog.service.CallbookService;
 import weblog.service.LocationService;
 
 @Entity
@@ -345,16 +346,47 @@ public class Contact {
 	/*
 	 * Calculated fields
 	 */
-	@Transient
-	private LocationService locationService = new LocationService();
+
 	
+	/*
+	 * Order of preference for bearing is:
+	 * 	-	Antenna Azimuth (note that az=0 is taken to mean that no azimuth was recorded)
+	 * 	-	Direction calculated from logbook locator to locator recorded in `location` field
+	 * 	-	Direction calculated from logbook locator to lat/long recorded in callbook data
+	 */
 	@Transient
 	public int getBearing() {
+		LocationService locationService = new LocationService();
+
+		if ( this.getAntennaAz() > 0 ) {
+			return this.getAntennaAz();
+		}
+
 		double srcLat = this.getLogbook().getLat();
 		double srcLng = this.getLogbook().getLng();
-		double dstLat = locationService.extractLatitudeFromLocator(this.getLocation());
-		double dstLng = locationService.extractLongitudeFromLocator(this.getLocation());
-		return (int) Math.round(locationService.getBearingDegrees(srcLat, srcLng, dstLat, dstLng));
+		
+		if ( this.getLocation() != null ) {
+			if ( this.getLocation().matches("[A-Z]{2}[0-9]{2}[a-zA-Z]{0,2}")) {
+				double dstLat = locationService.extractLatitudeFromLocator(this.getLocation());
+				double dstLng = locationService.extractLongitudeFromLocator(this.getLocation());
+				
+				return (int) Math.round(locationService.getBearingDegrees(srcLat, srcLng, dstLat, dstLng));
+			}
+		}
+		/*
+		else {
+			CallbookService callbookService = new CallbookService();
+			if ( callbookService.getCallbookEntryByCallsign(this.getCallsign()).size() == 1 ) {
+				CallbookEntry entry = callbookService.getCallbookEntryByCallsign(this.getCallsign()).iterator().next();
+				double dstLat = entry.getLat();
+				double dstLng = entry.getLon();
+				
+				return (int) Math.round(locationService.getBearingDegrees(srcLat, srcLng, dstLat, dstLng));
+			}
+		}
+		*/
+
+		return 0;
 	}
 	
 }

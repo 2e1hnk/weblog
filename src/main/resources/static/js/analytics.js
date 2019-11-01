@@ -7,7 +7,7 @@ var calendarHeatmap = {
   settings: {
     gutter: 5,
     item_gutter: 1,
-    width: 1000,
+    width: 900,
     height: 200,
     item_size: 10,
     label_padding: 40,
@@ -81,7 +81,7 @@ var calendarHeatmap = {
       var colIndex = Math.trunc(dayIndex / 7);
       var numWeeks = colIndex + 1;
 
-      calendarHeatmap.settings.width = container.offsetWidth < 1000 ? 1000 : container.offsetWidth;
+      calendarHeatmap.settings.width = container.offsetWidth < 900 ? 900 : container.offsetWidth;
       calendarHeatmap.settings.item_size = ((calendarHeatmap.settings.width - calendarHeatmap.settings.label_padding) / numWeeks - calendarHeatmap.settings.gutter);
       calendarHeatmap.settings.height = calendarHeatmap.settings.label_padding + 7 * (calendarHeatmap.settings.item_size + calendarHeatmap.settings.gutter);
       svg.attr({'width': calendarHeatmap.settings.width, 'height': calendarHeatmap.settings.height});

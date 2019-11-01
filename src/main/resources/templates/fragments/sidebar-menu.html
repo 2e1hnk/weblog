@@ -41,7 +41,14 @@
 		</div>
 	
 		<!-- Overlay -->
-		<div class="w3-overlay" id="page-overlay" onclick="closeLeftMenu()" style="cursor:pointer; z-index:10000; margin-top: 38px;"></div>
+		<div class="w3-overlay" id="page-overlay" onclick="closeLeftMenu()" style="cursor:pointer; z-index:10000; margin-top: 38px;">
+			<div id="overlay-text" class="w3-theme-text w3-center">
+				<div id="overlay-text-container"></div>
+				<div class="w3-light-grey">
+				  <div class="w3-grey" id="overlay-progress-bar" style="height:24px;width:1%"></div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<!-- end sidebar menu -->
 
