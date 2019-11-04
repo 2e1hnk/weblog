@@ -1,7 +1,11 @@
 package weblog.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,6 +62,38 @@ public class LogbookController {
 	@Autowired
 	private ContactService contactService;
 	
+	/*
+	 * If we end up here then go to the first/default/any logbook
+	 */
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public String anyLogbook(Model model, Contact contact, HttpServletResponse response) throws IOException {
+		
+		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        Logbook logbook = user.getAnyLogbook();
+        
+        return home(model, new Contact(), logbook, response, Optional.empty(), Optional.empty(), Optional.empty());
+	}
+	
+	/*
+	 * API - return a list of the user's logbooks
+	 */
+	@RequestMapping(value = "list.json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<String>> getUsersLogbooks() {
+		
+		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+		Collection<Logbook> logbooks = user.getLogbooks();
+		
+		List<String> logbookList = new ArrayList<String>();
+		
+        for (Iterator<Logbook> iterator = logbooks.iterator(); iterator.hasNext();) {
+        	logbookList.add("/logbook/" + iterator.next().getId());
+        }
+        return ResponseEntity.ok(logbookList);
+	}
+	
+	/*
+	 * TODO: Logbook security
+	 */
 	@RequestMapping(value = "/{logbook}.json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Logbook> getLogbook(@PathVariable Logbook logbook) {
 		return ResponseEntity.ok(logbook);
@@ -98,6 +134,8 @@ public class LogbookController {
         
         model.addAttribute("contact", contact);
         model.addAttribute("logbook", logbook);
+        
+        model.addAttribute("map_url", "/" + logbook.getId());
         
         model.addAttribute("submitUrl", "/logbook/" + logbook.getId() + "/addcontact");
               
