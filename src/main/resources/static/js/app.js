@@ -20,8 +20,9 @@ var map = L.map('map', {fullscreenControl: true, layers: markerLayer}).setView([
 
 var maxZoom = 8;
 
-L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/{style}/{z}/{x}/{y}.png', {
     attribution: 'Location data from <a href="http://qrz.com">QRZ.com</a>, stations that have not shared their location will not show<br />Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    style: "dark_all",
     maxZoom: 14
 }).addTo(map);
 
@@ -61,51 +62,6 @@ var layerControl = new L.Control.Layers(null, {
 
 	});
 map.addControl(new autoUpdateControl());
-
-// Add cluster/uncluster control
-// REMOVED - using separate layers instead
-/*
-var clusterControl = L.Control.extend({
-	options : {
-		position : 'topleft'
-	//control position - allowed: 'topleft', 'topright', 'bottomleft', 'bottomright'
-	},
-
-	onAdd : function(map) {
-		var container = L.DomUtil
-				.create('div',
-						'leaflet-bar leaflet-control leaflet-control-custom leaflet-control-cluster');
-		container.innerHTML = '<a href="#" title="Group/ungroup contacts" role="button" aria-label="Group/ungroup contacts"></a>'
-		
-
-		container.onclick = function() {
-			
-			if ( map.hasLayer(markerClusterLayer) ) {
-				if ( L.DomUtil.hasClass(container, 'leaflet-control-cluster-clustered')) {
-					L.DomUtil.removeClass(container, 'leaflet-control-cluster-clustered');
-				}
-				if ( map.hasLayer(markerClusterLayer) ) {
-					map.removeLayer(markerClusterLayer);
-				}
-				if ( !map.hasLayer(markerLayer) ) {
-					map.addLayer(markerLayer);
-				}
-			} else {
-				L.DomUtil.addClass(container, 'leaflet-control-cluster-clustered');
-				if ( map.hasLayer(markerLayer) ) {
-					map.removeLayer(markerLayer);
-				}
-				if ( !map.hasLayer(markerClusterLayer) ) {
-					map.addLayer(markerClusterLayer);
-				}
-			}
-		}
-		return container;
-	},
-
-});
-map.addControl(new clusterControl());
-*/
 
 // Disable auto update when user pans/zooms the map (but not on a programatic pan/zoom)
 	map.on('zoomstart', function() {
@@ -184,7 +140,7 @@ var bandIcon = {};
 
 // Update map markers
 	function update() {
-		var jqxhr = $.get("/location/from/" + latest_id,
+		var jqxhr = $.get("/location" + map_url + "/from/" + latest_id,
 				function(data) {
 					if (data.length > 0) {
 						$.each(data, function(index, value) {
@@ -195,9 +151,7 @@ var bandIcon = {};
 								
 								bandIcon[value.band] = icons[nextIconIndex];
 							}
-							
-							
-							
+
 							var contactDate = moment.utc(value.timestamp).format("YYYY-MM-DD HH:mm");
 							
 							// Add marker
@@ -657,3 +611,40 @@ function showModal(id, url) {
 function hideModal(id) {
 	document.getElementById(id).style.display='none';
 }
+
+/*
+ * Replace all SVG images with inline SVG
+ */
+jQuery('img.svg').each(function(){
+    var $img = jQuery(this);
+    var imgID = $img.attr('id');
+    var imgClass = $img.attr('class');
+    var imgURL = $img.attr('src');
+
+    jQuery.get(imgURL, function(data) {
+        // Get the SVG tag, ignore the rest
+        var $svg = jQuery(data).find('svg');
+
+        // Add replaced image's ID to the new SVG
+        if(typeof imgID !== 'undefined') {
+            $svg = $svg.attr('id', imgID);
+        }
+        // Add replaced image's classes to the new SVG
+        if(typeof imgClass !== 'undefined') {
+            $svg = $svg.attr('class', imgClass+' replaced-svg');
+        }
+
+        // Remove any invalid XML tags as per http://validator.w3.org
+        $svg = $svg.removeAttr('xmlns:a');
+
+        // Check if the viewport is set, if the viewport is not set the SVG wont't scale.
+        if(!$svg.attr('viewBox') && $svg.attr('height') && $svg.attr('width')) {
+            $svg.attr('viewBox', '0 0 ' + $svg.attr('height') + ' ' + $svg.attr('width'))
+        }
+
+        // Replace image with new SVG
+        $img.replaceWith($svg);
+
+    }, 'xml');
+
+});
