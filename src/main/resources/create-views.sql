@@ -5,6 +5,7 @@ CREATE OR REPLACE VIEW `map` AS
 	    `contact`.`timestamp` AS `timestamp`,
 	    `contact`.`callsign` AS `callsign`,
 	    `contact`.`band` AS `band`,
+	    `contact`.`logbook_id` AS `logbook_id`,
 	    concat(`callbook_entry`.`fname`,' ',`callbook_entry`.`name`) AS `name`,
 	    COALESCE(
 			(SELECT

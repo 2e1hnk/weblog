@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -41,6 +43,9 @@ public class Location implements Serializable {
 
 	@Column(name = "grid")
 	private String grid;
+
+	@Column(name = "logbook_id")
+	private Long logbookId;
 
 	public Long getId() {
 		return id;
@@ -104,6 +109,14 @@ public class Location implements Serializable {
 
 	public void setGrid(String grid) {
 		this.grid = grid;
+	}
+
+	public Long getLogbookId() {
+		return logbookId;
+	}
+
+	public void setLogbookId(Long logbook_id) {
+		this.logbookId = logbook_id;
 	}
 	
 }
