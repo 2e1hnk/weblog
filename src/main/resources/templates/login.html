@@ -5,6 +5,7 @@
 <head>
 	<link rel="stylesheet" th:href="@{/webjars/w3-css/w3.css}">
 	<link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
+	<link rel="stylesheet" th:href="@{/css/app.css}">
 	<link rel="stylesheet" th:href="@{/css/scout.theme.css}">
 </head>
 <body>
@@ -13,7 +14,7 @@
 		<div class="w3-col s12 m6 l4">
 			<form name="f" th:action="@{/login}" method="POST" class="log-in-form w3-border">
 				<div class="w3-container w3-theme">
-					<h1><img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 40px; max-width: 40px" /> <span th:text="${@environment.getProperty('INSTANCE_NAME')} ?: 'Login'"></span></h1>
+					<h1><img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" class="svg login-logo" /> <span th:text="${@environment.getProperty('INSTANCE_NAME')} ?: 'Login'"></span></h1>
 				</div>
 				
 				<!-- alerts container -->
