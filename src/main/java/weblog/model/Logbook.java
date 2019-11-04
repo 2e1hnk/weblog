@@ -3,6 +3,7 @@ package weblog.model;
 import java.awt.List;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,10 +29,14 @@ public class Logbook {
 	private Double lat;
 	private Double lng;
 	
+	// This will be replaced by the Entitlements below
     @ManyToMany(mappedBy = "logbooks")
     @ContainedIn
     @JsonIgnore
     private Collection<User> users = new ArrayList<User>();
+    
+    @OneToMany(mappedBy = "entitlement")
+    Set<Entitlement> entitlement;
     
     @OneToMany(mappedBy="logbook")
     private Collection<Contact> contacts = new ArrayList<Contact>();
@@ -76,6 +81,14 @@ public class Logbook {
 		this.users = users;
 	}
 	
+	public Set<Entitlement> getEntitlement() {
+		return entitlement;
+	}
+
+	public void setEntitlement(Set<Entitlement> entitlement) {
+		this.entitlement = entitlement;
+	}
+
 	public void associateUserWithLogbook(User user) {
 		if ( !this.users.contains(user) ) {
 			this.users.add(user);

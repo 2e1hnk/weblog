@@ -2,6 +2,7 @@ package weblog.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -56,6 +58,8 @@ public class User {
     
     /*
      * Logbook-specific fields
+     * 
+     * THIS WILL BE REPLACED WITH THE ENTITLEMENTS FIELD BELOW
      */
     @ManyToMany
     @JoinTable(
@@ -65,6 +69,9 @@ public class User {
         inverseJoinColumns = @JoinColumn(
           name = "logbook_id", referencedColumnName = "id"))
     private Collection<Logbook> logbooks = new ArrayList<Logbook>();
+    
+    @OneToMany(mappedBy = "entitlement")
+    Set<Entitlement> entitlement;
     
     public User() {
     	
