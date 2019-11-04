@@ -15,8 +15,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.springframework.security.core.GrantedAuthority;
-
 @Entity
 @Table(name = "users")
 public class User {
@@ -91,12 +89,6 @@ public class User {
 
 	public void setLogbooks(Collection<Logbook> logbooks) {
 		this.logbooks = logbooks;
-	}
-
-	public void associateWithLogbook(Logbook logbook) {
-		if ( !this.logbooks.contains(logbook) ) {
-			this.logbooks.add(logbook);
-		}
 	}
 	
 	public void dissociateFromLogbook(Logbook logbook) {
@@ -176,6 +168,18 @@ public class User {
 
 	public void setTheme(String theme) {
 		this.theme = theme;
+	}
+
+	public Set<Entitlement> getEntitlement() {
+		return entitlement;
+	}
+
+	public void setEntitlement(Set<Entitlement> entitlement) {
+		this.entitlement = entitlement;
+	}
+	
+	public void addEntitlement(Entitlement entitlement) {
+		this.entitlement.add(entitlement);
 	}
 
 }

@@ -2,6 +2,7 @@ package weblog.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import weblog.EntitlementEnum;
 import weblog.EventStreamMessage;
 import weblog.model.Contact;
 import weblog.model.Logbook;
@@ -189,9 +191,7 @@ public class LogbookController {
     public String newLogbook(@RequestParam String logbookName, Model model, HttpServletResponse response) {
     	User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
     	Logbook logbook = logbookService.createLogbook(logbookName, user.getLocator());
-    	logbook.associateUserWithLogbook(user);
-    	user.associateWithLogbook(logbook);
-    	logbookService.save(logbook);
+    	logbookService.grantEntitlement(logbook, user, Arrays.asList(EntitlementEnum.VIEW, EntitlementEnum.ADD, EntitlementEnum.UPDATE, EntitlementEnum.DELETE));
     	return "redirect:/logbook/" + logbook.getId();
     }
 

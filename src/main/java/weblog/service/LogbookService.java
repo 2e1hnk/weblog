@@ -1,5 +1,6 @@
 package weblog.service;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import weblog.EntitlementEnum;
 import weblog.model.Contact;
+import weblog.model.Entitlement;
 import weblog.model.Logbook;
 import weblog.model.User;
 import weblog.repository.LogbookRepository;
@@ -36,10 +39,22 @@ public class LogbookService {
 		return logbookRepository.findById(id);
 	}
 	
+	public void grantEntitlement(Logbook logbook, User user, List<EntitlementEnum> entitlements) {
+		for ( EntitlementEnum entitlementEnum : entitlements ) {
+			Entitlement entitlement = new Entitlement();
+			entitlement.setEntitlement(entitlementEnum);
+			user.addEntitlement(entitlement);
+			logbook.addEntitlement(entitlement);
+			userService.save(user);
+			save(logbook);
+		}
+	}
+	
 	public Logbook createLogbook(String logbookName, String locator, User user) {
 		Logbook logbook = this.createLogbook(logbookName, locator);
-		this.associateLogbookWithUser(logbook, user);
-		userService.associateUserWithLogbook(user, logbook);
+		
+		grantEntitlement(logbook, user, Arrays.asList(EntitlementEnum.VIEW, EntitlementEnum.ADD, EntitlementEnum.UPDATE, EntitlementEnum.DELETE) );
+		
 		return logbook;
 	}
 	
@@ -50,17 +65,6 @@ public class LogbookService {
 		logbook.setName(logbookName);
 		logbookRepository.save(logbook);
 		return logbook;
-	}
-	
-	public void associateLogbookWithUser(Logbook logbook, User user) {
-		logbook.associateUserWithLogbook(user);
-		save(logbook);
-		logger.info("Associated user " + user.getUsername() + " with logbook " + logbook.getName());
-	}
-	
-	public void dissociateLogbookFromUser(Logbook logbook, User user) {
-		logbook.dissociateUserFromLogbook(user);
-		save(logbook);
 	}
 	
 	public List<Logbook> getAllLogbooks() {

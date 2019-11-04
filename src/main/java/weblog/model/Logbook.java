@@ -89,10 +89,8 @@ public class Logbook {
 		this.entitlement = entitlement;
 	}
 
-	public void associateUserWithLogbook(User user) {
-		if ( !this.users.contains(user) ) {
-			this.users.add(user);
-		}
+	public void addEntitlement(Entitlement entitlement) {
+		this.entitlement.add(entitlement);
 	}
 	
 	public Collection<Contact> getContacts() {
@@ -101,12 +99,6 @@ public class Logbook {
 
 	public void setContacts(Collection<Contact> contacts) {
 		this.contacts = contacts;
-	}
-
-	public void dissociateUserFromLogbook(User user) {
-		if ( this.users.contains(user) ) {
-			this.users.remove(user);
-		}
 	}
 	
 	public int size() {

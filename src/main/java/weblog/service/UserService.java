@@ -38,8 +38,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import weblog.EntitlementEnum;
 import weblog.UserRepository;
 import weblog.exception.UsernameAlreadyExistsException;
+import weblog.model.Entitlement;
 import weblog.model.Logbook;
 import weblog.model.User;
 
@@ -104,8 +106,11 @@ public class UserService {
     	userRepository.delete(user);
     }
     
-    public void associateUserWithLogbook(User user, Logbook logbook) {
-    	user.associateWithLogbook(logbook);
+    public void associateUserWithLogbook(User user, Logbook logbook, EntitlementEnum entitlementLevel) {
+    	Entitlement entitlement = new Entitlement();
+    	entitlement.setEntitlement(entitlementLevel);
+    	user.addEntitlement(entitlement);
+    	logbook.addEntitlement(entitlement);
     	save(user);
     }
     
@@ -128,8 +133,30 @@ public class UserService {
     	// Create a default logbook for the user
     	// TODO: use correct locator here
     	Logbook logbook = logbookService.createLogbook(user.getUsername().toUpperCase(), user.getLocator());
-    	logbookService.associateLogbookWithUser(logbook, user);
-    	this.associateUserWithLogbook(user, logbook);
+    	
+    	Entitlement viewEntitlement = new Entitlement();
+    	viewEntitlement.setEntitlement(EntitlementEnum.VIEW);
+    	
+    	Entitlement addEntitlement = new Entitlement();
+    	addEntitlement.setEntitlement(EntitlementEnum.ADD);
+    	
+    	Entitlement updateEntitlement = new Entitlement();
+    	updateEntitlement.setEntitlement(EntitlementEnum.UPDATE);
+    	
+    	Entitlement deleteEntitlement = new Entitlement();
+    	deleteEntitlement.setEntitlement(EntitlementEnum.DELETE);
+    	
+    	logbook.addEntitlement(viewEntitlement);
+    	logbook.addEntitlement(addEntitlement);
+    	logbook.addEntitlement(updateEntitlement);
+    	logbook.addEntitlement(deleteEntitlement);
+    	logbookService.save(logbook);
+    	
+    	user.addEntitlement(viewEntitlement);
+    	user.addEntitlement(addEntitlement);
+    	user.addEntitlement(updateEntitlement);
+    	user.addEntitlement(deleteEntitlement);
+    	save(user);
     	
     	// Return the generated (not-encoded) password for info
     	return generatedPassword;

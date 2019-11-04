@@ -11,8 +11,11 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import weblog.model.Logbook;
 import weblog.model.Privilege;
 import weblog.model.Role;
+import weblog.model.User;
+import weblog.service.LogbookService;
 import weblog.service.UserService;
 
 @Component
@@ -31,6 +34,9 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
   
     @Autowired
     private UserService userService;
+  
+    @Autowired
+    private LogbookService logbookService;
   
     @Override
     @Transactional
@@ -57,6 +63,13 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         UserDetails userDetails = builder.build();
         userRepository.save(userDetails.);
  */
+        /*
+        for ( User user : userRepository.findAll() ) {
+        	for ( Logbook logbook : user.getLogbooks() ) {
+        		logbookService.grantEntitlement(logbook, user, Arrays.asList(EntitlementEnum.VIEW, EntitlementEnum.ADD, EntitlementEnum.UPDATE, EntitlementEnum.DELETE));
+        	}
+    	}
+        */
         alreadySetup = true;
     }
  
