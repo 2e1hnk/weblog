@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import weblog.LocationRepository;
 import weblog.model.Location;
+import weblog.model.Logbook;
 
 @Controller
 @RequestMapping(path="/location")
@@ -29,6 +30,11 @@ public class LocationController {
     @GetMapping(path="/from/{id}")
 	public @ResponseBody Iterable<Location> getLocationFrom(@PathVariable Long id) {
 		return locationRepository.findByIdGreaterThan(id);
+	}
+    
+    @GetMapping(path="/{logbook}/from/{id}")
+	public @ResponseBody Iterable<Location> getLocationFrom(@PathVariable Logbook logbook, @PathVariable Long id) {
+		return locationRepository.findByIdGreaterThanAndLogbookId(id, logbook.getId());
 	}
     
     // Get list of contacts by callsign (used for ajax requests from log page)
