@@ -73,8 +73,8 @@ input.monospace {
 	<div class="w3-bar w3-theme-highlight" th:fragment="navbar">
 		<button class="w3-bar-item w3-button navbar-button" id="left-menu-button" style="z-index:10002;" onclick="toggleLeftMenu()"><i class="fas fa-bars w3-large"></i></button>
 		
-		<a href="#" class="w3-bar-item w3-button">
-			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" />
+		<a href="#" class="w3-bar-item w3-button" style="min-width: 250px;">
+			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" class="navbar-logo svg" />
 			<b th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</b>
 		</a>
 		
@@ -129,8 +129,12 @@ input.monospace {
 
 		<!-- Logbook selection -->
 		<div class="w3-dropdown-hover w3-right">
-		    <button class="w3-button"><span th:text="#{lang.logbook}"></span><th:block th:if="${logbook}">: <b><span th:text="${logbook.getName()}"></span></b></th:block> <i class="fa fa-caret-down"></i></button>
-		    <div class="w3-dropdown-content w3-card-4 w3-theme-highlight">
+		    <button class="w3-button">
+		    	<span th:text="#{lang.logbook}"></span>
+		    	<th:block th:if="${logbook}">: <b><span th:text="${logbook.getName()}"></span></b>
+		    	</th:block> <i class="fa fa-caret-down"></i>
+		    </button>
+		    <div class="w3-dropdown-content w3-card-4 w3-theme-highlight" style="z-index: 1000;">
 		    	<div class="w3-bar-block">
 		    		<a th:each="logbook : ${user.logbooks}" th:href="@{|/logbook/${logbook.id}|}" class="w3-bar-item w3-button"><span th:text="${logbook.name}"></span> <span class="w3-badge w3-right w3-theme-info" th:text="${#lists.size(logbook.contacts)}"></span></a>
 		    		<hr />
