@@ -113,6 +113,9 @@ button.navbar-button {
 	background-color: #f00;
 	border-radius:100px;
 }
+#map {
+	z-index: 100;
+}
 .map-icon-0 {
 	bachground-color: #f00;
 }
@@ -272,4 +275,14 @@ button.navbar-button {
 	color: white;
 	transform: translate(-50%,-50%);
 	-ms-transform: translate(-50%,-50%);
+}
+
+.navbar-logo {
+	max-width: 20px;
+	max-height: 20px;
+}
+
+.login-logo {
+	max-width: 40px;
+	max-height: 40px;
 }
