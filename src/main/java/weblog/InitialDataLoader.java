@@ -3,6 +3,7 @@ package weblog;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -11,10 +12,12 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import weblog.model.Entitlement;
 import weblog.model.Logbook;
 import weblog.model.Privilege;
 import weblog.model.Role;
 import weblog.model.User;
+import weblog.service.LocationService;
 import weblog.service.LogbookService;
 import weblog.service.UserService;
 
@@ -37,6 +40,12 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
   
     @Autowired
     private LogbookService logbookService;
+    
+    @Autowired
+    private LocationService locationService;
+    
+    @Autowired
+    private EntitlementRepository entitlementRepository;
   
     @Override
     @Transactional
@@ -64,12 +73,27 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         userRepository.save(userDetails.);
  */
         /*
-        for ( User user : userRepository.findAll() ) {
-        	for ( Logbook logbook : user.getLogbooks() ) {
-        		logbookService.grantEntitlement(logbook, user, Arrays.asList(EntitlementEnum.VIEW, EntitlementEnum.ADD, EntitlementEnum.UPDATE, EntitlementEnum.DELETE));
-        	}
-    	}
-        */
+         * This grants all privileges to each user on the logbooks they own
+         */
+        /*
+        User user = userService.getUser("user");
+        Logbook logbook = logbookService.getLogbookById(2135).get();
+        
+        logbook.setLat(locationService.extractLatitudeFromLocator("IO81xw"));
+        logbook.setLng(locationService.extractLongitudeFromLocator("IO81xw"));
+        
+        Entitlement entitlement = new Entitlement();
+        entitlement.setEntitlement(Entitlement.ADD);
+        entitlement.setLogbook(logbook);
+        entitlement.setUser(user);
+        
+        logbook.addEntitlement(entitlement);
+        
+        userService.save(user);
+        logbookService.save(logbook);
+        entitlementRepository.save(entitlement);
+    	*/
+        
         alreadySetup = true;
     }
  

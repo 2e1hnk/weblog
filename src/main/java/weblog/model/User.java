@@ -68,7 +68,7 @@ public class User {
           name = "logbook_id", referencedColumnName = "id"))
     private Collection<Logbook> logbooks = new ArrayList<Logbook>();
     
-    @OneToMany(mappedBy = "entitlement")
+    @OneToMany(mappedBy = "user")
     Set<Entitlement> entitlement;
     
     public User() {

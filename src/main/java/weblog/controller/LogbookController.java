@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import weblog.EntitlementEnum;
+import weblog.model.Entitlement;
 import weblog.EventStreamMessage;
 import weblog.model.Contact;
 import weblog.model.Logbook;
@@ -112,7 +112,7 @@ public class LogbookController {
         model.addAttribute("user", user);
                 
         // Check that the currently logged in user has access to the requested logbook
-        if ( !user.getLogbooks().contains(logbook) ) {
+        if ( !logbookService.getUserEntitlement(logbook, user, Entitlement.VIEW) ) {
         	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have access to the logbook " + logbook.getName());
         }
         
@@ -191,7 +191,7 @@ public class LogbookController {
     public String newLogbook(@RequestParam String logbookName, Model model, HttpServletResponse response) {
     	User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
     	Logbook logbook = logbookService.createLogbook(logbookName, user.getLocator());
-    	logbookService.grantEntitlement(logbook, user, Arrays.asList(EntitlementEnum.VIEW, EntitlementEnum.ADD, EntitlementEnum.UPDATE, EntitlementEnum.DELETE));
+    	logbookService.grantEntitlement(logbook, user, Arrays.asList(Entitlement.VIEW, Entitlement.ADD, Entitlement.UPDATE, Entitlement.DELETE));
     	return "redirect:/logbook/" + logbook.getId();
     }
 

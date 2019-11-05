@@ -38,7 +38,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import weblog.EntitlementEnum;
 import weblog.UserRepository;
 import weblog.exception.UsernameAlreadyExistsException;
 import weblog.model.Entitlement;
@@ -106,7 +105,7 @@ public class UserService {
     	userRepository.delete(user);
     }
     
-    public void associateUserWithLogbook(User user, Logbook logbook, EntitlementEnum entitlementLevel) {
+    public void associateUserWithLogbook(User user, Logbook logbook, int entitlementLevel) {
     	Entitlement entitlement = new Entitlement();
     	entitlement.setEntitlement(entitlementLevel);
     	user.addEntitlement(entitlement);
@@ -135,16 +134,16 @@ public class UserService {
     	Logbook logbook = logbookService.createLogbook(user.getUsername().toUpperCase(), user.getLocator());
     	
     	Entitlement viewEntitlement = new Entitlement();
-    	viewEntitlement.setEntitlement(EntitlementEnum.VIEW);
+    	viewEntitlement.setEntitlement(Entitlement.VIEW);
     	
     	Entitlement addEntitlement = new Entitlement();
-    	addEntitlement.setEntitlement(EntitlementEnum.ADD);
+    	addEntitlement.setEntitlement(Entitlement.ADD);
     	
     	Entitlement updateEntitlement = new Entitlement();
-    	updateEntitlement.setEntitlement(EntitlementEnum.UPDATE);
+    	updateEntitlement.setEntitlement(Entitlement.UPDATE);
     	
     	Entitlement deleteEntitlement = new Entitlement();
-    	deleteEntitlement.setEntitlement(EntitlementEnum.DELETE);
+    	deleteEntitlement.setEntitlement(Entitlement.DELETE);
     	
     	logbook.addEntitlement(viewEntitlement);
     	logbook.addEntitlement(addEntitlement);

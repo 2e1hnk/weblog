@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import weblog.EntitlementEnum;
 import weblog.model.Contact;
 import weblog.model.Entitlement;
 import weblog.model.Logbook;
@@ -39,8 +38,8 @@ public class LogbookService {
 		return logbookRepository.findById(id);
 	}
 	
-	public void grantEntitlement(Logbook logbook, User user, List<EntitlementEnum> entitlements) {
-		for ( EntitlementEnum entitlementEnum : entitlements ) {
+	public void grantEntitlement(Logbook logbook, User user, List<Integer> entitlements) {
+		for ( int entitlementEnum : entitlements ) {
 			Entitlement entitlement = new Entitlement();
 			entitlement.setEntitlement(entitlementEnum);
 			user.addEntitlement(entitlement);
@@ -53,7 +52,7 @@ public class LogbookService {
 	public Logbook createLogbook(String logbookName, String locator, User user) {
 		Logbook logbook = this.createLogbook(logbookName, locator);
 		
-		grantEntitlement(logbook, user, Arrays.asList(EntitlementEnum.VIEW, EntitlementEnum.ADD, EntitlementEnum.UPDATE, EntitlementEnum.DELETE) );
+		grantEntitlement(logbook, user, Arrays.asList(Entitlement.VIEW, Entitlement.ADD, Entitlement.UPDATE, Entitlement.DELETE) );
 		
 		return logbook;
 	}
@@ -98,5 +97,17 @@ public class LogbookService {
 			user.dissociateFromLogbook(logbook);
 		}
 		logbookRepository.delete(logbook);
+	}
+	
+	/*
+	 * Returns true if the user is permitted to perform the requested action, otherwise return false
+	 */
+	public boolean getUserEntitlement(Logbook logbook, User user, int action) {
+		for ( Entitlement entitlement : logbook.getEntitlement() ) {
+			if ( entitlement.getUser().equals(user) && entitlement.getEntitlement() == action ) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

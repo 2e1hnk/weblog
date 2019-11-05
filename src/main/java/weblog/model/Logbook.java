@@ -35,7 +35,7 @@ public class Logbook {
     @JsonIgnore
     private Collection<User> users = new ArrayList<User>();
     
-    @OneToMany(mappedBy = "entitlement")
+    @OneToMany(mappedBy = "logbook")
     Set<Entitlement> entitlement;
     
     @OneToMany(mappedBy="logbook")

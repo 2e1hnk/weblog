@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import weblog.model.Contact;
+import weblog.model.Entitlement;
 import weblog.model.Logbook;
 import weblog.model.User;
+import weblog.service.EntitlementService;
 import weblog.service.UserService;
 
 @Controller
@@ -33,6 +35,7 @@ public class ProfileController {
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired private UserService userService;
+	@Autowired private EntitlementService entitlementService;
 	
     @GetMapping("")
     public String home(Model model, Principal principal, @ModelAttribute("activelogbook") Logbook activeLogbook) {
@@ -40,7 +43,7 @@ public class ProfileController {
     	User user = userService.getThisUser();
         model.addAttribute("user", user);
         model.addAttribute("themes", userService.listThemeNames());
-        
+        model.addAttribute("view_logbooks", entitlementService.getLogbooksAtEntitlement(user, Entitlement.VIEW));
         
         return "profile";
     }

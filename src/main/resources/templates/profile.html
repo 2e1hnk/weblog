@@ -27,6 +27,13 @@
 					<div sec:authentication="principal.authorities"></div>
 				</div>
 				<div class="w3-container">
+					<h2 th:text="#{lang.logbooks}">Roles</h2>
+					<p>Logbooks that you have VIEW access to</p>
+					<ul class="w3-ul">
+						<li th:each="logbook : ${view_logbooks}" th:text=${logbook.getName()} />
+					</ul>
+				</div>
+				<div class="w3-container">
 					<h2 th:text="#{lang.settings}"></h2>
 					<form action="#" method="post">
 						<label for="locator"><span th:text="#{lang.locator}"></span></label>
@@ -55,6 +62,9 @@
 				<li class="w3-bar w3-input" th:each="logbook : ${user.logbooks}">
 					  <!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
 		  		    <span class="w3-large" th:text="${logbook.name}">[NAME]</span>
+		  		    <th:block th:each="entitlement : ${logbook.entitlement}">
+		  		    	<span class="w3-small" th:text="${entitlement.entitlement}">[ENTITLEMENT]</span>
+		  		    </th:block>
 		  		    <div class="w3-dropdown-hover w3-right">
 					  <button class="w3-button w3-theme-button"><i class="fas fa-ellipsis-v"></i></button>
 					  <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
