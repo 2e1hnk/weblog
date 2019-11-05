@@ -97,7 +97,12 @@ public class LogbookController {
 	 * TODO: Logbook security
 	 */
 	@RequestMapping(value = "/{logbook}.json", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Logbook> getLogbook(@PathVariable Logbook logbook) {
+	public ResponseEntity<Logbook> getLogbook(@PathVariable Logbook logbook, HttpServletResponse response) throws IOException {
+		// Check that the currently logged in user has access to the requested logbook
+		if ( !logbookService.getUserEntitlement(logbook, userService.getThisUser(), Entitlement.VIEW) ) {
+        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have VIEW access to the logbook " + logbook.getName());
+        }
+        
 		return ResponseEntity.ok(logbook);
 	}
 	
@@ -108,12 +113,12 @@ public class LogbookController {
     	int currentPage = page.orElse(1);
         int pageSize = size.orElse(20);
         
-        User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = userService.getThisUser();
         model.addAttribute("user", user);
                 
         // Check that the currently logged in user has access to the requested logbook
         if ( !logbookService.getUserEntitlement(logbook, user, Entitlement.VIEW) ) {
-        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have access to the logbook " + logbook.getName());
+        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have VIEW access to the logbook " + logbook.getName());
         }
         
         PageRequest pageable = PageRequest.of(currentPage - 1, pageSize);
@@ -147,15 +152,16 @@ public class LogbookController {
     @PostMapping("/{logbook}/addcontact")
     public String addContact(@PathVariable Logbook logbook, @Valid Contact contact, BindingResult result, Model model, HttpServletResponse response, @ModelAttribute("activelogbook") Logbook activeLogbook, RedirectAttributes attributes) throws IOException {
     	
-    	User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    	// Check that the currently logged in user has access to the requested logbook
+		if ( !logbookService.getUserEntitlement(logbook, userService.getThisUser(), Entitlement.ADD) ) {
+        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have ADD access to the logbook " + logbook.getName());
+        }
+		
+		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
         model.addAttribute("user", user);
         
     	
-        if ( !user.getLogbooks().contains(logbook) ) {
-        	result.addError(new ObjectError("Logbook", "You do not have access to this logbook") );
-        }
-        
-    	if (result.hasErrors()) {
+		if (result.hasErrors()) {
             return "index";
         }
         
@@ -199,13 +205,28 @@ public class LogbookController {
     @GetMapping("/delete/{logbook}")
     public String delete(@PathVariable Logbook logbook, Model model, HttpServletResponse response) throws IOException {
         
-        logbookService.delete(logbook);
+    	// Check that the currently logged in user has access to the requested logbook
+		if ( !logbookService.getUserEntitlement(logbook, userService.getThisUser(), Entitlement.DELETE) ) {
+        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have DELETE access to the logbook " + logbook.getName());
+        }
+		
+    	logbookService.delete(logbook);
         
         return "redirect:/profile";
     }
 	
     @GetMapping("/move/{fromLogbook}")
     public String move(@PathVariable Logbook fromLogbook, @RequestParam Logbook toLogbook, @RequestParam Boolean deleteAfterMove, Model model, HttpServletResponse response) throws IOException {
+    	
+    	// Check that the currently logged in user has access to the source logbook
+		if ( !logbookService.getUserEntitlement(fromLogbook, userService.getThisUser(), Entitlement.DELETE) ) {
+        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have DELETE access to the logbook " + fromLogbook.getName());
+        }
+		
+		// Check that the currently logged in user has access to the requested logbook
+		if ( !logbookService.getUserEntitlement(toLogbook, userService.getThisUser(), Entitlement.ADD) ) {
+        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have ADD access to the logbook " + toLogbook.getName());
+        }
     	
     	logbookService.moveContacts(fromLogbook, toLogbook, deleteAfterMove);
     	
@@ -214,7 +235,11 @@ public class LogbookController {
     
     @GetMapping("/rename/{logbook}")
     public String delete(@PathVariable Logbook logbook, @RequestParam String name, Model model, HttpServletResponse response) throws IOException {
-        
+    	// Check that the currently logged in user has access to the requested logbook
+		if ( !logbookService.getUserEntitlement(logbook, userService.getThisUser(), Entitlement.UPDATE) ) {
+        	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have UPDATE access to the logbook " + logbook.getName());
+        }
+		        
     	logbook.setName(name);
         logbookService.save(logbook);
         
