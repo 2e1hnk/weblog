@@ -2,13 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-	<link rel="stylesheet" th:href="@{/webjars/w3-css/w3.css}">
-	<link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
-	<link rel="stylesheet" th:href="@{/css/app.css}">
-	<link rel="stylesheet" th:href="@{/css/scout.theme.css}">
-</head>
-<body>
+<head th:replace="fragments/header :: header(~{::meta})" />
+<body class="w3-theme-background">
 	<div class="w3-row">
 		<div class="w3-col m3 l4">&nbsp;</div>
 		<div class="w3-col s12 m6 l4">

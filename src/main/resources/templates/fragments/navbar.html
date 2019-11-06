@@ -1,79 +1,10 @@
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<title th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</title>
-
-<!-- Compiled and minified CSS -->
-<link rel="stylesheet" th:href="@{/webjars/w3-css/w3.css}">
-<link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
-<link rel="stylesheet" th:href="@{/css/scout.css}">
-<link rel="stylesheet" th:href="@{/css/app.css}">
-<link rel="stylesheet" th:href="@{/webjars/leaflet/leaflet.css}" />
-<link rel="stylesheet" th:href="@{/css/L.fullscreen.css}" />
-
-<!-- favicon -->
-<link rel="apple-touch-icon" sizes="57x57"
-	th:href="@{/apple-icon-57x57.png}">
-<link rel="apple-touch-icon" sizes="60x60"
-	th:href="@{/apple-icon-60x60.png}">
-<link rel="apple-touch-icon" sizes="72x72"
-	th:href="@{/apple-icon-72x72.png}">
-<link rel="apple-touch-icon" sizes="76x76"
-	th:href="@{/apple-icon-76x76.png}">
-<link rel="apple-touch-icon" sizes="114x114"
-	th:href="@{/apple-icon-114x114.png}">
-<link rel="apple-touch-icon" sizes="120x120"
-	th:href="@{/apple-icon-120x120.png}">
-<link rel="apple-touch-icon" sizes="144x144"
-	th:href="@{/apple-icon-144x144.png}">
-<link rel="apple-touch-icon" sizes="152x152"
-	th:href="@{/apple-icon-152x152.png}">
-<link rel="apple-touch-icon" sizes="180x180"
-	th:href="@{/apple-icon-180x180.png}">
-<link rel="icon" type="image/png" sizes="192x192"
-	th:href="@{/android-icon-192x192.png}">
-<link rel="icon" type="image/png" sizes="32x32"
-	th:href="@{/favicon-32x32.png}">
-<link rel="icon" type="image/png" sizes="96x96"
-	th:href="@{/favicon-96x96.png}">
-<link rel="icon" type="image/png" sizes="16x16"
-	th:href="@{/favicon-16x16.png}">
-<link rel="manifest" th:href="@{/manifest.json}">
-<meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage"
-	th:content="@{/ms-icon-144x144.png}">
-<meta name="theme-color" content="#ffffff">
-
-<!-- fonts -->
-<link
-	href="https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap"
-	rel="stylesheet">
-
-<style>
-htmp, body {
-	height: 100%;
-}
-input.monospace {
-	font-family: 'Roboto Mono', monospace;
-}
-
-.monospace {
-	font-family: 'Roboto Mono', monospace;
-}
-
-#map {
-	min-height: 550px;
-}
-</style>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 	<!-- navbar -->
 	<div class="w3-bar w3-theme-highlight" th:fragment="navbar">
 		<button class="w3-bar-item w3-button navbar-button" id="left-menu-button" style="z-index:10002;" onclick="toggleLeftMenu()"><i class="fas fa-bars w3-large"></i></button>
 		
-		<a href="#" class="w3-bar-item w3-button" style="min-width: 250px;">
+		<a href="#" class="w3-bar-item w3-button w3-left-align" style="min-width: 250px;">
 			<img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" style="max-height: 20px; max-width: 20px" class="navbar-logo svg" />
 			<b th:text="${@environment.getProperty('INSTANCE_NAME')}">Weblog</b>
 		</a>
@@ -83,74 +14,79 @@ input.monospace {
 		<!-- DX Cluster menu -->
 		<button class="w3-button w3-right navbar-button" id="right-menu-button" onclick="toggleRightMenu()"><i class="fa fa-globe w3-large"></i></button>
 
-		<!-- user dropdown -->
-		<div class="w3-dropdown-hover w3-right">
-		    <button class="w3-button navbar-button"><i class="far fa-user-circle w3-large"></i> </button>
-		    <div class="w3-dropdown-content w3-card-4 w3-theme-highlight" style="right:0">
-		    	<div class="w3-bar w3-center">
-			    	<a href="?lang=en" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-gb"></span>
-			    	</a>
-				    <a href="?lang=fr" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-fr"></span>
-			    	</a>
-				    <a href="?lang=es" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-es"></span>
-			    	</a>
-			        <a href="?lang=ru" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-ru"></span>
-			    	</a>
+		<!-- User-specific things -->
+		<div sec:authorize="isAuthenticated()">
+		
+			<!-- user dropdown -->
+			<div class="w3-dropdown-hover w3-right">
+			    <button class="w3-button navbar-button"><i class="far fa-user-circle w3-large"></i> </button>
+			    <div class="w3-dropdown-content w3-card-4 w3-theme-highlight" style="right:0">
+			    	<div class="w3-bar w3-center">
+				    	<a href="?lang=en" class="w3-bar-item w3-button">
+				    		<span class="flag-icon flag-icon-gb"></span>
+				    	</a>
+					    <a href="?lang=fr" class="w3-bar-item w3-button">
+				    		<span class="flag-icon flag-icon-fr"></span>
+				    	</a>
+					    <a href="?lang=es" class="w3-bar-item w3-button">
+				    		<span class="flag-icon flag-icon-es"></span>
+				    	</a>
+				        <a href="?lang=ru" class="w3-bar-item w3-button">
+				    		<span class="flag-icon flag-icon-ru"></span>
+				    	</a>
+				    </div>
+				    <div class="w3-bar w3-center">
+				        <a href="?lang=de" class="w3-bar-item w3-button">
+				    		<span class="flag-icon flag-icon-de"></span>
+				    	</a>
+				        <a href="?lang=it" class="w3-bar-item w3-button">
+				    		<span class="flag-icon flag-icon-it"></span>
+				    	</a>
+				        <a href="?lang=cy" class="w3-bar-item w3-button">
+				    		<span class="flag-icon flag-icon-gb-wls"></span>
+				    	</a>
+				        <a href="?lang=ie" class="w3-bar-item w3-button">
+				    		<span class="flag-icon flag-icon-ie"></span>
+				    	</a>
+				    </div>
+				    <div class="w3-bar">
+			    		<span class="w3-bar-item w3-large" sec:authentication="name" />
+			    	</div>
+			    	<div class="w3-bar-block">
+			    	    <a href="/profile" class="w3-bar-item w3-button"><i class="fas fa-user-circle"></i> <span th:text="#{lang.profile}"></span></a>
+					</div>
+			    	<div class="w3-bar-block">
+			    	    <a href="/logout" class="w3-bar-item w3-button"><i class="fas fa-sign-out-alt"></i> <span th:text="#{lang.logout}"></span></a>
+					</div>
 			    </div>
-			    <div class="w3-bar w3-center">
-			        <a href="?lang=de" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-de"></span>
-			    	</a>
-			        <a href="?lang=it" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-it"></span>
-			    	</a>
-			        <a href="?lang=cy" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-gb-wls"></span>
-			    	</a>
-			        <a href="?lang=ie" class="w3-bar-item w3-button">
-			    		<span class="flag-icon flag-icon-ie"></span>
-			    	</a>
+			</div>
+	
+			<!-- Logbook selection -->
+			<div class="w3-dropdown-hover w3-right">
+			    <button class="w3-button">
+			    	<span th:text="#{lang.logbook}"></span>
+			    	<th:block th:if="${logbook}">: <b><span th:text="${logbook.getName()}"></span></b>
+			    	</th:block> <i class="fa fa-caret-down"></i>
+			    </button>
+			    <div class="w3-dropdown-content w3-card-4 w3-theme-highlight" style="z-index: 1000;">
+			    	<div class="w3-bar-block">
+			    		<a th:each="logbook : ${user.getLogbooks(1)}" th:href="@{|/logbook/${logbook.id}|}" class="w3-bar-item w3-button"><span th:text="${logbook.name}"></span> <span class="w3-badge w3-right w3-theme-info" th:text="${#lists.size(logbook.contacts)}"></span></a>
+			    		<hr />
+			    		<button onclick="document.getElementById('modal-add-logbook').style.display='block'" class="w3-bar-item w3-button"><i class="fas fa-plus"></i> Create New Logbook</button>
+			    	</div>
 			    </div>
-			    <div class="w3-bar">
-		    		<span class="w3-bar-item w3-large" sec:authentication="name" />
-		    	</div>
-		    	<div class="w3-bar-block">
-		    	    <a href="/profile" class="w3-bar-item w3-button"><i class="fas fa-user-circle"></i> <span th:text="#{lang.profile}"></span></a>
-				</div>
-		    	<div class="w3-bar-block">
-		    	    <a href="/logout" class="w3-bar-item w3-button"><i class="fas fa-sign-out-alt"></i> <span th:text="#{lang.logout}"></span></a>
-				</div>
-		    </div>
-		</div>
+			</div>
 
-		<!-- Logbook selection -->
-		<div class="w3-dropdown-hover w3-right">
-		    <button class="w3-button">
-		    	<span th:text="#{lang.logbook}"></span>
-		    	<th:block th:if="${logbook}">: <b><span th:text="${logbook.getName()}"></span></b>
-		    	</th:block> <i class="fa fa-caret-down"></i>
-		    </button>
-		    <div class="w3-dropdown-content w3-card-4 w3-theme-highlight" style="z-index: 1000;">
-		    	<div class="w3-bar-block">
-		    		<a th:each="logbook : ${user.getLogbooks(1)}" th:href="@{|/logbook/${logbook.id}|}" class="w3-bar-item w3-button"><span th:text="${logbook.name}"></span> <span class="w3-badge w3-right w3-theme-info" th:text="${#lists.size(logbook.contacts)}"></span></a>
-		    		<hr />
-		    		<button onclick="document.getElementById('modal-add-logbook').style.display='block'" class="w3-bar-item w3-button"><i class="fas fa-plus"></i> Create New Logbook</button>
-		    	</div>
-		    </div>
+			<form style="margin-bottom: 0px;" action="/log/find" method="get">
+				<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small navbar-button" type="submit">
+					<i class="fas fa-search"></i>
+				</button>
+				<input type="text"
+					class="w3-bar-item w3-input w3-right w3-hide-small"
+					th:placeholder="#{lang.search}" name="q">
+			</form>
+		
 		</div>
-
-		<form style="margin-bottom: 0px;" action="/log/find" method="get">
-			<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small navbar-button" type="submit">
-				<i class="fas fa-search"></i>
-			</button>
-			<input type="text"
-				class="w3-bar-item w3-input w3-right w3-hide-small"
-				th:placeholder="#{lang.search}" name="q">
-		</form>
 	</div>
 	<!-- end navbar -->
 

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import weblog.BandStats;
 import weblog.service.StatsService;
+import weblog.service.UserService;
 
 
 @Controller
@@ -17,6 +18,9 @@ public class RootController {
 	@Autowired
 	private StatsService statsService;
 	
+	@Autowired
+	private UserService userService;
+	
     @GetMapping("")
     public String home(Model model) {
     	
@@ -25,6 +29,8 @@ public class RootController {
     	for ( BandStats bandStats : statsService.getBandStatsList() ) {
     		model.addAttribute("band_" + bandStats.getBand(), bandStats.getCount());
     	}
+    	
+    	model.addAttribute("user", userService.getThisUser());
     	
     	return "home";
     }
