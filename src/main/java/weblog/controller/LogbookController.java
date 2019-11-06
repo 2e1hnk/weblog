@@ -83,7 +83,7 @@ public class LogbookController {
 	public ResponseEntity<List<String>> getUsersLogbooks() {
 		
 		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
-		Collection<Logbook> logbooks = user.getLogbooks();
+		Collection<Logbook> logbooks = user.getLogbooks(Entitlement.VIEW);
 		
 		List<String> logbookList = new ArrayList<String>();
 		
@@ -197,8 +197,10 @@ public class LogbookController {
     public String newLogbook(@RequestParam String logbookName, Model model, HttpServletResponse response) {
     	User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
     	Logbook logbook = logbookService.createLogbook(logbookName, user.getLocator());
-    	logbookService.grantEntitlement(logbook, user, Arrays.asList(Entitlement.VIEW, Entitlement.ADD, Entitlement.UPDATE, Entitlement.DELETE));
-    	return "redirect:/logbook/" + logbook.getId();
+    	logbookService.save(logbook);
+    	Logbook savedLogbook = logbookService.getLogbookById(logbook.getId()).get();
+    	logbookService.grantEntitlement(savedLogbook, user, Entitlement.FULL);
+    	return "redirect:/logbook/" + savedLogbook.getId();
     }
 
 	
@@ -206,7 +208,7 @@ public class LogbookController {
     public String delete(@PathVariable Logbook logbook, Model model, HttpServletResponse response) throws IOException {
         
     	// Check that the currently logged in user has access to the requested logbook
-		if ( !logbookService.getUserEntitlement(logbook, userService.getThisUser(), Entitlement.DELETE) ) {
+		if ( !logbookService.getUserEntitlement(logbook, userService.getThisUser(), Entitlement.FULL) ) {
         	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have DELETE access to the logbook " + logbook.getName());
         }
 		
@@ -219,7 +221,7 @@ public class LogbookController {
     public String move(@PathVariable Logbook fromLogbook, @RequestParam Logbook toLogbook, @RequestParam Boolean deleteAfterMove, Model model, HttpServletResponse response) throws IOException {
     	
     	// Check that the currently logged in user has access to the source logbook
-		if ( !logbookService.getUserEntitlement(fromLogbook, userService.getThisUser(), Entitlement.DELETE) ) {
+		if ( !logbookService.getUserEntitlement(fromLogbook, userService.getThisUser(), Entitlement.FULL) ) {
         	response.sendError(response.SC_FORBIDDEN, "Sorry, you do not have DELETE access to the logbook " + fromLogbook.getName());
         }
 		

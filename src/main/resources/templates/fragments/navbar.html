@@ -136,7 +136,7 @@ input.monospace {
 		    </button>
 		    <div class="w3-dropdown-content w3-card-4 w3-theme-highlight" style="z-index: 1000;">
 		    	<div class="w3-bar-block">
-		    		<a th:each="logbook : ${user.logbooks}" th:href="@{|/logbook/${logbook.id}|}" class="w3-bar-item w3-button"><span th:text="${logbook.name}"></span> <span class="w3-badge w3-right w3-theme-info" th:text="${#lists.size(logbook.contacts)}"></span></a>
+		    		<a th:each="logbook : ${user.getLogbooks(1)}" th:href="@{|/logbook/${logbook.id}|}" class="w3-bar-item w3-button"><span th:text="${logbook.name}"></span> <span class="w3-badge w3-right w3-theme-info" th:text="${#lists.size(logbook.contacts)}"></span></a>
 		    		<hr />
 		    		<button onclick="document.getElementById('modal-add-logbook').style.display='block'" class="w3-bar-item w3-button"><i class="fas fa-plus"></i> Create New Logbook</button>
 		    	</div>

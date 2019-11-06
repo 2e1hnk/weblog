@@ -27,13 +27,6 @@
 					<div sec:authentication="principal.authorities"></div>
 				</div>
 				<div class="w3-container">
-					<h2 th:text="#{lang.logbooks}">Roles</h2>
-					<p>Logbooks that you have VIEW access to</p>
-					<ul class="w3-ul">
-						<li th:each="logbook : ${view_logbooks}" th:text=${logbook.getName()} />
-					</ul>
-				</div>
-				<div class="w3-container">
 					<h2 th:text="#{lang.settings}"></h2>
 					<form action="#" method="post">
 						<label for="locator"><span th:text="#{lang.locator}"></span></label>
@@ -59,11 +52,11 @@
 		    </ul>
 			<h1>Logbooks</h1>
 			<ul class="w3-ul">
-				<li class="w3-bar w3-input" th:each="logbook : ${user.logbooks}">
+				<li class="w3-bar w3-input" th:each="logbook : ${user.getLogbooks(1)}">
 					  <!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
 		  		    <span class="w3-large" th:text="${logbook.name}">[NAME]</span>
 		  		    <th:block th:each="entitlement : ${logbook.entitlement}">
-		  		    	<span class="w3-small" th:text="${entitlement.entitlement}">[ENTITLEMENT]</span>
+		  		    	(<span class="w3-small" th:text="${entitlement.getEntitlementAsText()}">[ENTITLEMENT]</span>)
 		  		    </th:block>
 		  		    <div class="w3-dropdown-hover w3-right">
 					  <button class="w3-button w3-theme-button"><i class="fas fa-ellipsis-v"></i></button>
@@ -79,6 +72,20 @@
 				    <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
 				    <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
   						<button class="box__button w3-theme-button" type="submit">Upload</button>
+  					<button th:onclick="|toggleElement('@{{id}-permissions(id=${logbook.id})}')|" class="w3-button w3-block w3-left-align">Permissions</button>
+  					<div th:id="|@{{id}-permissions(id=${logbook.id})}|" class="w3-container w3-hide">
+  						<table class="w3-table-all">
+  							<thead>
+  								<tr><th>Username</th><th>Access Level</th></tr>
+  							</thead>
+  							<tbody>
+  								<tr th:each="entitlement : ${logbook.entitlement}">
+  									<td th:text="${entitlement.user.getUsername()}" />
+  									<td th:text="${entitlement.getEntitlementAsText()}" />
+  								</tr>
+  							</tbody>
+  						</table>
+  					</div>
 		
 				</li>
 				<li class="w3-input">

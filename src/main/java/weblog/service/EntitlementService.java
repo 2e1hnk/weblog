@@ -42,4 +42,12 @@ public class EntitlementService {
 		}
 		return level;
 	}
+	
+	public void deleteAllEntitlementsForLogbookAndUser(Logbook logbook, User user) {
+		entitlementRepository.deleteByLogbookAndUser(logbook, user);
+	}
+	
+	public void save(Entitlement entitlement) {
+		entitlementRepository.save(entitlement);
+	}
 }

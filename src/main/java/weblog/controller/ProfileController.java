@@ -43,7 +43,6 @@ public class ProfileController {
     	User user = userService.getThisUser();
         model.addAttribute("user", user);
         model.addAttribute("themes", userService.listThemeNames());
-        model.addAttribute("view_logbooks", entitlementService.getLogbooksAtEntitlement(user, Entitlement.VIEW));
         
         return "profile";
     }

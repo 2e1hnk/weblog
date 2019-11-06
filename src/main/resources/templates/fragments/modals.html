@@ -87,7 +87,7 @@
 		    	</div>
 		    	<div class="w3-container">
 					<select name="toLogbook" class="w3-select">
-						<option th:each="logbook : ${user.logbooks}" th:value="${logbook.id}" th:text="${logbook.name}" />
+						<option th:each="logbook : ${user.getLogbooks(2)}" th:value="${logbook.id}" th:text="${logbook.name}" />
 					</select>
 				</div>
 				<div class="w3-container">

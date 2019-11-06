@@ -2,6 +2,7 @@ package weblog.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -57,17 +58,8 @@ public class User {
     /*
      * Logbook-specific fields
      * 
-     * THIS WILL BE REPLACED WITH THE ENTITLEMENTS FIELD BELOW
+     * Logbooks are mapped via an entitlement object - this object also specifies the permissions level
      */
-    @ManyToMany
-    @JoinTable(
-        name = "user_logbooks", 
-        joinColumns = @JoinColumn(
-          name = "user_id", referencedColumnName = "id"), 
-        inverseJoinColumns = @JoinColumn(
-          name = "logbook_id", referencedColumnName = "id"))
-    private Collection<Logbook> logbooks = new ArrayList<Logbook>();
-    
     @OneToMany(mappedBy = "user")
     Set<Entitlement> entitlement;
     
@@ -83,22 +75,23 @@ public class User {
 		this.admin = admin;
 	}
 
-	public Collection<Logbook> getLogbooks() {
+	/*
+	 * @return A list of all logbooks where this user has at least the permission level
+	 * specified in @Param entitlementLevel
+	 */
+	public List<Logbook> getLogbooks(int entitlementLevel) {
+		List<Logbook> logbooks = new ArrayList<Logbook>();
+		for (Entitlement entitlement : this.getEntitlement() ) {
+			if ( entitlement.getEntitlement() >= entitlementLevel ) {
+				logbooks.add(entitlement.getLogbook());
+			}
+		}
 		return logbooks;
 	}
-
-	public void setLogbooks(Collection<Logbook> logbooks) {
-		this.logbooks = logbooks;
-	}
 	
-	public void dissociateFromLogbook(Logbook logbook) {
-		if ( this.logbooks.contains(logbook) ) {
-			this.logbooks.remove(logbook);
-		}
-	}
 	
 	public Logbook getAnyLogbook() {
-		return (Logbook) logbooks.toArray()[0];
+		return this.getLogbooks(Entitlement.VIEW).get(0);
 	}
 	
 	public Long getId() {
@@ -180,6 +173,13 @@ public class User {
 	
 	public void addEntitlement(Entitlement entitlement) {
 		this.entitlement.add(entitlement);
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
+				+ ", admin=" + admin + ", locator=" + locator + ", roles=" + roles + ", theme=" + theme
+				+ ", entitlement=" + entitlement + "]";
 	}
 
 }

@@ -286,3 +286,17 @@ button.navbar-button {
 	max-width: 40px;
 	max-height: 40px;
 }
+
+.floating-div {
+	/* This is a vertically and horizontally-aligned div.
+		Width is 50% for large screens and 100% for small.
+		Height is dynamic.  */
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	min-width: 400px;
+	max-width: 100%;
+	max-height: 100%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}

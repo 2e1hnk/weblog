@@ -34,25 +34,29 @@ public class LogbookService {
 	@Autowired
 	private ContactService contactService;
 	
+	@Autowired EntitlementService entitlementService;
+	
 	public Optional<Logbook> getLogbookById(long id) {
 		return logbookRepository.findById(id);
 	}
 	
-	public void grantEntitlement(Logbook logbook, User user, List<Integer> entitlements) {
-		for ( int entitlementEnum : entitlements ) {
-			Entitlement entitlement = new Entitlement();
-			entitlement.setEntitlement(entitlementEnum);
-			user.addEntitlement(entitlement);
-			logbook.addEntitlement(entitlement);
-			userService.save(user);
-			save(logbook);
-		}
+	@Transactional
+	public void grantEntitlement(Logbook logbook, User user, int entitlementLevel) {
+		Entitlement entitlement = new Entitlement();
+		entitlement.setEntitlement(entitlementLevel);
+		entitlement.setLogbook(logbook);
+		entitlement.setUser(user);
+		user.addEntitlement(entitlement);
+		logbook.addEntitlement(entitlement);
+		userService.save(user);
+		save(logbook);
+		entitlementService.save(entitlement);
 	}
 	
 	public Logbook createLogbook(String logbookName, String locator, User user) {
 		Logbook logbook = this.createLogbook(logbookName, locator);
 		
-		grantEntitlement(logbook, user, Arrays.asList(Entitlement.VIEW, Entitlement.ADD, Entitlement.UPDATE, Entitlement.DELETE) );
+		grantEntitlement(logbook, user, Entitlement.FULL );
 		
 		return logbook;
 	}
@@ -89,12 +93,12 @@ public class LogbookService {
 	}
 	
 	/*
-	 * Delete a logbook AND AND CONTACTS IN IT!
+	 * Delete a logbook AND ALL CONTACTS IN IT!
 	 * You should probably be calling moveContactsAndDelete() instead
 	 */
 	public void delete(Logbook logbook) {
-		for (User user : logbook.getUsers() ) {
-			user.dissociateFromLogbook(logbook);
+		for (Entitlement entitlement : logbook.getEntitlement() ) {
+			entitlementService.deleteAllEntitlementsForLogbookAndUser(entitlement.getLogbook(), entitlement.getUser());
 		}
 		logbookRepository.delete(logbook);
 	}
@@ -104,7 +108,7 @@ public class LogbookService {
 	 */
 	public boolean getUserEntitlement(Logbook logbook, User user, int action) {
 		for ( Entitlement entitlement : logbook.getEntitlement() ) {
-			if ( entitlement.getUser().equals(user) && entitlement.getEntitlement() == action ) {
+			if ( entitlement.getUser().equals(user) && entitlement.getEntitlement() >= action ) {
 				return true;
 			}
 		}

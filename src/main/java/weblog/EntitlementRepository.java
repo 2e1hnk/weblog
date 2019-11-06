@@ -14,4 +14,5 @@ import weblog.model.User;
 public interface EntitlementRepository extends CrudRepository<Entitlement, Long> {
 	Collection<Entitlement> findByUserAndEntitlementLessThanEqual(User user, int entitlement);
 	List<Entitlement> findByUserAndLogbook(User user, Logbook logbook);
+	long deleteByLogbookAndUser(Logbook logbook, User user);
 }

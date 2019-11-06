@@ -73,7 +73,7 @@ public class UserService {
     
     public Collection<Logbook> getThisUserLogbookList() {
     	User user = this.getThisUser();
-    	return user.getLogbooks();
+    	return user.getLogbooks(Entitlement.VIEW);
     }
     
     public Optional<User> getById(long id) {
@@ -143,7 +143,7 @@ public class UserService {
     	updateEntitlement.setEntitlement(Entitlement.UPDATE);
     	
     	Entitlement deleteEntitlement = new Entitlement();
-    	deleteEntitlement.setEntitlement(Entitlement.DELETE);
+    	deleteEntitlement.setEntitlement(Entitlement.FULL);
     	
     	logbook.addEntitlement(viewEntitlement);
     	logbook.addEntitlement(addEntitlement);

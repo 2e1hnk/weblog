@@ -1,5 +1,6 @@
 package weblog.controller;
 
+import org.apache.catalina.connector.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import weblog.IAuthenticationFacade;
 import weblog.RigctlMessage;
+import weblog.model.Entitlement;
 import weblog.model.Logbook;
 import weblog.model.User;
 import weblog.service.LogbookService;
+import weblog.service.UserService;
 
 @RestController
 @RequestMapping(path="/rigctl")
@@ -40,6 +43,9 @@ public class RigctlController {
     
     @Autowired
     private LogbookService logbookService;
+    
+    @Autowired
+    private UserService userService;
 	
 	@GetMapping(path="")
 	public @ResponseBody String dummy() {
@@ -54,12 +60,11 @@ public class RigctlController {
 		
 		Logbook logbook = logbookService.getLogbookById(logbookId).get();
 		
-		// Check user has access to the logbook
-		User user = authenticationFacade.getUser();
-		if ( !user.getLogbooks().contains(logbook) ) {
-			return new ResponseEntity<String>("Unauthorized", HttpStatus.UNAUTHORIZED);
-		}
-		
+		// Check that the currently logged in user has access to the requested logbook
+		if ( !logbookService.getUserEntitlement(logbook, userService.getThisUser(), Entitlement.VIEW) ) {
+			return new ResponseEntity<String>("Sorry, you do not have VIEW access to the logbook " + logbook.getName(), HttpStatus.UNAUTHORIZED);
+        }
+			
 		RigctlMessage message = new RigctlMessage();
 		
 		message.setLogbookId(logbook.getId());
@@ -83,11 +88,10 @@ public class RigctlController {
 		
 		Logbook logbook = logbookService.getLogbookById(logbookId).get();
 		
-		// Check user has access to the logbook
-		User user = authenticationFacade.getUser();
-		if ( !user.getLogbooks().contains(logbook) ) {
-			return new ResponseEntity<String>("Unauthorized", HttpStatus.UNAUTHORIZED);
-		}
+		// Check that the currently logged in user has access to the requested logbook
+		if ( !logbookService.getUserEntitlement(logbook, userService.getThisUser(), Entitlement.VIEW) ) {
+			return new ResponseEntity<String>("Sorry, you do not have VIEW access to the logbook " + logbook.getName(), HttpStatus.UNAUTHORIZED);
+        }
 		
 		RigctlMessage message = new RigctlMessage();
 		

@@ -18,7 +18,7 @@ public class Entitlement {
 	public static final int VIEW = 1;
 	public static final int ADD = 2;
 	public static final int UPDATE = 3;
-	public static final int DELETE = 4;
+	public static final int FULL = 4;		// FULL include permission to delete, permission to alter other user's permissions etc.
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -60,6 +60,28 @@ public class Entitlement {
 
 	public int getEntitlement() {
 		return entitlement;
+	}
+
+	public String getEntitlementAsText() {
+		switch ( this.getEntitlement() ) {
+		case 0:
+			return "No Access";
+			
+		case 1:
+			return "View-only";
+			
+		case 2:
+			return "View/Add";
+			
+		case 3:
+			return "View/Add/Update";
+			
+		case 4:
+			return "Full Access";
+			
+		default:
+			return "Error";
+		}
 	}
 
 	public void setEntitlement(int entitlement) {

@@ -76,11 +76,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
          * This grants all privileges to each user on the logbooks they own
          */
         /*
-        User user = userService.getUser("user");
-        Logbook logbook = logbookService.getLogbookById(2135).get();
-        
-        logbook.setLat(locationService.extractLatitudeFromLocator("IO81xw"));
-        logbook.setLng(locationService.extractLongitudeFromLocator("IO81xw"));
+        User user = userService.getUser("2e1hnk");
+        Logbook logbook = logbookService.getLogbookById(5338).get();
         
         Entitlement entitlement = new Entitlement();
         entitlement.setEntitlement(Entitlement.ADD);

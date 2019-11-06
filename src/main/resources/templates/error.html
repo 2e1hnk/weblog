@@ -9,30 +9,25 @@
 	<link rel="stylesheet" th:href="@{/css/scout.theme.css}">
 </head>
 <body>
-	<div class="w3-row">
-		<div class="w3-col m3 l4">&nbsp;</div>
-		<div class="w3-col s12 m6 l4">
-			<div class="w3-border">
-				<div class="w3-container w3-theme">
-					<h1><img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" class="svg login-logo" /> <span th:text="${status}"></span> <span th:text="${error} ?: 'Error'"></span></h1>
-				</div>
-				
-				<div th:if="${message}" class="w3-container">
-					<p th:text="${message}" />
-				</div>
-				
-				<div th:if="${exception}" class="w3-container">
-					<p th:text="${exception}" />
-				</div>
-				
-				<div th:if="${trace}" class="w3-container">
-					<p th:text="${trace}" />
-				</div>
-				
-				<div class="w3-container w3-theme">
-					
-				</div>
-			</div>
+	<div class="floating-div w3-border">
+		<div class="w3-container w3-theme">
+			<h1><img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" class="svg login-logo" /> <span th:text="${status}"></span> <span th:text="${error} ?: 'Error'"></span></h1>
+		</div>
+		
+		<div th:if="${message}" class="w3-container">
+			<p th:text="${message}" />
+		</div>
+		
+		<div th:if="${exception}" class="w3-container">
+			<p th:text="${exception}" />
+		</div>
+		
+		<div th:if="${trace}" class="w3-container">
+			<p th:text="${trace}" />
+		</div>
+		
+		<div class="w3-container w3-theme">
+			
 		</div>
 	</div>
 </body>
