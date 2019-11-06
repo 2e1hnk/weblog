@@ -11,8 +11,8 @@ import javax.persistence.ManyToOne;
 public class Entitlement {
 	
 	/*
-	 * These are the entitlement levels. These are heirarchical so if a user has UPDATE, it is assumed that
-	 * they also have VIEW and ADD. 
+	 * These are the entitlement levels. These are hierarchical so if a user has UPDATE, it is assumed that
+	 * they also have VIEW and ADD.
 	 */
 	public static final int NONE = 0;
 	public static final int VIEW = 1;
