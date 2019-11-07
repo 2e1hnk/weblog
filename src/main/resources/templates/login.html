@@ -3,66 +3,62 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head th:replace="fragments/header :: header(~{::meta})" />
+
 <body class="w3-theme-background">
-	<div class="w3-row">
-		<div class="w3-col m3 l4">&nbsp;</div>
-		<div class="w3-col s12 m6 l4">
-			<form name="f" th:action="@{/login}" method="POST" class="log-in-form w3-border">
-				<div class="w3-container w3-theme">
-					<h1><img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" class="svg login-logo" /> <span th:text="${@environment.getProperty('INSTANCE_NAME')} ?: 'Login'"></span></h1>
-				</div>
-				
-				<!-- alerts container -->
-				<div class="w3-container" th:if="${param.error}">
-					<div class="w3-cell-row" >
-						<div class="w3-panel w3-pale-red w3-leftbar w3-border-red" th:text="#{message.badCredentials}"></div>
-					</div>
-				</div>
-				<div class="w3-container" th:if="${param.logout}">
-					<div class="w3-cell-row" th:if="${param.logout}">
-						<div class="w3-panel w3-pale-green w3-leftbar w3-border-green" th:text="#{message.logoutSucc}"></div>
-					</div>
-				</div>
-				<div class="w3-container">
-					<div class="w3-cell-row">
-						<div class="w3-container w3-cell" style="padding-top: 20px; padding-bottom: 10px;">
-							<label th:text="#{lang.username}">[username]</label>
-							<input class="w3-input" type='text' name='username' value='' />
-						</div>
-					</div>
-					
-					<div class="w3-cell-row">
-						<div class="w3-container w3-cell" style="padding-top: 10px; padding-bottom: 20px;">
-							<label th:text="#{lang.password}">[password]</label>
-							<input class="w3-input" type='password' name='password' />
-						</div>
-					</div>
-				</div>
-				<div class="w3-container w3-theme">
-					<input type="submit" class="w3-button w3-theme-d3 w3-right" value="Log in" onclick="validate()"></input>
-				</div>
-			</form>
+	<form name="f" th:action="@{/login}" method="POST" class="floating-div w3-theme-border">
+		<div class="w3-container w3-theme-highlight">
+			<h1><img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" class="svg login-logo logo" /> <span th:text="${@environment.getProperty('INSTANCE_NAME')} ?: 'Login'"></span></h1>
 		</div>
-	</div>
-	<script type="text/javascript">
-		function validate() {
-			if (document.f.username.value == ""
-					&& document.f.password.value == "") {
-				alert("Username and password are required");
-				document.f.username.focus();
-				return false;
+		
+		<div class="w3-container">
+			<div class="w3-cell-row" th:if="${param.error}">
+				<div class="w3-panel w3-theme-error" th:text="#{message.badCredentials}"></div>
+			</div>
+			
+			<div class="w3-cell-row" th:if="${param.logout}">
+				<div class="w3-panel w3-theme-success" th:text="#{message.logoutSucc}"></div>
+			</div>
+			
+			<div class="w3-cell-row">
+				<div class="w3-container w3-cell" style="padding-top: 20px; padding-bottom: 10px;">
+					<label th:text="#{lang.username}">[username]</label>
+					<input class="w3-input" type='text' name='username' value='' />
+				</div>
+			</div>
+			
+			<div class="w3-cell-row">
+				<div class="w3-container w3-cell" style="padding-top: 10px; padding-bottom: 20px;">
+					<label th:text="#{lang.password}">[password]</label>
+					<input class="w3-input" type='password' name='password' />
+				</div>
+			</div>
+		</div>
+		<div class="w3-container w3-theme-highlight">
+			<input type="submit" class="w3-button w3-theme-d3 w3-right" value="Log in" onclick="validate()"></input>
+		</div>
+	</form>
+	
+	<th:block th:replace="fragments/scripts :: base_script(~{::script})">
+		<script type="text/javascript">
+			function validate() {
+				if (document.f.username.value == ""
+						&& document.f.password.value == "") {
+					alert("Username and password are required");
+					document.f.username.focus();
+					return false;
+				}
+				if (document.f.username.value == "") {
+					alert("Username is required");
+					document.f.username.focus();
+					return false;
+				}
+				if (document.f.password.value == "") {
+					alert("Password is required");
+					document.f.password.focus();
+					return false;
+				}
 			}
-			if (document.f.username.value == "") {
-				alert("Username is required");
-				document.f.username.focus();
-				return false;
-			}
-			if (document.f.password.value == "") {
-				alert("Password is required");
-				document.f.password.focus();
-				return false;
-			}
-		}
-	</script>
+		</script>
+	</th:block>
 </body>
 </html>

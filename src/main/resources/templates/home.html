@@ -18,77 +18,49 @@
 	<div class="w3-row" style="margin-top: 20px;">
 		<div class="w3-quarter">
 			<div class="w3-container">
-				<header class="w3-container w3-theme-l3">
+				<header class="w3-container w3-theme-highlight">
 				  <h4>Total Contacts Logged</h4>
 				</header>
-				<div class="w3-container w3-theme-l5 w3-center">
+				<div class="w3-container w3-center w3-theme-border">
 				  <h1 th:text="${TotalContacts}"></h1>
 				</div>
-				<footer class="w3-container w3-theme-l3">
+				<footer class="w3-container w3-theme-highlight">
 				  <h5>Since <span th:text="${firstContactTimeAgo}"></span></h5>
 				</footer>
 			</div>
 			<br />
 			<div class="w3-container">
-				<header class="w3-container w3-theme-l3">
+				<header class="w3-container w3-theme-highlight">
 				  <h4>Last Contact was with</h4>
 				</header>
-				<div class="w3-container w3-theme-l5 w3-center">
+				<div class="w3-container w3-center w3-theme-border">
 				  <h1 th:text="${latestContactCallsign}"></h1>
 				  <h3 th:text="${latestContactName}"></h3>
 				</div>
-				<footer class="w3-container w3-theme-l3">
+				<footer class="w3-container w3-theme-highlight">
 				  <h5 th:text="${latestContactTimeAgo}">Footer</h5>
 				</footer>
 			</div>
 			<br />
 			<div class="w3-container">
-				<header class="w3-container w3-theme-l3">
+				<header class="w3-container w3-theme-highlight">
 				  <h4>Check the Log</h4>
 				</header>
-				<div class="w3-container w3-theme-l5">
-				  <input type="text" class="w3-input" placeholder="Your callsign" id="checkLogCallsign" />
+				<div class="w3-container w3-theme-border">
+				  <input type="text" class="w3-input w3-border monospace uppercase" placeholder="Your callsign" id="checkLogCallsign" />
 				</div>
-				<footer class="w3-container w3-theme-l3">
+				<footer class="w3-container w3-theme-highlight">
 				  <button class="w3-button w3-right" onclick="document.getElementById('checkLogModal').style.display='block';checkLog(document.getElementById('checkLogCallsign').value)">Check Log</button>
 				</footer>
 			</div>
 			
-			<!-- Check Log Modal -->
-			<div id="checkLogModal" class="w3-modal" style="z-index: 2000;">
-			  <div class="w3-modal-content">
-			    <header class="w3-container w3-theme">
-			      <span onclick="document.getElementById('checkLogModal').style.display='none'"
-			      class="w3-button w3-display-topright">&times;</span>
-			      <h2>Log Check</h2>
-			    </header>
-			    <div class="w3-container">
-			      <table class="w3-table w3-striped">
-			      	<thead>
-			      		<tr>
-			      			<th>Date/Time</th>
-			      			<th>Callsign</th>
-			      			<th>Band</th>
-			      			<th>Mode</th>
-			      		</tr>
-			      	</thead>
-			      	<tbody id="checkLogResults" >
-			      		
-			      	</tbody>
-			      </table>
-			    </div>
-			    <footer class="w3-container w3-theme">
-			      <p>QSL Cards will be sent via the bureau. Please send cards to us directly to our callsign (no QSL Mgr). Logs will also be uploaded to LoTW and eQSL.</p>
-			    </footer>
-			  </div>
-			</div> <!-- End Check log -->
 		</div>
 		<div class="w3-container w3-half">
 			<div id="map" class="w3-container"></div>
 		</div>
 		<div class="w3-container w3-quarter">
 			<table class="w3-table w3-striped">
-				<thead class="w3-theme-l3">
+				<thead class="w3-theme-highlight">
 					<tr>
 						<th>HF</th>
 						<td>Contacts</td>
@@ -134,7 +106,7 @@
 					<td>10M</td>
 					<td th:text="${band_10M}"></td>
 				</tr>
-				<thead class="w3-theme-l3">
+				<thead class="w3-theme-highlight">
 					<tr>
 						<th colspan="2">VHF/UHF</th>
 					</tr>
@@ -159,69 +131,70 @@
 		</div>
 	</div>
 	<!-- end content pane -->
+	
+	<!-- Modal windows -->
+	<div th:replace="fragments/modals :: modals"></div>
+	<!-- End Modals -->
 
 	<!-- Compiled and minified JavaScript -->
 	<!-- <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script> -->
-	<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-	<script th:src="@{/webjars/foundation/dist/js/foundation.min.js}"></script>
-	<script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
-	<script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
-	<script th:src="@{/webjars/momentjs/min/moment.min.js}"></script>
-	<script th:src="@{/webjars/leaflet/leaflet.js}"></script>
-	<script th:src="@{/webjars/chartjs/Chart.min.js}"></script>
-	<script th:src="@{/js/rigctl-ws.js}"></script>
-	<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
-	<script th:src="@{/js/L.Heatmap.min.js}"></script>
-	<script th:src="@{/js/L.fullscreen.js}"></script>
-	<script th:src="@{/js/L.icons.js}"></script>
-	<script th:src="@{/js/leaflet.markercluster.js}"></script>
-	<script th:src="@{/js/app.js}"></script>
-	<script th:inline="javascript">
-	var BANDS = ['2M', '70CM'];
-	//var color = Chart.helpers.color;
-	var horizontalBarChartData = {
-		labels: BANDS,
-		datasets: [{
-			label: 'Band Stats',
-			backgroundColor: '#00f',
-			borderColor: '#f00',
-			borderWidth: 1,
-			data: [
-				/*[[${band_2M}]]*/ 0,
-				/*[[${band_70CM}]]*/ 0
-			]
-		}]
-	};
-	
-	window.onload = function() {
-		var ctx = document.getElementById('bandStatsChart').getContext('2d');
-		window.myHorizontalBar = new Chart(ctx, {
-			type: 'horizontalBar',
-			data: horizontalBarChartData,
-			options: {
-				// Elements options apply to all of the options unless overridden in a dataset
-				// In this case, we are setting the border of each horizontal bar to be 2px wide
-				elements: {
-					rectangle: {
-						borderWidth: 2,
+	<th:block th:replace="fragments/scripts :: base_script(~{::script})">
+
+		<script th:src="@{/webjars/leaflet/leaflet.js}"></script>
+		<script th:src="@{/webjars/chartjs/Chart.min.js}"></script>
+		<script th:src="@{/js/rigctl-ws.js}"></script>
+		<script th:src="@{/js/L.MaidenheadColoured.js}"></script>
+		<script th:src="@{/js/L.Heatmap.min.js}"></script>
+		<script th:src="@{/js/L.fullscreen.js}"></script>
+		<script th:src="@{/js/L.icons.js}"></script>
+		<script th:src="@{/js/leaflet.markercluster.js}"></script>
+		<script th:inline="javascript">
+		var BANDS = ['2M', '70CM'];
+		//var color = Chart.helpers.color;
+		var horizontalBarChartData = {
+			labels: BANDS,
+			datasets: [{
+				label: 'Band Stats',
+				backgroundColor: '#00f',
+				borderColor: '#f00',
+				borderWidth: 1,
+				data: [
+					/*[[${band_2M}]]*/ 0,
+					/*[[${band_70CM}]]*/ 0
+				]
+			}]
+		};
+		
+		window.onload = function() {
+			var ctx = document.getElementById('bandStatsChart').getContext('2d');
+			window.myHorizontalBar = new Chart(ctx, {
+				type: 'horizontalBar',
+				data: horizontalBarChartData,
+				options: {
+					// Elements options apply to all of the options unless overridden in a dataset
+					// In this case, we are setting the border of each horizontal bar to be 2px wide
+					elements: {
+						rectangle: {
+							borderWidth: 2,
+						}
+					},
+					responsive: true,
+					legend: {
+						position: 'right',
+					},
+					title: {
+						display: true,
+						text: 'Chart.js Horizontal Bar Chart'
 					}
-				},
-				responsive: true,
-				legend: {
-					position: 'right',
-				},
-				title: {
-					display: true,
-					text: 'Chart.js Horizontal Bar Chart'
 				}
-			}
-		});
-	};
-	
-	// Run postloading functions
-	mapPostLoad();
-	
-	</script>
+			});
+		};
+		
+		// Run postloading functions
+		mapPostLoad();
+		
+		</script>
+	</th:block>
 </body>
 
 </html>

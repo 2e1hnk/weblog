@@ -80,6 +80,18 @@ public class Logbook {
 		this.entitlement.add(entitlement);
 	}
 	
+	/*
+	 * Returns true if the user has at least the level specified, otherwise return false
+	 */
+	public boolean checkEntitlement(User user, int entitlementLevel) {
+		for ( Entitlement entitlement : this.getEntitlement() ) {
+			if ( entitlement.getUser().equals(user) && entitlement.getEntitlement() >= entitlementLevel ) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public Collection<Contact> getContacts() {
 		return contacts;
 	}

@@ -8,7 +8,7 @@
 	<link rel="stylesheet" th:href="@{/css/app.css}">
 	<link rel="stylesheet" th:href="@{/css/scout.theme.css}">
 </head>
-<body>
+<body class="w3-theme-background">
 	<div class="floating-div w3-border">
 		<div class="w3-container w3-theme">
 			<h1><img th:src="${@environment.getProperty('INSTANCE_LOGO_SRC')}" class="svg login-logo" /> <span th:text="${status}"></span> <span th:text="${error} ?: 'Error'"></span></h1>

@@ -22,7 +22,7 @@ public class PublicSearchController {
 	
     // Get list of contacts by callsign (used for ajax requests from log page)
 	@GetMapping(path="/{callsign}")
-	public @ResponseBody Collection<Contact> getContactsByCallsign(@PathVariable String callsign) {
+	public @ResponseBody Collection<Contact> getContactsByCallsignPublic(@PathVariable String callsign) {
 		return contactService.getByCallsign(callsign);
 	}
 }

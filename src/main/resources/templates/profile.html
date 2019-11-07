@@ -52,6 +52,34 @@
 		    </ul>
 			<h1>Logbooks</h1>
 			<ul class="w3-ul">
+				<li class="w3-bar w3-input">
+					<!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
+				  	<form class="file-upload-box box" action="/adif/multi" method="POST" enctype="multipart/form-data">
+				  		<span class="w3-large" th:text="#{lang.newLogbook}"></span><br>
+				  		<div class="w3-cell-row">
+				  			<div class="w3-cell w3-mobile w3-center" style="min-width: 50%; vertical-align: middle;">
+						  		<div class="box__input">
+								    <span th:text="#{lang.dragDropAdifHere}"></span>, <span th:text="#{lang.or}"></span>
+								</div>
+								<div class="box__uploading">
+									<div class="w3-light-grey">
+									  <div id="upload-progress-bar" class="w3-blue" style="width:0%"></div>
+									</div>
+								</div>
+								<div class="box__success" th:text="#{lang.done}"></div>
+								<div class="box__error" th:text="#{lang.error}"><span></span>.</div>	
+								<label for="file-create-new" class="w3-theme-button custom-file-upload" th:text="#{lang.chooseAnAdifFileToUpload}"></label><br />
+								
+					  			<input class="w3-input box__file" type="file" name="file" id="file-create-new" style="position: absolute; left: -99999rem" /><span class="box__dragndrop"></span>
+			    				<button class="w3-button w3-theme-button box__button" type="submit" th:text="#{lang.upload}"></button>
+				  			</div>
+				  			<div class="w3-cell w3-mobile w3-center" style="min-width: 50%; vertical-align: middle; border-left: 1px #ccc solid">
+				  				<button onclick="document.getElementById('modal-add-logbook').style.display='block'" class="w3-bar-item w3-button"><i class="fas fa-plus-circle w3-jumbo"></i><br />Create Empty Logbook</button>
+				  			</div>
+				  		</div>
+				  		
+					</form>
+				</li>				
 				<li class="w3-bar w3-input" th:each="logbook : ${user.getLogbooks(1)}">
 					  <!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
 		  		    <span class="w3-large" th:text="${logbook.name}">[NAME]</span>
@@ -68,15 +96,15 @@
 					  </div>
 					</div>
 		  		    <br>
-				    <span th:text="${logbook.size()}" /> Contacts logged<br />
+				    <span th:text="${logbook.size()}" /> <span th:text="#{lang.contactsLogged}">contacts logged</span><br />
 				    <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
-				    <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
-  						<button class="box__button w3-theme-button" type="submit">Upload</button>
-  					<button th:onclick="|toggleElement('@{{id}-permissions(id=${logbook.id})}')|" class="w3-button w3-block w3-left-align">Permissions</button>
+				    <label for="file"><strong th:text="#{lang.chooseAFile}">Choose a file</strong><span class="box__dragndrop" th:text="#{lang.orDragItHere}"> or drag it here</span>.</label>
+  						<button class="box__button w3-theme-button" type="submit" th:text="#{lang.upload}">Upload</button>
+  					<button th:onclick="|toggleElement('@{{id}-permissions(id=${logbook.id})}')|" class="w3-button w3-block w3-left-align"><i class="fas fa-chevron-down"></i> <span th:text="#{lang.permissions}">Permissions</span></button>
   					<div th:id="|@{{id}-permissions(id=${logbook.id})}|" class="w3-container w3-hide">
   						<table class="w3-table-all">
   							<thead>
-  								<tr><th>Username</th><th>Access Level</th></tr>
+  								<tr><th th:text="#{lang.username}">Username</th><th th:text="#{lang.permissions}">Access Level</th></tr>
   							</thead>
   							<tbody>
   								<tr th:each="entitlement : ${logbook.entitlement}">
@@ -86,28 +114,8 @@
   							</tbody>
   						</table>
   					</div>
-		
 				</li>
-				<li class="w3-input">
-					<!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
-				  	<form class="w3-bar-item file-upload-box box" action="/adif/multi" method="POST" enctype="multipart/form-data">
-				  		<div class="box__input">
-						    <span class="w3-large">New Logbook</span><br>
-						    <input class="w3-input box__file" type="file" name="file" />
-						    <label for="file"><strong>Choose an ADIF file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
-    						<button class="w3-button w3-theme-button box__button" type="submit">Upload</button>
-						</div>
-						<div class="box__uploading">
-							<div class="w3-light-grey">
-							  <div id="upload-progress-bar" class="w3-blue" style="width:0%"></div>
-							</div>
-						</div>
-						<div class="box__success">Done!</div>
-						<div class="box__error">Error! <span></span>.</div>
-					</form>
-				</li>				
 			</ul>
-			</p>
 		</div>
 	</div>
 	

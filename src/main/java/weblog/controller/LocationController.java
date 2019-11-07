@@ -27,6 +27,9 @@ public class LocationController {
 		return locationRepository.findAll();
 	}
     
+    /*
+     * TODO: add security here
+     */
     @GetMapping(path="/from/{id}")
 	public @ResponseBody Iterable<Location> getLocationFrom(@PathVariable Long id) {
 		return locationRepository.findByIdGreaterThan(id);

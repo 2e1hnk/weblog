@@ -7,13 +7,6 @@ li.settings {
 	padding-right: 30px;
 }
 
-.log-in-form {
-  border: 1px solid #cacaca;
-  padding: 1rem;
-  border-radius: 0;
-  margin-top: 3em;
-}
-
 .page-item.active {
 	font-weight: bold;
 }
@@ -176,9 +169,12 @@ button.navbar-button {
   display: none;
 }
 
+.box__file {
+	width: 200px;
+}
+
 .box.has-advanced-upload {
   padding: 10px;
-  background-color: white;
   outline: 5px dashed #ccc;
   outline-offset: 0px;
 }
@@ -196,6 +192,12 @@ button.navbar-button {
 
 .box.is-uploading .box__uploading {
   display: block;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
 }
 
 .w3-modal-content footer {

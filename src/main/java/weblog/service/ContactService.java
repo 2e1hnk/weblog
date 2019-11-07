@@ -47,9 +47,19 @@ public class ContactService {
     	return contactRepository.findById(id);
     }
     
+    /*
+     * Private search
+     */
     public Collection<Contact> getByCallsign(String callsign) {
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     	return contactRepository.findByLogbookInAndCallsignIn(authentication.getName(), callsign);
+    }
+    
+    /*
+     * Public search
+     */
+    public Collection<Contact> getByCallsignPublic(String callsign) {
+    	return contactRepository.findByCallsignIn(callsign);
     }
     
     public void save(Contact contact) {

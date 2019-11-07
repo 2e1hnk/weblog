@@ -241,7 +241,7 @@
 									<th><span th:text="#{lang.location}"></span></th>
 									<th><span th:text="#{lang.name}"></span></th>
 									<th><span th:text="#{lang.logbook}"></span></th>
-									<th colspan="2"><span th:text="#{lang.actions}"></span></th>
+									<th><span th:text="#{lang.actions}"></span></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -255,10 +255,10 @@
 									<td><span th:text="${contact.location}"></span> (<span th:text="${contact.bearing}"></span>&deg;)</td>
 									<td th:text="${contact.name}"></td>
 									<td th:text="${contact.logbook.name}"></td>
-									<td><a th:href="@{/contact/edit/{id}(id=${contact.id})}"><i
-											class="fas fa-edit w3-text-theme"></i></a></td>
-									<td><a th:href="@{/log/delete/{id}(id=${contact.id})}"><i
-											class="fas fa-trash w3-text-theme"></i></a></td>
+									<td>
+										<a th:if="${logbook.checkEntitlement(user, 3)}" th:href="@{/contact/edit/{id}(id=${contact.id})}"><i class="fas fa-edit w3-text-theme"></i></a>
+										<a th:if="${logbook.checkEntitlement(user, 4)}" th:href="@{/log/delete/{id}(id=${contact.id})}"><i class="fas fa-trash w3-text-theme"></i></a>
+									</td>
 								</tr>
 							</tbody>
 						</table>
