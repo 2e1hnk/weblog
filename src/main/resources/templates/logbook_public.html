@@ -22,10 +22,10 @@
 				  <h4>Total Contacts Logged</h4>
 				</header>
 				<div class="w3-container w3-center w3-theme-border">
-				  <h1 th:text="${TotalContacts}"></h1>
+				  <h1 th:text="${logbook.getContacts().size()}"></h1>
 				</div>
 				<footer class="w3-container w3-theme-highlight">
-				  <h5>Since <span th:text="${firstContactTimeAgo}"></span></h5>
+				  <h5>Since <span></span></h5>
 				</footer>
 			</div>
 			<br />
@@ -34,11 +34,10 @@
 				  <h4>Last Contact was with</h4>
 				</header>
 				<div class="w3-container w3-center w3-theme-border">
-				  <h1 th:text="${latestContactCallsign}"></h1>
-				  <h3 th:text="${latestContactName}"></h3>
+
 				</div>
 				<footer class="w3-container w3-theme-highlight">
-				  <h5 th:text="${latestContactTimeAgo}">Footer</h5>
+				  
 				</footer>
 			</div>
 			<br />
@@ -59,75 +58,7 @@
 			<div id="map" class="w3-container"></div>
 		</div>
 		<div class="w3-container w3-quarter">
-			<table class="w3-table">
-				<thead class="w3-theme-highlight">
-					<tr>
-						<th>HF</th>
-						<td>Contacts</td>
-					</tr>
-				</thead>
-				<tr th:if="${band_160M > 0}">
-					<td>160M</td>
-					<td th:text="${band_160M}"></td>
-				</tr>
-				<tr th:if="${band_80M > 0}">
-					<td>80M</td>
-					<td th:text="${band_80M}"></td>
-				</tr>
-				<tr th:if="${band_60M > 0}">
-					<td>60M</td>
-					<td th:text="${band_60M}"></td>
-				</tr>
-				<tr th:if="${band_40M > 0}">
-					<td>40M</td>
-					<td th:text="${band_40M}"></td>
-				</tr>
-				<tr th:if="${band_30M > 0}">
-					<td>30M</td>
-					<td th:text="${band_30M}"></td>
-				</tr>
-				<tr th:if="${band_20M > 0}">
-					<td>20M</td>
-					<td th:text="${band_20M}"></td>
-				</tr>
-				<tr th:if="${band_17M > 0}">
-					<td>17M</td>
-					<td th:text="${band_17M}"></td>
-				</tr>
-				<tr th:if="${band_15M > 0}">
-					<td>15M</td>
-					<td th:text="${band_15M}"></td>
-				</tr>
-				<tr th:if="${band_12M > 0}">
-					<td>12M</td>
-					<td th:text="${band_12M}"></td>
-				</tr>
-				<tr th:if="${band_10M > 0}">
-					<td>10M</td>
-					<td th:text="${band_10M}"></td>
-				</tr>
-				<thead class="w3-theme-highlight">
-					<tr>
-						<th colspan="2">VHF/UHF</th>
-					</tr>
-				</thead>
-				<tr th:if="${band_6M > 0}">
-					<td>6M</td>
-					<td th:text="${band_6M}"></td>
-				</tr>
-				<tr th:if="${band_4M > 0}">
-					<td>4M</td>
-					<td th:text="${band_4M}"></td>
-				</tr>
-				<tr th:if="${band_2M > 0}">
-					<td>2M</td>
-					<td th:text="${band_2M}"></td>
-				</tr>
-				<tr th:if="${band_70CM > 0}">
-					<td>70CM</td>
-					<td th:text="${band_70CM}"></td>
-				</tr>
-			</table>
+
 		</div>
 	</div>
 	<!-- end content pane -->

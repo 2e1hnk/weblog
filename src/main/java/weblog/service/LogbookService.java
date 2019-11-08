@@ -114,4 +114,20 @@ public class LogbookService {
 		}
 		return false;
 	}
+	
+	/*
+	 * Get a user's logbook by its name. Note that logbook names are not necessarily unique but should probably
+	 * be unique per-user (although this is not enforced). If there are multiple logbooks with the same name
+	 * registered to the same user then this will just return the first one it comes to.
+	 */
+	public Logbook getUserLogbookByName(String username, String logbook_name) {
+		User user = userService.getUser(username);
+		logger.info("Username: " + username);
+		for ( Entitlement entitlement : user.getEntitlement() ) {
+			if ( entitlement.getEntitlement() >= Entitlement.VIEW && entitlement.getLogbook().getName().equals(logbook_name) ) {
+				return entitlement.getLogbook();
+			}
+		}
+		return null;
+	}
 }

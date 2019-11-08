@@ -7,5 +7,5 @@ import weblog.model.Logbook;
 
 @Repository
 public interface LogbookRepository extends JpaRepository<Logbook, Long> {
-	
+
 }
