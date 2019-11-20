@@ -65,7 +65,7 @@ public class RootController {
     	User user = userService.getUser(username);
     	model.addAttribute("user", user);
     	model.addAttribute("posts", user.getBlogPosts());	// This isn't strictly necessary but useful to make the template compatible with filtered lists
-    	return "blog";
+    	return "blogthemes/fashion/blog";
     }
     
     @GetMapping("/public/{username}/blog/tag/{tag}")
@@ -81,7 +81,7 @@ public class RootController {
     	}
     	model.addAttribute("posts", taggedBlogPosts);
     	
-    	return "blog";
+    	return "blogthemes/fashion/blog";
     }
 
     @GetMapping("/public/{username}/blog/{blogPost}")
@@ -91,7 +91,7 @@ public class RootController {
     		model.addAttribute("user", user);
     		model.addAttribute("blog", blogPost);
     	}
-    	return "blogpost";
+    	return "blogthemes/basic/blogpost";
     }
     
     @GetMapping("/public/{username}/**")

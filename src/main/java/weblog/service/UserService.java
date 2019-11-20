@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -226,5 +227,33 @@ public class UserService {
 
     	return fileList;
     }
+
+    public List<String> listFolders(String dir) throws URISyntaxException, IOException {
+    	
+    	List<String> folderList = new ArrayList<String>();
+    	
+    	ClassLoader cl = this.getClass().getClassLoader(); 
+    	ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(cl);
+    	Resource[] resources = resolver.getResources("classpath*:/" + dir + "/") ;
+    	
+    	for (Resource resource: resources){
+    	    folderList.add(resource.getFilename());
+    	}
+    	
+    	logger.debug("Listing discovered themes...");
+    	logger.debug(Arrays.toString(folderList.toArray()));
+
+    	return folderList;
+    }
+
+	public List<String> listBlogThemeNames() {
+		List<String> names = new ArrayList<String>();
+    	try {
+			names = this.listFolders("templates/blogthemes");
+		} catch (URISyntaxException | IOException e) {
+			e.printStackTrace();
+		}
+    	return names;
+	}
     
 }

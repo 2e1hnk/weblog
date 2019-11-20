@@ -36,6 +36,12 @@
 						<select class="w3-select w3-border w3-input" id="theme" name="theme">
 							<option th:each="theme : ${themes}" th:value="${theme}" th:text="${theme}" th:selected="${theme==user.theme}"></option>
 						</select>
+						
+						<label for="blog_theme"><span th:text="#{lang.blog_theme}"></span></label>
+						<select class="w3-select w3-border w3-input" id="blog_theme" name="blog_theme">
+							<option th:each="blog_theme : ${blog_themes}" th:value="${blog_theme}" th:text="${blog_theme}" th:selected="${blog_theme==user.getBlogTheme()}"></option>
+						</select>
+						
 						<input type="submit" class="w3-button w3-theme-highlight w3-block w3-theme-button"
 							th:value="#{lang.save}">
 					</form>

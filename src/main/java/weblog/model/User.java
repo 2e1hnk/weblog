@@ -33,11 +33,15 @@ public class User {
  
     private String password;
     
+    private String name;
+    
     private Boolean enabled = true;
     
     private boolean admin = false;
     
     private String locator = "XX00xx";
+    
+    private String about = "";
     
     /*
      * User permissions fields
@@ -64,8 +68,14 @@ public class User {
     @OneToMany(mappedBy = "user")
     Set<Entitlement> entitlement;
     
+    
+    /*
+     * Blog/site stuff
+     */
     @OneToMany(mappedBy = "user")
     Set<BlogPost> blogPosts;
+    
+    private String blogTheme = "basic";
     
     public User() {
     	
@@ -122,6 +132,14 @@ public class User {
 		this.password = password;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public Boolean getEnabled() {
 		return enabled;
 	}
@@ -136,6 +154,14 @@ public class User {
 
 	public void setLocator(String locator) {
 		this.locator = locator;
+	}
+
+	public String getAbout() {
+		return about;
+	}
+
+	public void setAbout(String about) {
+		this.about = about;
 	}
 
 	public Collection<Role> getRoles() {
@@ -193,6 +219,14 @@ public class User {
 			tags.addAll(blog.getTags());
 		}
 		return tags;
+	}
+
+	public String getBlogTheme() {
+		return blogTheme;
+	}
+
+	public void setBlogTheme(String blogTheme) {
+		this.blogTheme = blogTheme;
 	}
 
 	@Override

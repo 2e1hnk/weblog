@@ -2,6 +2,7 @@ package weblog.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -39,24 +40,25 @@ public class ProfileController {
 	
     @GetMapping("")
     public String home(Model model, Principal principal, @ModelAttribute("activelogbook") Logbook activeLogbook) {
-    	
     	User user = userService.getThisUser();
         model.addAttribute("user", user);
         model.addAttribute("themes", userService.listThemeNames());
-        
+        model.addAttribute("blog_themes", userService.listBlogThemeNames()); //TODO: This doesn't seem to be working
         return "profile";
     }
     
     @PostMapping("")
     public String update(@Valid User user, Principal principal, BindingResult result, Model model, HttpServletResponse response, RedirectAttributes attributes, @ModelAttribute("activelogbook") Logbook activeLogbook) {
     	
+    	/*
     	logger.info(user.toString());
     	
     	User myUser = userService.getThisUser();
     	myUser.setTheme(user.getTheme());
     	
     	userService.save(myUser);
-    	
+    	*/
+    	userService.save(user);
     	return home(model, principal, activeLogbook);
     }
     
