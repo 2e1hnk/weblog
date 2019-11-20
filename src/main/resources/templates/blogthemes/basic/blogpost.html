@@ -20,7 +20,7 @@ and is wrapped around the whole page content, except for the footer in this exam
 <!-- Header -->
 <header class="w3-container w3-center w3-padding-32"> 
   <h1><b th:text="${user.getUsername().toUpperCase()}" /></h1>
-  <p>Welcome to the blog of <span class="w3-tag">unknown</span></p>
+  <p>Welcome to the blog of <span class="w3-tag" th:text="${user.getName()}" /></p>
 </header>
 
 <!-- Grid -->
@@ -30,7 +30,7 @@ and is wrapped around the whole page content, except for the footer in this exam
 <div class="w3-col l8 s12">
   <!-- Blog entry -->
   <div class="w3-card-4 w3-margin w3-white">
-    <img th:src="${blog.getHeaderImageUrl()} ?: 'https://www.w3schools.com/w3images/woods.jpg'" alt="Header Image" style="width:100%">
+    <img th:if="${blog.getHeaderImageUrl()}" th:src="${blog.getHeaderImageUrl()}" alt="Header Image" style="width:100%">
     <div class="w3-container">
       <h3><b th:text="${blog.getTitle().toUpperCase()}" /></h3>
       <h5><span class="w3-opacity" th:text="${blog.getTimestamp()}" /></h5>
@@ -62,8 +62,8 @@ and is wrapped around the whole page content, except for the footer in this exam
   <div class="w3-card w3-margin w3-margin-top">
   <img src="/w3images/avatar_g.jpg" style="width:100%">
     <div class="w3-container w3-white">
-      <h4><b>My Name</b></h4>
-      <p>Just me, myself and I, exploring the universe of uknownment. I have a heart of love and a interest of lorem ipsum and mauris neque quam blog. I want to share my world with you.</p>
+      <h4><b th:text="${user.getName()}" /></h4>
+      <p th:text="${user.getAbout()}" />
     </div>
   </div><hr>
   

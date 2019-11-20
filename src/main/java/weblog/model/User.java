@@ -77,6 +77,8 @@ public class User {
     
     private String blogTheme = "basic";
     
+    private String blogFeatureImage = "";
+    
     public User() {
     	
     }
@@ -227,6 +229,14 @@ public class User {
 
 	public void setBlogTheme(String blogTheme) {
 		this.blogTheme = blogTheme;
+	}
+
+	public String getBlogFeatureImage() {
+		return blogFeatureImage;
+	}
+
+	public void setBlogFeatureImage(String blogFeatureImage) {
+		this.blogFeatureImage = blogFeatureImage;
 	}
 
 	@Override

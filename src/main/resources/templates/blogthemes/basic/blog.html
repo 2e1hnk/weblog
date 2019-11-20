@@ -28,50 +28,32 @@ and is wrapped around the whole page content, except for the footer in this exam
 
 <!-- Blog entries -->
 <div class="w3-col l8 s12">
-  <!-- Blog entry -->
-  <div class="w3-card-4 w3-margin w3-white">
-    <img th:src="${posts[0].getHeaderImageUrl()} ?: 'https://www.w3schools.com/w3images/woods.jpg'" alt="Nature" style="width:100%">
-    <div class="w3-container">
-      <h3><b th:text="${posts[0].getTitle().toUpperCase()}" /></h3>
-      <h5><span class="w3-opacity" th:text="${posts[0].getTimestamp()}" /></h5>
-      <span th:each="tag : ${posts[0].getTags()}" th:text="${tag.getTag()}" class="w3-tag w3-light-grey w3-small w3-margin-right w3-margin-bottom">[TAG]</span>
-    </div>
 
-    <div class="w3-container">
-      <p th:utext="${posts[0].getPostContentsRendered()}" />
-      <div class="w3-row">
-        <div class="w3-col m8 s12">
-          <p><a th:href="'blog/' + ${posts[0].getId()}" class="w3-button w3-padding-large w3-white w3-border"><b>READ MORE &raquo;</b></a></p>
-        </div>
-        <div th:if="${posts[0].isCommentsEnabled()}" class="w3-col m4 w3-hide-small">
-          <p><span class="w3-padding-large w3-right"><b>Comments &nbsp;</b> <span class="w3-tag" th:text="${posts[0].getComments().size()}" /></span></p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <hr>
+	<th:block th:each="post,postStat : ${posts}" th:if="${postStat.index} < 5">
+	  <!-- Blog entry -->
+	  <div class="w3-card-4 w3-margin w3-white">
+	    <img th:if="${post.getHeaderImageUrl()}" th:src="${post.getHeaderImageUrl()}" alt="Nature" style="width:100%">
+	    <div class="w3-container">
+	      <h3><b th:text="${post.getTitle().toUpperCase()}" /></h3>
+	      <h5><span class="w3-opacity" th:text="${post.getTimestamp()}" /></h5>
+	      <span th:each="tag : ${post.getTags()}" th:text="${tag.getTag()}" class="w3-tag w3-light-grey w3-small w3-margin-right w3-margin-bottom">[TAG]</span>
+	    </div>
+	
+	    <div class="w3-container">
+	      <p th:utext="${post.getPostContentsRendered()}" />
+	      <div class="w3-row">
+	        <div class="w3-col m8 s12">
+	          <p><a th:href="'blog/' + ${post.getId()}" class="w3-button w3-padding-large w3-white w3-border"><b>READ MORE &raquo;</b></a></p>
+	        </div>
+	        <div th:if="${post.isCommentsEnabled()}" class="w3-col m4 w3-hide-small">
+	          <p><span class="w3-padding-large w3-right"><b>Comments &nbsp;</b> <span class="w3-tag" th:text="${post.getComments().size()}" /></span></p>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	  <hr>
+	</th:block>
 
-  <!-- Blog entry -->
-  <div th:if="${posts.size() > 1}" class="w3-card-4 w3-margin w3-white">
-    <img th:src="${posts[1].getHeaderImageUrl()} ?: 'https://www.w3schools.com/w3images/bridge.jpg'" alt="Nature" style="width:100%">
-    <div class="w3-container">
-      <h3><b th:text="${posts[1].getTitle().toUpperCase()}" /></h3>
-      <h5><span class="w3-opacity" th:text="${posts[0].getTimestamp()}" /></h5>
-      <span th:each="tag : ${posts[1].getTags()}" th:text="${tag.getTag()}" class="w3-tag w3-light-grey w3-small w3-margin-right w3-margin-bottom">[TAG]</span>
-    </div>
-
-    <div class="w3-container">
-      <p th:utext="${posts[1].getPostContentsRendered()}" />
-      <div class="w3-row">
-        <div class="w3-col m8 s12">
-          <p><a th:href="'blog/' + ${posts[1].getId()}" class="w3-button w3-padding-large w3-white w3-border"><b>READ MORE &raquo;</b></a></p>
-        </div>
-        <div th:if="${posts[1].isCommentsEnabled()}" class="w3-col m4 w3-hide-small">
-          <p><span class="w3-padding-large w3-right"><b>Comments &nbsp;</b> <span class="w3-tag" th:text="${posts[1].getComments().size()}" /></span></p>
-        </div>
-      </div>
-    </div>
-  </div>
 <!-- END BLOG ENTRIES -->
 </div>
 
@@ -94,7 +76,7 @@ and is wrapped around the whole page content, except for the footer in this exam
     <ul class="w3-ul w3-hoverable w3-white">
       <li th:each="blog : ${user.getBlogPosts()}" class="w3-padding-16">
       	<a th:href="'blog/' + ${blog.getId()}">
-	        <img th:src="${blog.getHeaderImageUrl()} ?: 'https://www.w3schools.com/w3images/woods.jpg'" alt="Image" class="w3-left w3-margin-right" style="width:50px">
+	        <img th:if="${blog.getHeaderImageUrl()}" th:src="${blog.getHeaderImageUrl()}" alt="Image" class="w3-left w3-margin-right" style="width:50px">
 	        <span class="w3-large" th:text="${blog.getTitle()}" /><br>
 	        <span th:each="tag : ${blog.getTags()}" th:text="${tag.getTag()}" class="w3-tag w3-light-grey w3-small w3-margin-right w3-margin-bottom">[TAG]</span>
 	    </a>

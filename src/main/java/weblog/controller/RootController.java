@@ -1,5 +1,7 @@
 package weblog.controller;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,8 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +27,10 @@ import weblog.model.BlogPost;
 import weblog.model.Logbook;
 import weblog.model.Tag;
 import weblog.model.User;
+import weblog.service.FileSystemStorageService;
 import weblog.service.LogbookService;
 import weblog.service.StatsService;
+import weblog.service.StorageService;
 import weblog.service.UserService;
 
 
@@ -40,6 +48,9 @@ public class RootController {
 	
 	@Autowired
 	private LogbookService logbookService;
+	
+	@Autowired
+	private FileSystemStorageService storageService;
 	
     @GetMapping("")
     public String home(Model model) {
@@ -65,7 +76,7 @@ public class RootController {
     	User user = userService.getUser(username);
     	model.addAttribute("user", user);
     	model.addAttribute("posts", user.getBlogPosts());	// This isn't strictly necessary but useful to make the template compatible with filtered lists
-    	return "blogthemes/fashion/blog";
+    	return "blogthemes/" + user.getBlogTheme() + "/blog";
     }
     
     @GetMapping("/public/{username}/blog/tag/{tag}")
@@ -81,7 +92,17 @@ public class RootController {
     	}
     	model.addAttribute("posts", taggedBlogPosts);
     	
-    	return "blogthemes/fashion/blog";
+    	return "blogthemes/" + user.getBlogTheme() + "/blog";
+    }
+
+    @GetMapping("/public/{username}/gallery/{filename}")
+    public ResponseEntity<Resource> userPublicGalleryImage(@PathVariable String username, @PathVariable String filename, Model model, HttpServletRequest request) {
+    	User user = userService.getUser(username);
+    	model.addAttribute("user", user);
+    	
+    	Resource imgFile = storageService.loadAsResource(null, user.getUsername() + "/gallery/" + filename);
+    	
+    	return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imgFile);
     }
 
     @GetMapping("/public/{username}/blog/{blogPost}")
@@ -91,7 +112,7 @@ public class RootController {
     		model.addAttribute("user", user);
     		model.addAttribute("blog", blogPost);
     	}
-    	return "blogthemes/basic/blogpost";
+    	return "blogthemes/" + user.getBlogTheme() + "/blogpost";
     }
     
     @GetMapping("/public/{username}/**")

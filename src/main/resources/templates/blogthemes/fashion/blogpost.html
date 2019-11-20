@@ -30,7 +30,7 @@ and is wrapped around the whole page content, except for the footer in this exam
 <div class="w3-col l8 s12">
   <!-- Blog entry -->
   <div class="w3-card-4 w3-margin w3-white">
-    <img th:src="${blog.getHeaderImageUrl()} ?: 'https://www.w3schools.com/w3images/woods.jpg'" alt="Header Image" style="width:100%">
+    <img th:if="${blog.getHeaderImageUrl()}" th:src="${blog.getHeaderImageUrl()}" alt="Header Image" style="width:100%">
     <div class="w3-container">
       <h3><b th:text="${blog.getTitle().toUpperCase()}" /></h3>
       <h5><span class="w3-opacity" th:text="${blog.getTimestamp()}" /></h5>
