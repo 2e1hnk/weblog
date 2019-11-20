@@ -93,6 +93,10 @@ dependencies {
 	// Search dependencies
 	compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.11.2.Final'
 	
+	// For Blog Posts
+	compile group: 'es.nitaur.markdown', name: 'txtmark', version: '0.16'
+	
+	
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'

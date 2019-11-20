@@ -1,5 +1,8 @@
 package weblog.controller;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -11,8 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.github.rjeschke.txtmark.Processor;
+
 import weblog.BandStats;
+import weblog.model.BlogPost;
 import weblog.model.Logbook;
+import weblog.model.Tag;
 import weblog.model.User;
 import weblog.service.LogbookService;
 import weblog.service.StatsService;
@@ -51,6 +58,40 @@ public class RootController {
     @GetMapping("/map")
     public String map(Model model) {
     	return "map";
+    }
+    
+    @GetMapping("/public/{username}/blog")
+    public String userPublicBlog(@PathVariable String username, Model model, HttpServletRequest request) {
+    	User user = userService.getUser(username);
+    	model.addAttribute("user", user);
+    	model.addAttribute("posts", user.getBlogPosts());	// This isn't strictly necessary but useful to make the template compatible with filtered lists
+    	return "blog";
+    }
+    
+    @GetMapping("/public/{username}/blog/tag/{tag}")
+    public String userPublicTaggedBlogPage(@PathVariable String username, @PathVariable Tag tag, Model model, HttpServletRequest request) {
+    	User user = userService.getUser(username);
+    	model.addAttribute("user", user);
+    	
+    	Set<BlogPost> taggedBlogPosts = new HashSet<BlogPost>();
+    	for ( BlogPost blogPost : tag.getBlogPosts() ) {
+    		if ( blogPost.getUser().equals(user) ) {
+    			taggedBlogPosts.add(blogPost);
+    		}
+    	}
+    	model.addAttribute("posts", taggedBlogPosts);
+    	
+    	return "blog";
+    }
+
+    @GetMapping("/public/{username}/blog/{blogPost}")
+    public String userPublicBlogPage(@PathVariable String username, @PathVariable BlogPost blogPost, Model model, HttpServletRequest request) {
+    	User user = userService.getUser(username);
+    	if ( blogPost.getUser().equals(user) ) {
+    		model.addAttribute("user", user);
+    		model.addAttribute("blog", blogPost);
+    	}
+    	return "blogpost";
     }
     
     @GetMapping("/public/{username}/**")

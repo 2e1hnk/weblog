@@ -2,6 +2,7 @@ package weblog.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -62,6 +63,9 @@ public class User {
      */
     @OneToMany(mappedBy = "user")
     Set<Entitlement> entitlement;
+    
+    @OneToMany(mappedBy = "user")
+    Set<BlogPost> blogPosts;
     
     public User() {
     	
@@ -173,6 +177,22 @@ public class User {
 	
 	public void addEntitlement(Entitlement entitlement) {
 		this.entitlement.add(entitlement);
+	}
+
+	public Set<BlogPost> getBlogPosts() {
+		return blogPosts;
+	}
+
+	public void setBlogPosts(Set<BlogPost> blogPosts) {
+		this.blogPosts = blogPosts;
+	}
+	
+	public Set<Tag> getAllBlogTags() {
+		Set<Tag> tags = new HashSet<Tag>();
+		for ( BlogPost blog : this.getBlogPosts() ) {
+			tags.addAll(blog.getTags());
+		}
+		return tags;
 	}
 
 	@Override
