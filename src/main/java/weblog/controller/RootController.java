@@ -89,6 +89,7 @@ public class RootController {
     	User user = userService.getUser(username);
     	model.addAttribute("user", user);
     	model.addAttribute("posts", blogPostService.findUsersBlogPosts(user));	// This isn't strictly necessary but useful to make the template compatible with filtered lists
+    	model.addAttribute("url_base", "/public/" + username);
     	return "blogthemes/" + user.getBlogTheme() + "/blog";
     }
     

@@ -38,7 +38,7 @@ and is wrapped around the whole page content, except for the footer in this exam
 
   <!-- Image header -->
   <header class="w3-display-container w3-wide" id="home">
-    <img class="w3-image" src="https://www.w3schools.com/w3images/jane.jpg" alt="Fashion Blog" width="1600" height="1060">
+    <img class="w3-image" src="/public/2e1hnk/gallery/Yaesu1600x900.jpg" alt="Fashion Blog" width="1600" height="1060">
     <div class="w3-display-left w3-padding-large">
       <h1 class="w3-text-white" th:text="${user.getUsername().toUpperCase()} + '\'s'"></h1>
       <h1 class="w3-jumbo w3-text-white w3-hide-small"><b>HAM RADIO BLOG</b></h1>
@@ -73,7 +73,7 @@ and is wrapped around the whole page content, except for the footer in this exam
 	                <img src="/w3images/avatar_smoke.jpg" style="width:90px;">
 	              </div>
 	              <div class="w3-col l10 m9">
-	                <h4><span th:text="${comment.getUser().getUsername()}" />, <span class="w3-opacity w3-medium" th:text="${comment.getTimestamp()}" /></h4>
+	                <h4><span th:text="${comment.getUser()?.getUsername() ?: 'Anonymous'}" />, <span class="w3-opacity w3-medium" th:text="${comment.getTimestamp()}" /></h4>
 	                <p th:text="${comment.getComment()}" />
 	              </div>
 	             </th:block>
