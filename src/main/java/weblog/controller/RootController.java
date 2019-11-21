@@ -110,17 +110,6 @@ public class RootController {
     	return "blogthemes/" + user.getBlogTheme() + "/blog";
     }
 
-    @GetMapping("/public/{username}/gallery/{filename}")
-    public ResponseEntity<Resource> userPublicGalleryImage(@PathVariable String username, @PathVariable String filename, Model model, HttpServletRequest request) {
-    	User user = userService.getUser(username);
-    	model.addAttribute("user", user);
-    	
-    	Resource imgFile = storageService.loadAsResource(null, user.getUsername() + "/gallery/" + filename);
-    	
-    	model.addAttribute("url_base", "/public/" + user.getUsername());
-    	return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imgFile);
-    }
-
     @GetMapping("/public/{username}/blog/{blogPost}")
     public String userPublicBlogPage(@PathVariable String username, @PathVariable BlogPost blogPost, Model model, HttpServletRequest request) {
     	User user = userService.getUser(username);
@@ -161,6 +150,26 @@ public class RootController {
     	
     }
     
+    @GetMapping("/public/{username}/gallery")
+    public String userPublicGallery(@PathVariable String username, Model model, HttpServletRequest request) {
+    	User user = userService.getUser(username);
+    	model.addAttribute("user", user);
+    	model.addAttribute("images", storageService.loadFromSubDir(user.getUsername() + "/gallery"));	// This isn't strictly necessary but useful to make the template compatible with filtered lists
+    	model.addAttribute("url_base", "/public/" + username);
+    	return "blogthemes/" + user.getBlogTheme() + "/gallery";
+    }
+
+    @GetMapping("/public/{username}/gallery/{filename}")
+    public ResponseEntity<Resource> userPublicGalleryImage(@PathVariable String username, @PathVariable String filename, Model model, HttpServletRequest request) {
+    	User user = userService.getUser(username);
+    	model.addAttribute("user", user);
+    	
+    	Resource imgFile = storageService.loadAsResource(null, user.getUsername() + "/gallery/" + filename);
+    	
+    	model.addAttribute("url_base", "/public/" + user.getUsername());
+    	return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imgFile);
+    }
+
     @GetMapping("/public/{username}/**")
     public String userPublicLogbookPage(@PathVariable String username, Model model, HttpServletRequest request) {
     	
