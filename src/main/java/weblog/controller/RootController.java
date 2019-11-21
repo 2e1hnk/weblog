@@ -2,6 +2,7 @@ package weblog.controller;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,15 +19,21 @@ import org.springframework.ui.Model;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.github.rjeschke.txtmark.Processor;
 
 import weblog.BandStats;
+import weblog.model.BlogComment;
 import weblog.model.BlogPost;
 import weblog.model.Logbook;
 import weblog.model.Tag;
 import weblog.model.User;
+import weblog.repository.BlogCommentRepository;
+import weblog.repository.BlogPostRepository;
+import weblog.service.BlogPostService;
 import weblog.service.FileSystemStorageService;
 import weblog.service.LogbookService;
 import weblog.service.StatsService;
@@ -52,6 +59,12 @@ public class RootController {
 	@Autowired
 	private FileSystemStorageService storageService;
 	
+	@Autowired
+	private BlogPostService blogPostService;
+	
+	@Autowired
+	private BlogCommentRepository blogCommentRepository;
+	
     @GetMapping("")
     public String home(Model model) {
     	
@@ -75,7 +88,7 @@ public class RootController {
     public String userPublicBlog(@PathVariable String username, Model model, HttpServletRequest request) {
     	User user = userService.getUser(username);
     	model.addAttribute("user", user);
-    	model.addAttribute("posts", user.getBlogPosts());	// This isn't strictly necessary but useful to make the template compatible with filtered lists
+    	model.addAttribute("posts", blogPostService.findUsersBlogPosts(user));	// This isn't strictly necessary but useful to make the template compatible with filtered lists
     	return "blogthemes/" + user.getBlogTheme() + "/blog";
     }
     
@@ -92,6 +105,7 @@ public class RootController {
     	}
     	model.addAttribute("posts", taggedBlogPosts);
     	
+    	model.addAttribute("url_base", "/public/" + user.getUsername());
     	return "blogthemes/" + user.getBlogTheme() + "/blog";
     }
 
@@ -102,6 +116,7 @@ public class RootController {
     	
     	Resource imgFile = storageService.loadAsResource(null, user.getUsername() + "/gallery/" + filename);
     	
+    	model.addAttribute("url_base", "/public/" + user.getUsername());
     	return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imgFile);
     }
 
@@ -110,9 +125,39 @@ public class RootController {
     	User user = userService.getUser(username);
     	if ( blogPost.getUser().equals(user) ) {
     		model.addAttribute("user", user);
+    		
+    		blogPost.incrementViews();
+    		blogPostService.save(blogPost);
+    		
     		model.addAttribute("blog", blogPost);
     	}
+    	model.addAttribute("url_base", "/public/" + user.getUsername());
     	return "blogthemes/" + user.getBlogTheme() + "/blogpost";
+    }
+    
+    @PostMapping("/public/{username}/blog/{blogPost}/addcomment")
+    public String userPublicLogbookPage(@PathVariable String username, @PathVariable BlogPost blogPost, Model model, HttpServletRequest request, @RequestParam String comment) {
+    	
+    	if ( blogPost.isCommentsEnabled() ) {
+    		if ( !blogPost.isAnonymousCommentsEnabled() ) {
+    			User user = userService.getThisUser();
+    			BlogComment blogComment = new BlogComment();
+    			blogComment.setUser(user);
+    			blogComment.setTimestamp(new Date());
+    			blogComment.setComment(comment);
+    			blogComment.setBlogPost(blogPost);
+    			blogPost.addComment(blogComment);
+    			
+    			blogCommentRepository.save(blogComment);
+    			blogPostService.save(blogPost);
+    		}
+    	} else {
+    		// Comments not enabled
+    		logger.error("Comment attempted by an unauthenticated user! " + request.getRemoteAddr());
+    	}
+    	
+    	return "redirect:/public/" + username + "/blog/" + blogPost.getId();
+    	
     }
     
     @GetMapping("/public/{username}/**")

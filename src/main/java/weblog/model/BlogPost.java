@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -22,6 +24,7 @@ import com.github.rjeschke.txtmark.Processor;
 public class BlogPost {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long Id;
 	
     @ManyToOne
@@ -53,6 +56,10 @@ public class BlogPost {
     @OneToMany(mappedBy = "blogPost")
     private Set<BlogComment> comments;
     
+    /*
+     * Stats things
+     */
+    private long views;
     public BlogPost() {
     	this.tags = new HashSet<Tag>();
     }
@@ -139,5 +146,21 @@ public class BlogPost {
 
 	public void setComments(Set<BlogComment> comments) {
 		this.comments = comments;
+	}
+	
+	public void addComment(BlogComment comment) {
+		this.comments.add(comment);
+	}
+
+	public long getViews() {
+		return views;
+	}
+
+	public void setViews(long views) {
+		this.views = views;
+	}
+	
+	public void incrementViews() {
+		this.views++;
 	}
 }

@@ -3,6 +3,8 @@ package weblog.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -12,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class BlogComment {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
 	@ManyToOne(optional = true)
@@ -24,6 +27,22 @@ public class BlogComment {
 	private BlogPost blogPost;
 	
 	private String comment;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public BlogPost getBlogPost() {
+		return blogPost;
+	}
+
+	public void setBlogPost(BlogPost blogPost) {
+		this.blogPost = blogPost;
+	}
 
 	public User getUser() {
 		return user;

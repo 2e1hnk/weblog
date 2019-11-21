@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
@@ -11,6 +13,7 @@ import javax.persistence.ManyToMany;
 public class Tag {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
 	@ManyToMany(mappedBy="tags")
@@ -45,6 +48,4 @@ public class Tag {
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
-	
-	
 }

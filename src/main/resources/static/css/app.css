@@ -302,3 +302,7 @@ button.navbar-button {
 	-webkit-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 }
+
+.confirmed::after {
+	content: '<i class="fas fa-check-square"></i>';
+}

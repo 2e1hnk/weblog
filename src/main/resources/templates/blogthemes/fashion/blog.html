@@ -64,7 +64,7 @@ and is wrapped around the whole page content, except for the footer in this exam
 	          <img th:if="${post.getHeaderImageUrl()}" th:src="${post.getHeaderImageUrl()}" alt="Post header image" style="width:100%" class="w3-padding-16">
 	          <p th:utext="${post.getPostContentsRendered()}" />
 	          <p class="w3-left"><button class="w3-button w3-white w3-border" onclick="likeFunction(this)"><b><i class="fa fa-thumbs-up"></i> Like</b></button></p>
-	          <p class="w3-right"><button class="w3-button w3-black" onclick="myFunction('demo1')" id="myBtn"><b>Replies &nbsp;</b> <span class="w3-tag w3-white" th:text="${posts[0].getComments().size()}"></span></button></p>
+	          <p class="w3-right"><button class="w3-button w3-black" onclick="myFunction('demo1')" id="myBtn"><b>Replies &nbsp;</b> <span class="w3-tag w3-white" th:text="${post.getComments().size()}"></span></button></p>
 	          <p class="w3-clear"></p>
 	          <div class="w3-row w3-margin-bottom" id="demo1" style="display:none">
 	          	<th:block th:each="comment : ${post.getComments()}">
@@ -73,8 +73,8 @@ and is wrapped around the whole page content, except for the footer in this exam
 	                <img src="/w3images/avatar_smoke.jpg" style="width:90px;">
 	              </div>
 	              <div class="w3-col l10 m9">
-	                <h4><span th:text="${comment.getUser().getUsername()}" /> <span class="w3-opacity w3-medium" th:text="${comment.getTimestamp()}" /></h4>
-	                <p th:text="${comment.getComment()}"></p>
+	                <h4><span th:text="${comment.getUser().getUsername()}" />, <span class="w3-opacity w3-medium" th:text="${comment.getTimestamp()}" /></h4>
+	                <p th:text="${comment.getComment()}" />
 	              </div>
 	             </th:block>
 	          </div>

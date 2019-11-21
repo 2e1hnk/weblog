@@ -20,7 +20,6 @@
 			<div class="w3-card">
 				<header class="w3-container w3-theme-highlight">
 				  <h1><i class="far fa-user-circle"></i> <span th:text="${user.username}">[USERNAME]</span></h1>
-				  User ID: <span th:text="${user.id}"></span>
 				</header>
 				<div class="w3-container">
 					<h2 th:text="#{lang.roles}">Roles</h2>
@@ -37,8 +36,8 @@
 							<option th:each="theme : ${themes}" th:value="${theme}" th:text="${theme}" th:selected="${theme==user.theme}"></option>
 						</select>
 						
-						<label for="blog_theme"><span th:text="#{lang.blog_theme}"></span></label>
-						<select class="w3-select w3-border w3-input" id="blog_theme" name="blog_theme">
+						<label for="blogTheme"><span th:text="#{lang.blog_theme}"></span></label>
+						<select class="w3-select w3-border w3-input" id="blogTheme" name="blogTheme">
 							<option th:each="blog_theme : ${blog_themes}" th:value="${blog_theme}" th:text="${blog_theme}" th:selected="${blog_theme==user.getBlogTheme()}"></option>
 						</select>
 						
@@ -56,72 +55,126 @@
 			<ul class="w3-ul" th:each="message : ${messages}">
 		        <li th:text="${message}" class="w3-panel w3-theme-success" />
 		    </ul>
-			<h1>Logbooks</h1>
-			<ul class="w3-ul">
-				<li class="w3-bar w3-input">
-					<!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
-				  	<form class="file-upload-box box" action="/adif/multi" method="POST" enctype="multipart/form-data">
-				  		<span class="w3-large" th:text="#{lang.newLogbook}"></span><br>
-				  		<div class="w3-cell-row">
-				  			<div class="w3-cell w3-mobile w3-center" style="min-width: 50%; vertical-align: middle;">
-						  		<div class="box__input">
-								    <span th:text="#{lang.dragDropAdifHere}"></span>, <span th:text="#{lang.or}"></span>
-								</div>
-								<div class="box__uploading">
-									<div class="w3-light-grey">
-									  <div id="upload-progress-bar" class="w3-blue" style="width:0%"></div>
-									</div>
-								</div>
-								<div class="box__success" th:text="#{lang.done}"></div>
-								<div class="box__error" th:text="#{lang.error}"><span></span>.</div>	
-								<label for="file-create-new" class="w3-theme-button custom-file-upload" th:text="#{lang.chooseAnAdifFileToUpload}"></label><br />
+		    <div class="w3-bar w3-border">
+			  <button class="w3-bar-item w3-button" onclick="openTab('profile-tabs', 'tab-logbooks')">Logbooks</button>
+			  <button class="w3-bar-item w3-button" onclick="openTab('profile-tabs', 'tab-blog')">Blog</button>
+			</div>
+			
+			<div class="w3-border">
+				<div id="tab-logbooks" class="city profile-tabs">
+					<ul class="w3-ul">
+						<li class="w3-bar w3-input">
+							<!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
+						  	<form class="file-upload-box box" action="/adif/multi" method="POST" enctype="multipart/form-data">
+						  		<span class="w3-large" th:text="#{lang.newLogbook}"></span><br>
+						  		<div class="w3-cell-row">
+						  			<div class="w3-cell w3-mobile w3-center" style="min-width: 50%; vertical-align: middle;">
+								  		<div class="box__input">
+										    <span th:text="#{lang.dragDropAdifHere}"></span>, <span th:text="#{lang.or}"></span>
+										</div>
+										<div class="box__uploading">
+											<div class="w3-light-grey">
+											  <div id="upload-progress-bar" class="w3-blue" style="width:0%"></div>
+											</div>
+										</div>
+										<div class="box__success" th:text="#{lang.done}"></div>
+										<div class="box__error" th:text="#{lang.error}"><span></span>.</div>	
+										<label for="file-create-new" class="w3-theme-button custom-file-upload" th:text="#{lang.chooseAnAdifFileToUpload}"></label><br />
+										
+							  			<input class="w3-input box__file" type="file" name="file" id="file-create-new" style="position: absolute; left: -99999rem" /><span class="box__dragndrop"></span>
+					    				<button class="w3-button w3-theme-button box__button" type="submit" th:text="#{lang.upload}"></button>
+						  			</div>
+						  			<div class="w3-cell w3-mobile w3-center" style="min-width: 50%; vertical-align: middle; border-left: 1px #ccc solid">
+						  				<button onclick="document.getElementById('modal-add-logbook').style.display='block'" class="w3-bar-item w3-button"><i class="fas fa-plus-circle w3-jumbo"></i><br />Create Empty Logbook</button>
+						  			</div>
+						  		</div>
+						  		
+							</form>
+						</li>				
+						<li class="w3-bar w3-input" th:each="logbook : ${user.getLogbooks(1)}">
+							  <!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
+				  		    <span class="w3-large" th:text="${logbook.name}">[NAME]</span>
+				  		    <th:block th:each="entitlement : ${logbook.entitlement}">
+				  		    	(<span class="w3-small" th:text="${entitlement.getEntitlementAsText()}">[ENTITLEMENT]</span>)
+				  		    </th:block>
+				  		    <div class="w3-dropdown-hover w3-right">
+							  <button class="w3-button w3-theme-button"><i class="fas fa-ellipsis-v"></i></button>
+							  <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
+								<a class="w3-bar-item w3-button" th:onclick="|showModal('modal-rename-logbook', '@{/logbook/rename/{id}(id=${logbook.id})}'); return false;|"><i class="fas fa-edit"></i> <span th:text="#{lang.renameLogbook}" /></a>
+								<a class="w3-bar-item w3-button" th:href="@{/adif/download/{id}(id=${logbook.id})}"><i class="fas fa-file-export"></i> <span th:text="#{lang.export}" /></a>
+								<a class="w3-bar-item w3-button" th:onclick="|showModal('modal-delete-logbook', '@{/logbook/delete/{id}(id=${logbook.id})}'); return false;|"><i class="fas fa-trash"></i> <span th:text="#{lang.delete}" /></a>
+								<a class="w3-bar-item w3-button" th:onclick="|showModal('modal-move-contacts', '@{/logbook/move/{id}(id=${logbook.id})}'); return false;|"><i class="fas fa-arrows-alt-h"></i>  <span th:text="#{lang.moveContactsToOtherLog}" /></a>
+							  </div>
+							</div>
+				  		    <br>
+						    <span th:text="${logbook.size()}" /> <span th:text="#{lang.contactsLogged}">contacts logged</span><br />
+						    <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
+						    <label for="file"><strong th:text="#{lang.chooseAFile}">Choose a file</strong><span class="box__dragndrop" th:text="#{lang.orDragItHere}"> or drag it here</span>.</label>
+		  						<button class="box__button w3-theme-button" type="submit" th:text="#{lang.upload}">Upload</button>
+		  					<button th:onclick="|toggleElement('@{{id}-permissions(id=${logbook.id})}')|" class="w3-button w3-block w3-left-align"><i class="fas fa-chevron-down"></i> <span th:text="#{lang.permissions}">Permissions</span></button>
+		  					<div th:id="|@{{id}-permissions(id=${logbook.id})}|" class="w3-container w3-hide">
+		  						<table class="w3-table-all">
+		  							<thead>
+		  								<tr><th th:text="#{lang.username}">Username</th><th th:text="#{lang.permissions}">Access Level</th></tr>
+		  							</thead>
+		  							<tbody>
+		  								<tr th:each="entitlement : ${logbook.entitlement}">
+		  									<td th:text="${entitlement.user.getUsername()}" />
+		  									<td th:text="${entitlement.getEntitlementAsText()}" />
+		  								</tr>
+		  							</tbody>
+		  						</table>
+		  					</div>
+						</li>
+					</ul>
+				</div> <!-- end logbook tab -->
+				
+				<div id="tab-blog" class="city profile-tabs" style="display: none;">
+					<ul class="w3-ul">
+						<li class="w3-bar w3-input">
+							<form class="w3-container" name="new-blog-post" method="post" action="/profile/blog/add">
+								<input class="w3-input" name="title" placeholder="Blog Post Title"></input>
 								
-					  			<input class="w3-input box__file" type="file" name="file" id="file-create-new" style="position: absolute; left: -99999rem" /><span class="box__dragndrop"></span>
-			    				<button class="w3-button w3-theme-button box__button" type="submit" th:text="#{lang.upload}"></button>
-				  			</div>
-				  			<div class="w3-cell w3-mobile w3-center" style="min-width: 50%; vertical-align: middle; border-left: 1px #ccc solid">
-				  				<button onclick="document.getElementById('modal-add-logbook').style.display='block'" class="w3-bar-item w3-button"><i class="fas fa-plus-circle w3-jumbo"></i><br />Create Empty Logbook</button>
-				  			</div>
-				  		</div>
-				  		
-					</form>
-				</li>				
-				<li class="w3-bar w3-input" th:each="logbook : ${user.getLogbooks(1)}">
-					  <!-- Advanced upload: https://css-tricks.com/drag-and-drop-file-uploading/ -->
-		  		    <span class="w3-large" th:text="${logbook.name}">[NAME]</span>
-		  		    <th:block th:each="entitlement : ${logbook.entitlement}">
-		  		    	(<span class="w3-small" th:text="${entitlement.getEntitlementAsText()}">[ENTITLEMENT]</span>)
-		  		    </th:block>
-		  		    <div class="w3-dropdown-hover w3-right">
-					  <button class="w3-button w3-theme-button"><i class="fas fa-ellipsis-v"></i></button>
-					  <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
-						<a class="w3-bar-item w3-button" th:onclick="|showModal('modal-rename-logbook', '@{/logbook/rename/{id}(id=${logbook.id})}'); return false;|"><i class="fas fa-edit"></i> <span th:text="#{lang.renameLogbook}" /></a>
-						<a class="w3-bar-item w3-button" th:href="@{/adif/download/{id}(id=${logbook.id})}"><i class="fas fa-file-export"></i> <span th:text="#{lang.export}" /></a>
-						<a class="w3-bar-item w3-button" th:onclick="|showModal('modal-delete-logbook', '@{/logbook/delete/{id}(id=${logbook.id})}'); return false;|"><i class="fas fa-trash"></i> <span th:text="#{lang.delete}" /></a>
-						<a class="w3-bar-item w3-button" th:onclick="|showModal('modal-move-contacts', '@{/logbook/move/{id}(id=${logbook.id})}'); return false;|"><i class="fas fa-arrows-alt-h"></i>  <span th:text="#{lang.moveContactsToOtherLog}" /></a>
-					  </div>
-					</div>
-		  		    <br>
-				    <span th:text="${logbook.size()}" /> <span th:text="#{lang.contactsLogged}">contacts logged</span><br />
-				    <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
-				    <label for="file"><strong th:text="#{lang.chooseAFile}">Choose a file</strong><span class="box__dragndrop" th:text="#{lang.orDragItHere}"> or drag it here</span>.</label>
-  						<button class="box__button w3-theme-button" type="submit" th:text="#{lang.upload}">Upload</button>
-  					<button th:onclick="|toggleElement('@{{id}-permissions(id=${logbook.id})}')|" class="w3-button w3-block w3-left-align"><i class="fas fa-chevron-down"></i> <span th:text="#{lang.permissions}">Permissions</span></button>
-  					<div th:id="|@{{id}-permissions(id=${logbook.id})}|" class="w3-container w3-hide">
-  						<table class="w3-table-all">
-  							<thead>
-  								<tr><th th:text="#{lang.username}">Username</th><th th:text="#{lang.permissions}">Access Level</th></tr>
-  							</thead>
-  							<tbody>
-  								<tr th:each="entitlement : ${logbook.entitlement}">
-  									<td th:text="${entitlement.user.getUsername()}" />
-  									<td th:text="${entitlement.getEntitlementAsText()}" />
-  								</tr>
-  							</tbody>
-  						</table>
-  					</div>
-				</li>
-			</ul>
+								<textarea class="w3-input" id="new-blog-entry-contents" name="contents" placeholder="Blog contents" style="width: 100%" rows="10"></textarea>
+								
+								<input class="w3-input" name="imageUrl" placeholder="Image URL"></input>
+								
+								<input class="w3-check" type="checkbox" checked="checked" name="allowComments">
+								<label>Allow Comments</label>
+								
+								<input class="w3-check" type="checkbox" checked="checked" name="allowAnonymousComments">
+								<label>Allow Anonymous Comments</label>
+								
+								<input type="submit" class="w3-button"></input>
+							</form>
+						</li>
+						<li th:each="post : ${user.getBlogPosts()}" class="w3-bar w3-input">
+							<div class="w3-dropdown-hover w3-right">
+							  <button class="w3-button w3-theme-button"><i class="fas fa-ellipsis-v"></i></button>
+							  <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
+								<a class="w3-bar-item w3-button" th:href="${'/profile/blog/delete/' + post.getId()}"><i class="fas fa-trash"></i> <span th:text="#{lang.delete}" /></a>
+							  </div>
+							</div>
+							<h3><a th:href="${'/public/' + post.getUser().getUsername() + '/blog/' + post.getId()}" th:text="${post.getTitle()}" />
+								<span class="w3-small">(<span th:text="${post.getViews() + ' views'}" /><span th:if="${post.isCommentsEnabled()}" th:text="${', ' + post.getComments().size() + ' comments'}" />)</span>
+				  		    </h3>
+							<p th:text="${post.getPostContents()}" />
+							<th:block th:if="${post.isCommentsEnabled()}">
+								<button th:onclick="|toggleElement('@{{id}-comments(id=${post.getId()})}')|" class="w3-button w3-block w3-left-align"><i class="fas fa-chevron-down"></i> <span th:text="#{lang.comments}">Comments</span></button>
+			  					<div th:id="|@{{id}-comments(id=${post.getId()})}|" class="w3-container w3-hide">
+			  						<ul class="w3-ul">
+			  							<li th:each="comment : ${post.getComments()}" class="w3-bar w3-input">
+			  								<span th:text="${comment.getUser()?.getUsername() ?: 'Anonymous'}" /> <i th:if="${comment.getUser()?.equals(user)}" class="fas fa-check-square"></i>, <span th:text="${comment.getTimestamp()}"></span>
+			  								<div th:text="${comment.getComment()}" />
+			  							</li>
+			  						</ul>
+			  					</div>
+			  				</th:block>
+						</li>
+					</ul>
+				
+				</div> <!-- end blog tab -->
+			</div>
 		</div>
 	</div>
 	
@@ -259,6 +312,11 @@
 		  droppedFiles = e.originalEvent.dataTransfer.files;
 		  $form.trigger('submit');
 		});
+		</script>
+		
+		<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+		<script>
+			var simplemde = new SimpleMDE({ element: document.getElementById("new-blog-entry-contents") });
 		</script>
 	</th:block>
 </body>

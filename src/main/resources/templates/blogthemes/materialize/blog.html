@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blog</title>
+
+    <!-- Lato Font -->
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+
+    <!-- Stylesheet -->
+    <link href="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/gallery-materialize.min.opt.css?0" rel="stylesheet">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
+    
+    <style>
+    	.chip {
+    		display:inline-block;
+    		height:32px;
+    		font-size:13px;
+    		font-weight:500;
+    		color:rgba(0,0,0,0.6);
+    		line-height:32px;
+    		padding:0 12px;
+    		border-radius:16px;
+    		background-color:#e4e4e4;
+    		margin-bottom:5px;
+    		margin-right:5px
+    	}
+    	.chip:focus {
+    		outline:none;
+    		background-color:#26a69a;
+    		color:#fff
+    	}
+    	.chip>img {
+    		float:left;
+    		margin:0 8px 0 -12px;
+    		height:32px;
+    		width:32px;
+    		border-radius:50%
+    	}
+    	.chip .close {
+    		cursor:pointer;
+    		float:right;
+    		font-size:16px;
+    		line-height:32px;
+    		padding-left:8px
+    	}
+    </style>
+
+</head>
+
+  <body class="blog">
+
+    <!-- Navbar and Header -->
+    <nav class="nav-extended an">
+      <div class="nav-background">
+        <div class="ea k" style="background-image: url('//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/icon-seamless.png?0');"></div>
+      </div>
+      <div class="nav-wrapper db">
+        <a href="/pages/demo" class="brand-logo"><i class="material-icons">settings_input_antenna</i><span th:text="${user.getUsername().toUpperCase()}" /></a>
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="bt hide-on-med-and-down">
+          <li><a href="/pages/demo">Gallery</a></li>
+          <li class="k"><a href="/pages/blog">Blog</a></li>
+        </ul>
+        
+        <div class="nav-header de">
+          <h1 th:text="${user.getUsername().toUpperCase()}" />
+          <div class="ge">Ham Radio Blog</div>
+        </div>
+      </div>
+
+      <!-- Fixed Masonry Filters -->
+      <div class="categories-wrapper an darken-1">
+        <div class="categories-container">
+          <ul class="categories db">
+            <li><a th:href="${url_base} + '/blog'">All</a></li> <!-- add .k to get underlined 'active' indicator  -->
+            <li th:each="tag : ${user.getAllBlogTags()}"><a th:href="${url_base} + '/blog/tag/' + ${tag.getId()}" th:text="${tag.getTag()}" /></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <ul class="side-nav" id="nav-mobile">
+      <li><a href="/pages/demo"><i class="material-icons">camera</i>Gallery</a></li>
+      <li class="k"><a href="blog.html"><i class="material-icons">edit</i>Blog</a></li>
+    </ul>
+
+    <div id="portfolio" class="cx gray">
+      <div class="db">
+        <div class="b e">
+          <div class="d hx hf gu gallery-item ce all">
+            <div class="h blue-grey darken-1">
+              <div class="card-content white-text">
+                <span class="card-title">About</span>
+                <p th:text="${user.getAbout()}" />
+              </div>
+              <div class="card-action">
+                <a href="#">This is a link</a>
+                <a href="#">This is a link</a>
+              </div>
+            </div>
+          </div>
+		  <th:block th:each="post : ${posts}">
+	          <div class="d hx hf gu gallery-item gallery-expand ce overhead">
+	            <div class="gallery-curve-wrapper">
+	              <a th:if="${post.getHeaderImageUrl()}" class="gallery-cover gray">
+	                <img th:src="${post.getHeaderImageUrl()}" style="width: 100%; max-height:300px" crossOrigin="anonymous" alt="placeholder">
+	              </a>
+	              <div class="gallery-header">
+	                <span th:text="${post.getTitle()}"></span>
+	              </div>
+	              <div class="gallery-body">
+	                <div class="title-wrapper">
+	                  <h3 th:text="${post.getTitle()}" />
+	                  <h6><i th:text="${post.getTimestamp()}" /></h6>
+	                  <iv class="chip" th:each="tag : ${post.getTags()}" th:text="${tag.getTag()}" />
+	                </div>
+	                <p class="fi" th:utext="${post.getPostContentsRendered()}" />
+	                <th:block th:if="${post.isCommentsEnabled()}" th:each="comment : ${post.getComments()}">
+	                	<hr />
+	                	<p><span th:text="${comment.getUser()?.getUsername() ?: 'Anonymous'}" /><i th:if="${comment.getUser()?.equals(user)}" class="fas fa-check-square"></i>, <span class="w3-opacity w3-medium" th:text="${comment.getTimestamp()}" /></p>
+	                	<p th:text="${comment.getComment()}" />
+	                </th:block>
+	              </div>
+	              <div class="gallery-action">
+	                <a class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">favorite</i></a>
+	              </div>
+	            </div>
+	          </div>
+	      </th:block>
+
+
+        </div>
+
+      </div>
+
+    </div><!-- /.container -->
+
+    <!-- Core Javascript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/materialize/0.98.0/js/materialize.min.js"></script>
+    <script src="//cdn.shopify.com/s/files/1/1775/8583/t/1/assets/gallery.min.opt.js?0" crossOrigin="anonymous"></script>
+
+  </body>
+</html>

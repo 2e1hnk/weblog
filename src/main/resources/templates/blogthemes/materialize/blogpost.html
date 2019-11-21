@@ -43,14 +43,11 @@ and is wrapped around the whole page content, except for the footer in this exam
         	<h4><b>Comments <span class="w3-tag" th:text="${blog.getComments().size()}" /></b></h4>
         	<ul class="w3-ul">
         		<li th:each="comment : ${blog.getComments()}">
-        			<span th:text="${comment.getTimestamp()}" /> - <span th:text="${comment.getUser()?.getUsername()} ?: 'Anonymous'" /> <i th:if="${comment.getUser()?.equals(user)}" class="fas fa-check-square"></i>
+        			<span th:text="${comment.getTimestamp()}" /> - <span th:text="${comment.getUser().getUsername()} ?: 'Anonymous'" /> <i th:if="${comment.getUser()?.equals(user)}" class="fas fa-check-square"></i>
         			<div th:text="${comment.getComment()}" />
         		</li>
         	</ul>
-        	<form th:action="${'/public/' + blog.getUser().getUsername() + '/blog/' + blog.getId() + '/addcomment'}" method="post">
-        		<textarea name="comment" rows="5" style="width: 100%"></textarea>
-        		<p><input type="submit" value="Post Comment" class="w3-button w3-padding-large w3-white w3-border" /><p>
-        	</form>
+          <p><button class="w3-button w3-padding-large w3-white w3-border"><b>READ MORE &raquo;</b></button></p>
         </div>
       </div>
     </div>

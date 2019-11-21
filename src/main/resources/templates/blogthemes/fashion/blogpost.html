@@ -43,7 +43,7 @@ and is wrapped around the whole page content, except for the footer in this exam
         	<h4><b>Comments <span class="w3-tag" th:text="${blog.getComments().size()}" /></b></h4>
         	<ul class="w3-ul">
         		<li th:each="comment : ${blog.getComments()}">
-        			<span th:text="${comment.getTimestamp()}" /> - <span th:text="${comment.getUser().getUsername()} ?: 'Anonymous'" />
+        			<span th:text="${comment.getTimestamp()}" /> - <span th:text="${comment.getUser().getUsername()} ?: 'Anonymous'" /> <i th:if="${comment.getUser()?.equals(user)}" class="fas fa-check-square"></i>
         			<div th:text="${comment.getComment()}" />
         		</li>
         	</ul>

@@ -234,7 +234,7 @@ public class UserService {
     	
     	ClassLoader cl = this.getClass().getClassLoader(); 
     	ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(cl);
-    	Resource[] resources = resolver.getResources("classpath*:/" + dir + "/") ;
+    	Resource[] resources = resolver.getResources("classpath*:/" + dir + "/*") ;
     	
     	for (Resource resource: resources){
     	    folderList.add(resource.getFilename());
@@ -250,6 +250,7 @@ public class UserService {
 		List<String> names = new ArrayList<String>();
     	try {
 			names = this.listFolders("templates/blogthemes");
+			logger.info(names.toString());
 		} catch (URISyntaxException | IOException e) {
 			e.printStackTrace();
 		}
