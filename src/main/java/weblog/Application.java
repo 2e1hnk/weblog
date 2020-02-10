@@ -2,7 +2,9 @@ package weblog;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -12,13 +14,19 @@ import weblog.config.StorageProperties;
 @EnableConfigurationProperties(StorageProperties.class)
 @ComponentScan(basePackages= {"weblog", "QRZClient2", "DXCluster"})
 @EnableScheduling
-public class Application {
+public class Application extends SpringBootServletInitializer {
  
     public static final String DEFAULT_TENANT_ID = "default";
 
 	public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+	
+	@Override
+	protected SpringApplicationBuilder configure(
+	  SpringApplicationBuilder application) {
+	  return application.sources(Application.class);
+	}
     
     // Provide multi-tenancy support
     // https://bytefish.de/blog/spring_boot_multitenancy/

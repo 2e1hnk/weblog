@@ -14,6 +14,7 @@ buildscript {
     }
 }
 
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -28,9 +29,14 @@ repositories {
       url 'http://maven.twttr.com'
     }
 }
-
+apply plugin: 'war'
+war {
+	enabled = true
+    baseName = 'weblog'
+    version = '0.1.0'
+}
 bootJar {
-    baseName = 'web-log'
+    baseName = 'weblog'
     version =  '0.1.0'
 }
 
@@ -48,6 +54,8 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-websocket")
 	compile("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
 	compile("org.ocpsoft.prettytime:prettytime:4.0.1.Final")
+	compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '2.1.0.RELEASE'
+
 	
 	// DX Cluster Stuff
 	compile("commons-net:commons-net:3.6")
@@ -104,4 +112,6 @@ dependencies {
     
     // Dev-only dependencies
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }
