@@ -53,10 +53,10 @@
 			    		<span class="w3-bar-item w3-large" sec:authentication="name" />
 			    	</div>
 			    	<div class="w3-bar-block">
-			    	    <a th:href="@{~/profile}" class="w3-bar-item w3-button"><i class="fas fa-user-circle"></i> <span th:text="#{lang.profile}"></span></a>
+			    	    <a th:href="@{/profile}" class="w3-bar-item w3-button"><i class="fas fa-user-circle"></i> <span th:text="#{lang.profile}"></span></a>
 					</div>
 			    	<div class="w3-bar-block">
-			    	    <a th:href="@{~/logout}" class="w3-bar-item w3-button"><i class="fas fa-sign-out-alt"></i> <span th:text="#{lang.logout}"></span></a>
+			    	    <a th:href="@{/logout}" class="w3-bar-item w3-button"><i class="fas fa-sign-out-alt"></i> <span th:text="#{lang.logout}"></span></a>
 					</div>
 			    </div>
 			</div>
@@ -77,7 +77,7 @@
 			    </div>
 			</div>
 
-			<form style="margin-bottom: 0px;" th:action="@{~/log/find}" method="get">
+			<form style="margin-bottom: 0px;" th:action="@{/log/find}" method="get">
 				<button class="w3-bar-item w3-right w3-button w3-large w3-hide-small navbar-button" type="submit">
 					<i class="fas fa-search"></i>
 				</button>
