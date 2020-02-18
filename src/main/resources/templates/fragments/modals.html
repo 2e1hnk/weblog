@@ -7,7 +7,7 @@
 		<!-- These modals require the user to be logged in to be functional -->
 		<th:block sec:authorize="isAuthenticated()">
 			<!-- Change Password Modal -->
-			<form id="modal-change-password" class="w3-modal" action="/profile/update-password" method="POST">
+			<form id="modal-change-password" class="w3-modal" th:action="@{/profile/update-password}" method="POST">
 			  <div class="w3-modal-content w3-theme-background">
 			    <header class="w3-container w3-theme-highlight">
 			      <span onclick="document.getElementById('modal-change-password').style.display='none'"
@@ -34,7 +34,7 @@
 			</form>
 			
 			<!-- Add Logbook -->
-			<form id="modal-add-logbook" class="w3-modal" action="/logbook/new" method="get">
+			<form id="modal-add-logbook" class="w3-modal" th:action="@{/logbook/new}" method="get">
 			  <div class="w3-modal-content w3-theme-background">
 			    <header class="w3-container w3-theme-highlight">
 			      <span onclick="document.getElementById('modal-add-logbook').style.display='none'"
