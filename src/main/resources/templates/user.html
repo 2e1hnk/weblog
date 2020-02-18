@@ -22,7 +22,7 @@
 		
 		<div class="w3-panel w3-pale-red w3-leftbar w3-rightbar w3-border-red" th:each="err : ${#fields.errors('global')}" th:text="${err}">Validation error</div>
 	
-		<form action="/admin/users/adduser" method="POST">
+		<form th:action="@{/admin/users/adduser}" method="POST">
 		<table class="w3-table-all">
 			<thead>
 				<tr>
@@ -49,7 +49,7 @@
 						</div>
 					</td>
 					<td>
-						<div th:each="logbook : ${user.logbooks}">
+						<div th:each="logbook : ${user.getLogbooks(0)}">
 							<span th:text="${logbook.name}">[logbook name]</span>
 						</div>
 					</td>
@@ -78,6 +78,7 @@
 					<td><input class="w3-input w3-border" type="text" name="username" placeholder="username" /></td>
 					<td><input class="w3-check" type="checkbox" name="enabled" /></td>
 					<td><input class="w3-check" type="checkbox" name="admin" /></td>
+					<td></td>
 					<td></td>
 					<td><input class="w3-button w3-theme-button" type="submit" value="Create User" /></td>
 				</tr>
